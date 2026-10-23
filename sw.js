@@ -1,6 +1,6 @@
 // Offline support: keeps a copy of the game on the device after the first online launch.
 // Pages load network-first (players get updates when online), everything falls back to the cache offline.
-const CACHE = 'sv-blocks-v3';
+const CACHE = 'sv-blocks-v4';
 const CORE = [
   './',
   './index.html',
@@ -33,7 +33,8 @@ const CORE = [
   './art/level-01.webp',
   './art/level-02.webp',
   './art/level-03.webp',
-  './art/level-04.webp'
+  './art/level-04.webp',
+  './art/level-05.webp'
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
