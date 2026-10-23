@@ -213,6 +213,27 @@ body{
 .links a{color:var(--cyan)}
 .fine{font-size:12px!important}
 
+/* home screen */
+.home{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding-block:16px;text-align:center}
+.brand .sv{display:block;font:600 12px var(--f);letter-spacing:.3em;text-transform:uppercase;color:var(--cyan)}
+.brand h1{margin:6px 0 0;font:400 clamp(44px, 15vw, 72px)/1 var(--fd);color:#fff;text-shadow:0 0 18px var(--pink),0 0 40px var(--violet)}
+.hpic{position:relative;width:min(70vw, 40vh, 340px);aspect-ratio:1;max-width:100%;padding:0;border-radius:16px;overflow:hidden;border:1px solid color-mix(in srgb, var(--violet) 60%, transparent);box-shadow:0 0 30px color-mix(in srgb, var(--violet) 45%, transparent);background:var(--panel);cursor:pointer}
+.hpic canvas{width:100%;height:100%;display:block}
+.hlabel{position:absolute;left:8px;bottom:8px;font-size:12px;font-weight:600;letter-spacing:.05em;padding:3px 8px;border-radius:7px;background:rgba(6,10,30,.82);color:var(--cyan);font-variant-numeric:tabular-nums}
+.hbest{color:var(--dim);font-size:14px;font-variant-numeric:tabular-nums}
+.hbest b{color:var(--gold)}
+.hbtns{display:flex;flex-direction:column;gap:10px;width:min(100%, 300px)}
+.hrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn2{font:600 14px var(--f);color:var(--text);padding:11px 12px;border-radius:12px;border:1px solid color-mix(in srgb, var(--cyan) 40%, transparent);background:rgba(34,228,255,.07);cursor:pointer}
+.btn2:focus-visible,.gitem:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.help svg{width:16px;height:16px;display:block;margin:auto}
+.ggrid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;width:100%}
+.gitem{aspect-ratio:1;border-radius:10px;overflow:hidden;padding:0;border:1px solid color-mix(in srgb, var(--violet) 45%, transparent);background:#0b1235;display:grid;place-items:center;color:var(--dim);font:600 12px var(--f);cursor:pointer}
+.gitem:disabled{cursor:default}
+.gitem img{width:100%;height:100%;object-fit:cover;display:block}
+.gitem .lock{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gitem .lock b{font:400 20px var(--fd);color:#3a4380}
+#vimg{width:min(86vw, 60vh, 480px);height:auto;aspect-ratio:1;border-radius:14px;border:1px solid color-mix(in srgb, var(--cyan) 45%, transparent)}
 #done{z-index:60}
 #done .card{width:min(100%, 560px);gap:16px}
 #done canvas{
@@ -236,7 +257,21 @@ body{
 </style>
 </head>
 <body>
-<main class="app">
+<section class="home" id="home">
+  <div class="brand"><span class="sv">StratoshiVibes</span><h1>BLOCKS</h1></div>
+  <button class="hpic" id="hpic" type="button" data-i18n-aria="peekAria"><canvas id="hc"></canvas><span class="hlabel" id="hlabel"></span></button>
+  <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b></div>
+  <div class="hbtns">
+    <button class="btn" id="play" type="button"></button>
+    <button class="btn2" id="newFromHome" type="button" data-i18n="newGame"></button>
+    <div class="hrow">
+      <button class="btn2" id="galleryBtn" type="button" data-i18n="gallery"></button>
+      <button class="btn2" id="howBtn" type="button" data-i18n="howTitle"></button>
+    </div>
+  </div>
+</section>
+
+<main class="app" id="game" hidden>
   <header class="top">
     <button class="reveal" id="reveal" type="button" data-i18n-aria="peekAria">
       <canvas id="rc"></canvas>
@@ -245,7 +280,7 @@ body{
     <div class="stats">
       <div class="head">
         <div class="eyebrow" id="eyebrow"></div>
-        <button class="help" id="helpBtn" type="button" data-i18n-aria="helpAria">?</button>
+        <button class="help" id="homeBtn" type="button" data-i18n-aria="homeAria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg></button>
       </div>
       <div class="score" id="score">0</div>
       <div class="meta"><span><span data-i18n="best"></span> <b id="best">0</b></span><span class="combo" id="combo"></span></div>
@@ -285,7 +320,24 @@ body{
   <div class="card">
     <canvas id="pc"></canvas>
     <p id="peekTxt"></p>
-    <button class="btn" id="closePeek" type="button" data-i18n="back"></button>
+    <button class="btn" id="closePeek" type="button" data-i18n="resume"></button>
+  </div>
+</div>
+
+<div class="ov" id="gallery" hidden>
+  <div class="card">
+    <h2 data-i18n="gallery"></h2>
+    <div class="ggrid" id="ggrid"></div>
+    <p class="fine" data-i18n="galleryHint"></p>
+    <button class="btn" id="closeGallery" type="button" data-i18n="back"></button>
+  </div>
+</div>
+
+<div class="ov" id="view" hidden>
+  <div class="card">
+    <img id="vimg" alt="">
+    <p id="vtxt"></p>
+    <button class="btn" id="closeView" type="button" data-i18n="back"></button>
   </div>
 </div>
 
@@ -338,7 +390,9 @@ body{
       doneTxt: 'Όλα τα 36 κομμάτια ξεκλειδώθηκαν. Η εικόνα μένει εδώ μέχρι να πατήσεις.',
       nextPic: 'Επόμενη εικόνα',
       peekTxt: c => c + ' από 36 κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
-      back: 'Συνέχεια',
+      back: 'Πίσω', resume: 'Συνέχεια', play: 'Παίξε', cont: 'Συνέχισε την παρτίδα',
+      gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει εδώ.', locked: 'Κλειδωμένη',
+      homeAria: 'Αρχική', picN: n => 'Εικόνα ' + n,
       howTitle: 'Πώς παίζεται',
       r1: 'Σύρε τα κομμάτια στο ταμπλό.',
       r2: 'Γέμισε μια γραμμή ή μια στήλη για να καθαρίσει.',
@@ -359,7 +413,9 @@ body{
       doneTxt: 'All 36 pieces are unlocked. The picture stays here until you tap.',
       nextPic: 'Next picture',
       peekTxt: c => c + ' of 36 pieces unlocked. Every line you clear reveals more.',
-      back: 'Back to game',
+      back: 'Back', resume: 'Back to game', play: 'Play', cont: 'Continue game',
+      gallery: 'Gallery', galleryHint: 'Every picture you complete is added here.', locked: 'Locked',
+      homeAria: 'Home', picN: n => 'Picture ' + n,
       howTitle: 'How to play',
       r1: 'Drag the pieces onto the board.',
       r2: 'Fill a row or a column to clear it.',
@@ -606,11 +662,12 @@ body{
     $('over').hidden = false;
     requestAnimationFrame(() => drawReveal($('oc')));
   }
-  $('again').addEventListener('click', () => {
+  function resetGame() {
     board.fill(-1); score = 0; combo = 0; refill();
     $('over').hidden = true;
     renderBoard(); renderTray(); renderStats(); saveGame();
-  });
+  }
+  $('again').addEventListener('click', resetGame);
 
   /* ---------- drag ---------- */
   let drag = null;
@@ -724,7 +781,7 @@ body{
   }
   let rafOn = false;
   function tick() {
-    let act = drawReveal($('rc'));
+    let act = $('home').hidden ? drawReveal($('rc')) : drawReveal($('hc'));
     if (!$('peek').hidden) act = drawReveal($('pc')) || act;
     if (!$('done').hidden) drawReveal($('dc'), true);
     if (act) requestAnimationFrame(tick); else rafOn = false;
@@ -737,12 +794,66 @@ body{
     $('peek').hidden = false; kick();
   });
   $('closePeek').addEventListener('click', () => { $('peek').hidden = true; });
-  $('helpBtn').addEventListener('click', () => { $('help').hidden = false; });
+  $('howBtn').addEventListener('click', () => { $('help').hidden = false; });
+
+  /* ---------- home, gallery, back button ---------- */
+  const inProgress = () => score > 0 || board.some(v => v >= 0);
+  function renderHome() {
+    $('hbest').textContent = best;
+    $('hlabel').textContent = t('picN')(rev.level) + ' · ' + rev.count + '/' + TT;
+    $('play').textContent = inProgress() ? t('cont') : t('play');
+    $('newFromHome').hidden = !inProgress();
+  }
+  function showHome() {
+    ['over', 'peek', 'help', 'gallery', 'view'].forEach(id => $(id).hidden = true);
+    endDrag(false);
+    $('game').hidden = true; $('home').hidden = false;
+    renderHome(); kick();
+  }
+  function showGame() {
+    $('home').hidden = true; $('game').hidden = false;
+    try { history.pushState({ s: 'game' }, ''); } catch (e) {}
+    renderBoard(); renderTray(); renderStats(); kick();
+    setTimeout(checkOver, 300);
+  }
+  $('play').addEventListener('click', showGame);
+  $('newFromHome').addEventListener('click', () => { resetGame(); showGame(); });
+  $('hpic').addEventListener('click', () => $('reveal').click());
+  $('homeBtn').addEventListener('click', () => {
+    if (history.state && history.state.s === 'game') history.back(); else showHome();
+  });
+  window.addEventListener('popstate', () => { if ($('home').hidden) showHome(); });
+
+  function openGallery() {
+    const g = $('ggrid'); g.innerHTML = '';
+    const completed = rev.level - 1;
+    LEVELS.forEach((src, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'gitem';
+      if (i < completed) {
+        const im = document.createElement('img'); im.src = src; im.alt = t('picN')(i + 1);
+        b.appendChild(im);
+        b.addEventListener('click', () => {
+          $('vimg').src = src; $('vimg').alt = t('picN')(i + 1);
+          $('vtxt').textContent = t('picN')(i + 1);
+          $('view').hidden = false;
+        });
+      } else {
+        b.disabled = true;
+        b.innerHTML = '<span class="lock"><b>' + (i + 1) + '</b>' + t('locked') + '</span>';
+      }
+      g.appendChild(b);
+    });
+    $('gallery').hidden = false;
+  }
+  $('galleryBtn').addEventListener('click', openGallery);
+  $('closeGallery').addEventListener('click', () => { $('gallery').hidden = true; });
+  $('closeView').addEventListener('click', () => { $('view').hidden = true; });
   $('closeHelp').addEventListener('click', () => { $('help').hidden = true; });
   $('langBtn').addEventListener('click', () => {
     lang = lang === 'el' ? 'en' : 'el';
     store.set('svb_lang', lang);
-    applyLang(); renderStats();
+    applyLang(); renderStats(); renderHome();
   });
 
   function showDone() {
@@ -760,10 +871,9 @@ body{
   /* ---------- start ---------- */
   applyLang();
   if (!loadGame()) refill();
-  renderBoard(); renderTray(); renderStats();
+  renderBoard(); renderTray(); renderStats(); renderHome();
   kick();
   if (rev.count >= TT) showDone();
-  else setTimeout(checkOver, 300);
 })();
 </script>
 <script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
