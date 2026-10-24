@@ -1,6 +1,6 @@
 # StratoshiVibes Blockspace
 
-Neon block puzzle for the Solana Seeker. Drag pieces onto an 8×8 board, clear rows and columns, and every clear reveals part of a picture. Free to play, no wallet connection, no tokens or rewards.
+Neon block puzzle for the Solana Seeker. Drag pieces onto an 8×8 board, clear rows and columns, and every clear reveals part of a picture. Free to play, no ads. Connecting a wallet is optional (it unlocks Vol.1 Degens holder pictures), and an optional Shop sells in-game extras for SKR, SOL or USDC. No tokens or real-money rewards.
 
 - Play in the browser: https://blockspace.stratoshivibes.com/
 - Privacy policy: https://blockspace.stratoshivibes.com/privacy.html
