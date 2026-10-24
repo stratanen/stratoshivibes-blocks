@@ -1222,6 +1222,9 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     chance: { usd: 0.10, ic: '↻', restorable: false }
   };
   const SUPPORTER_CHANCES = 10;
+  // Shop paused: Seed Vault Wallet flags stratanen.github.io as a scam site when a transfer is requested.
+  // Turn back on (true) once the game runs on its own domain and payments pass the wallet's security check.
+  const SHOP_ENABLED = false;
   let SH = readJSON('svb_shop') || {};
   SH.own = SH.own || {}; SH.credits = Math.max(0, +SH.credits || 0);
   const saveSH = () => store.set('svb_shop', JSON.stringify(SH));
@@ -1425,17 +1428,19 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   function renderChanceBox() {
     const box = $('chanceBox');
+    if (!SHOP_ENABLED && !SH.credits) { box.innerHTML = ''; return; }
     if (chanceUsed) { box.innerHTML = '<p class="fine">' + t('chanceUsed') + '</p>'; return; }
     box.innerHTML = '<button class="chancebtn" type="button" id="chanceBtn">' + t('chanceName') +
       '<small>' + (SH.credits ? t('useOne')(SH.credits) : usdTxt(PRODUCTS.chance.usd) + ' · SKR / SOL / USDC') + '</small></button>' +
       '<p class="fine">' + t('chanceDesc') + '</p>';
     $('chanceBtn').onclick = () => {
       if (SH.credits > 0) { SH.credits--; saveSH(); applyChance(); }
-      else { $('over').hidden = true; checkout('chance'); }
+      else if (SHOP_ENABLED) { $('over').hidden = true; checkout('chance'); }
     };
   }
 
   $('shopBtn').addEventListener('click', openShop);
+  $('shopBtn').hidden = !SHOP_ENABLED;
   applyPerks();
 
   $('closeGallery').addEventListener('click', () => { $('gallery').hidden = true; });
