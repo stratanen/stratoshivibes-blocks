@@ -302,6 +302,8 @@ body{
 body.gold .blk{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg) brightness(1.06) contrast(1.05);box-shadow:0 0 10px rgba(255,190,60,.65)}
 body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
+.rateTitle{font:800 22px/1.2 var(--f)!important;letter-spacing:0!important}
+.rateBtn{display:inline-block;text-decoration:none}
 #done{z-index:60}
 #done .card{width:min(100%, 560px);gap:16px}
 #done canvas{
@@ -421,6 +423,15 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   <div class="card" id="shopCard" role="dialog" aria-modal="true"></div>
 </div>
 
+<div class="ov" id="rate" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="rateTitle">
+    <h2 id="rateTitle" class="rateTitle" data-i18n="rateTitle"></h2>
+    <p data-i18n="rateTxt"></p>
+    <a class="btn rateBtn" id="rateGo" href="solanadappstore://details?id=com.stratoshivibes.blocks" data-i18n="rateGo"></a>
+    <button class="btn2" id="rateLater" type="button" data-i18n="notNow"></button>
+  </div>
+</div>
+
 <div class="ov" id="help" hidden>
   <div class="card">
     <h2 data-i18n="howTitle"></h2>
@@ -435,6 +446,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       <button class="link" id="langBtn" type="button"></button>
       <a href="privacy.html" data-i18n="privacy"></a>
       <a href="terms.html" data-i18n="terms"></a>
+      <a href="solanadappstore://details?id=com.stratoshivibes.blocks" class="rateLink" data-i18n="rateLink" hidden></a>
     </div>
     <button class="btn" id="closeHelp" type="button" data-i18n="back"></button>
   </div>
@@ -531,7 +543,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r3: 'Κάθε καθαρισμός αποκαλύπτει κομμάτια της εικόνας. Τα combos αποκαλύπτουν περισσότερα.',
       r4: 'Η παρτίδα τελειώνει όταν δεν χωράει κανένα κομμάτι. Η εικόνα κρατάει την πρόοδό της.',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
-      privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι',
+      rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση στο dApp Store βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε στο dApp Store', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
       boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια'
     },
@@ -588,7 +600,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r3: 'Every clear reveals pieces of the picture. Combos reveal more.',
       r4: 'The game ends when no piece fits. Your picture keeps its progress.',
       free: 'Free, no ads, no wallet connection.',
-      privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off',
+      rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating on the dApp Store helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate on the dApp Store', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
       boardAria: '8 by 8 board', trayAria: 'Pieces'
     }
@@ -1518,11 +1530,18 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     applyLang(); renderStats(); renderHome(); paintWallet();
   });
 
+  // Rating prompt: shown once, inside the Seeker app only, after the player completes a second picture.
+  const IN_APP = /; wv\)/.test(navigator.userAgent);
+  let rateDue = false;
+  document.querySelectorAll('.rateLink').forEach(a => { a.hidden = !IN_APP; });
+  $('rateLater').addEventListener('click', () => { $('rate').hidden = true; });
+  $('rateGo').addEventListener('click', () => { store.set('svb_rate', 'opened'); setTimeout(() => { $('rate').hidden = true; }, 400); });
+
   function showDone() {
     if (!$('over').hidden) { $('over').hidden = true; pendingOver = true; }
     const pic = picById(rev.id);
     const wasNew = !done.includes(pic.id);
-    if (wasNew) { done.push(pic.id); saveDone(); }
+    if (wasNew) { done.push(pic.id); saveDone(); if (done.length >= 2 && IN_APP && !store.get('svb_rate')) rateDue = true; }
     const list = PICS.filter(p => p.ch === pic.ch), chDone = list.every(p => done.includes(p.id));
     $('doneName').textContent = pic[lang];
     $('doneTxt').textContent = PICS.filter(isActive).every(p => done.includes(p.id)) && wasNew ? t('allDone')
@@ -1534,6 +1553,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   $('next').addEventListener('click', () => {
     rev = newReveal(nextPicId()); saveRev(); fades.clear();
     $('done').hidden = true;
+    if (rateDue) { rateDue = false; store.set('svb_rate', 'asked'); $('rate').hidden = false; }
     renderStats(); renderHome(); kick();
     if (pendingOver) { pendingOver = false; checkOver(); }
   });
