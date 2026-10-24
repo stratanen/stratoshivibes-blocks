@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>StratoshiVibes Blocks</title>
+<title>StratoshiVibes Blockspace</title>
 <meta name="description" content="Neon block puzzle. Clear lines to reveal the picture.">
 <meta name="theme-color" content="#060a1e">
 <link rel="manifest" href="manifest.webmanifest">
@@ -216,7 +216,7 @@ body{
 /* home screen */
 .home{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding-block:16px;text-align:center}
 .brand .sv{display:block;font:600 12px var(--f);letter-spacing:.3em;text-transform:uppercase;color:var(--cyan)}
-.brand h1{margin:6px 0 0;font:400 clamp(44px, 15vw, 72px)/1 var(--fd);color:#fff;text-shadow:0 0 18px var(--pink),0 0 40px var(--violet)}
+.brand h1{margin:6px 0 0;font:400 clamp(34px, 11vw, 60px)/1 var(--fd);color:#fff;text-shadow:0 0 18px var(--pink),0 0 40px var(--violet)}
 .hpic{position:relative;width:min(70vw, 40vh, 340px);aspect-ratio:1;max-width:100%;padding:0;border-radius:16px;overflow:hidden;border:1px solid color-mix(in srgb, var(--violet) 60%, transparent);box-shadow:0 0 30px color-mix(in srgb, var(--violet) 45%, transparent);background:var(--panel);cursor:pointer}
 .hpic canvas{width:100%;height:100%;display:block}
 .hlabel{position:absolute;left:8px;bottom:8px;font-size:12px;font-weight:600;letter-spacing:.05em;padding:3px 8px;border-radius:7px;background:rgba(6,10,30,.82);color:var(--cyan);font-variant-numeric:tabular-nums}
@@ -258,7 +258,7 @@ body{
 </head>
 <body>
 <section class="home" id="home">
-  <div class="brand"><span class="sv">StratoshiVibes</span><h1>BLOCKS</h1></div>
+  <div class="brand"><span class="sv">StratoshiVibes</span><h1>BLOCKSPACE</h1></div>
   <button class="hpic" id="hpic" type="button" data-i18n-aria="peekAria"><canvas id="hc"></canvas><span class="hlabel" id="hlabel"></span></button>
   <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b></div>
   <div class="hbtns">
