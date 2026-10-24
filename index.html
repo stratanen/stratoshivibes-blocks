@@ -154,13 +154,13 @@ body{
 .piece.float{
   position:fixed;left:0;top:0;z-index:30;pointer-events:none;
   will-change:transform;
-  --s:1.12;
+  --s:1.05;
   transform:translate(var(--x,0px),var(--y,0px)) scale(var(--s));
-  filter:drop-shadow(0 14px 18px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(34,228,255,.55));
-  animation:liftpop .3s cubic-bezier(.25,1.7,.45,1) backwards;
+  filter:drop-shadow(0 8px 12px rgba(0,0,0,.5)) drop-shadow(0 0 6px rgba(34,228,255,.4));
+  animation:liftpop .18s ease-out backwards;
 }
 @property --s{syntax:'<number>';inherits:false;initial-value:1}
-@keyframes liftpop{from{--s:.5}to{--s:1.12}}
+@keyframes liftpop{from{--s:.75}to{--s:1.05}}
 .piece.float.fit{--s:1;transition:--s .12s ease-out}
 .cell.drop{animation:drop .26s cubic-bezier(.25,1.6,.45,1) both}
 @keyframes drop{from{transform:scale(1.22);filter:brightness(1.5)}to{transform:scale(1);filter:none}}
@@ -922,7 +922,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const g = geom(), gp = g.pitch - g.cell, p = drag.p;
     const W = p.w * g.pitch - gp, H = p.h * g.pitch - gp;
     const x = e.clientX - W / 2;
-    const y = drag.touch ? e.clientY - H - Math.max(52, g.cell * 1.35) : e.clientY - H / 2;
+    const y = drag.touch ? e.clientY - H - Math.max(44, g.cell * 1.1) : e.clientY - H / 2;
     drag.el.style.setProperty('--sz', g.cell + 'px');
     drag.el.style.gap = gp + 'px';
     drag.el.style.setProperty('--x', x + 'px');
