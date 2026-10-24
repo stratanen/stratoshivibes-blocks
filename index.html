@@ -227,6 +227,11 @@ body{
 .btn2{font:600 14px var(--f);color:var(--text);padding:11px 12px;border-radius:12px;border:1px solid color-mix(in srgb, var(--cyan) 40%, transparent);background:rgba(34,228,255,.07);cursor:pointer}
 .btn2:focus-visible,.gitem:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .help svg{width:16px;height:16px;display:block;margin:auto}
+.hbar{display:flex;gap:8px;flex:none}
+.sndbtn .off{display:none}
+.muted .sndbtn .on{display:none}
+.muted .sndbtn .off{display:block}
+.homesnd{position:fixed;top:calc(env(safe-area-inset-top, 0px) + 12px);right:max(16px, env(safe-area-inset-right, 0px));width:36px;height:36px}
 .ggrid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;width:100%}
 .gitem{aspect-ratio:1;border-radius:10px;overflow:hidden;padding:0;border:1px solid color-mix(in srgb, var(--violet) 45%, transparent);background:#0b1235;display:grid;place-items:center;color:var(--dim);font:600 12px var(--f);cursor:pointer}
 .gitem:disabled{cursor:default}
@@ -258,6 +263,7 @@ body{
 </head>
 <body>
 <section class="home" id="home">
+  <button class="help sndbtn homesnd" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button>
   <div class="brand"><span class="sv">StratoshiVibes</span><h1>BLOCKSPACE</h1></div>
   <button class="hpic" id="hpic" type="button" data-i18n-aria="peekAria"><canvas id="hc"></canvas><span class="hlabel" id="hlabel"></span></button>
   <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b></div>
@@ -280,7 +286,7 @@ body{
     <div class="stats">
       <div class="head">
         <div class="eyebrow" id="eyebrow"></div>
-        <button class="help" id="homeBtn" type="button" data-i18n-aria="homeAria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg></button>
+        <span class="hbar"><button class="help sndbtn" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button><button class="help" id="homeBtn" type="button" data-i18n-aria="homeAria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg></button></span>
       </div>
       <div class="score" id="score">0</div>
       <div class="meta"><span><span data-i18n="best"></span> <b id="best">0</b></span><span class="combo" id="combo"></span></div>
@@ -399,7 +405,7 @@ body{
       r3: 'Κάθε καθαρισμός αποκαλύπτει κομμάτια της εικόνας. Τα combos αποκαλύπτουν περισσότερα.',
       r4: 'Η παρτίδα τελειώνει όταν δεν χωράει κανένα κομμάτι. Η εικόνα κρατάει την πρόοδό της.',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
-      privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English',
+      privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
       boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια'
     },
@@ -422,7 +428,7 @@ body{
       r3: 'Every clear reveals pieces of the picture. Combos reveal more.',
       r4: 'The game ends when no piece fits. Your picture keeps its progress.',
       free: 'Free, no ads, no wallet connection.',
-      privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά',
+      privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
       boardAria: '8 by 8 board', trayAria: 'Pieces'
     }
@@ -617,6 +623,72 @@ body{
     el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
     clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 1150);
   }
+  /* ---------- sound (synthesised, no files) ---------- */
+  let muted = store.get('svb_sound') === 'off';
+  let actx = null, master = null;
+  function audio() {
+    if (muted) return null;
+    try {
+      if (!actx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        actx = new AC();
+        master = actx.createGain(); master.gain.value = 0.32;
+        const comp = actx.createDynamicsCompressor();
+        master.connect(comp); comp.connect(actx.destination);
+      }
+      if (actx.state === 'suspended') actx.resume();
+      return actx;
+    } catch (e) { return null; }
+  }
+  function tone(freq, start, dur, type, vol, slideTo) {
+    const a = audio(); if (!a) return;
+    const t0 = a.currentTime + start;
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, t0);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol || 0.5, t0 + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(master);
+    o.start(t0); o.stop(t0 + dur + 0.02);
+  }
+  const SCALE = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51, 1567.98, 1760, 2093];
+  const sfx = {
+    pick() { tone(660, 0, 0.06, 'sine', 0.25, 880); },
+    place() { tone(190, 0, 0.12, 'triangle', 0.6, 120); tone(950, 0, 0.03, 'square', 0.06); },
+    clear(lines, combo) {
+      const base = Math.min(combo - 1, 5);
+      const n = 2 + Math.min(lines, 4);
+      for (let i = 0; i < n; i++) {
+        const f = SCALE[Math.min(base + i, SCALE.length - 1)];
+        tone(f, i * 0.055, 0.22, 'triangle', 0.4);
+        tone(f * 2, i * 0.055, 0.12, 'sine', 0.12);
+      }
+      tone(110, 0, 0.25, 'sine', 0.35, 55);
+    },
+    reveal(count) {
+      for (let i = 0; i < Math.min(count, 8); i++) tone(SCALE[6 + (i % 4)], 0.25 + i * 0.11, 0.18, 'sine', 0.18);
+    },
+    complete() {
+      [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => { tone(f, i * 0.12, 0.5, 'triangle', 0.4); tone(f / 2, i * 0.12, 0.6, 'sine', 0.2); });
+      [1046.5, 1318.51, 1567.98, 2093].forEach(f => tone(f, 0.55, 1.1, 'sine', 0.16));
+    },
+    over() { [392, 329.63, 261.63, 196].forEach((f, i) => tone(f, i * 0.16, 0.32, 'triangle', 0.35)); }
+  };
+  function applySound() {
+    document.body.classList.toggle('muted', muted);
+    document.querySelectorAll('.sndbtn').forEach(b => b.setAttribute('aria-pressed', String(!muted)));
+  }
+  document.querySelectorAll('.sndbtn').forEach(b => b.addEventListener('click', () => {
+    muted = !muted;
+    store.set('svb_sound', muted ? 'off' : 'on');
+    applySound();
+    if (!muted) sfx.pick();
+  }));
+  applySound();
+
   function buzz(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} }
 
   /* ---------- placing ---------- */
@@ -635,8 +707,11 @@ body{
       const label = lines > 1 ? t('lines')(lines) : (combo > 1 ? 'Combo ×' + combo : t('line'));
       toast(label, got ? t('pieces')(got) : '');
       buzz(lines > 1 ? [20, 40, 30] : 20);
+      sfx.clear(lines, combo);
+      if (got) sfx.reveal(got);
     } else {
       combo = 0;
+      sfx.place();
     }
     if (tray.every(x => !x)) refill();
     renderBoard();
@@ -660,6 +735,7 @@ body{
     $('finalScore').textContent = score;
     $('overTxt').innerHTML = t('overTxt')(best, rev.count + '/' + TT);
     $('over').hidden = false;
+    sfx.over();
     requestAnimationFrame(() => drawReveal($('oc')));
   }
   function resetGame() {
@@ -682,6 +758,7 @@ body{
     document.body.appendChild(el);
     drag = { i, p: tray[i], el, touch: e.pointerType !== 'mouse', r: null, c: null, ok: false };
     s.classList.add('lift');
+    sfx.pick();
     moveDrag(e);
   }));
   function moveDrag(e) {
@@ -859,6 +936,7 @@ body{
   function showDone() {
     if (!$('over').hidden) { $('over').hidden = true; pendingOver = true; }
     $('done').hidden = false;
+    if (actx) sfx.complete();
     requestAnimationFrame(() => drawReveal($('dc'), true));
   }
   $('next').addEventListener('click', () => {
