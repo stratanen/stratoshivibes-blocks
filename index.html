@@ -444,7 +444,10 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 (() => {
   /* ---------- content you can edit ---------- */
   // Chapters of the Gallery, in play order.
+  // A chapter with "until" is a limited event: its pictures can be played only before that moment (Athens time).
+  // Pictures completed during the event stay in the Gallery for good.
   const CHAPTERS = [
+    { id: 'halloween', el: 'Halloween 2026', en: 'Halloween 2026', until: '2026-11-04T00:00:00+02:00', untilEl: 'έως 3/11', untilEn: 'until Nov 3' },
     { id: 'degens', el: 'Οι Degens', en: 'The Degens' },
     { id: 'legends', el: 'Θρύλοι', en: 'Legends' }
   ];
@@ -461,7 +464,9 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     { id: 'satoshi', ch: 'legends', src: 'art/level-02.webp', n: 6, chars: [], el: 'Satoshi', en: 'Satoshi' },
     { id: 'aether', ch: 'legends', src: 'art/level-04.webp', n: 6, chars: [], el: 'Αιθήρ', en: 'Aether' },
     { id: 'treasure', ch: 'legends', src: 'art/level-09.webp', n: 6, chars: [], el: 'Ο θησαυρός του Bitcoin', en: 'The Bitcoin Treasure' },
-    { id: 'dragon', ch: 'legends', src: 'art/level-10.webp', n: 8, chars: [], el: 'Ο δράκος του θησαυρού', en: 'The Treasure Dragon' }
+    { id: 'dragon', ch: 'legends', src: 'art/level-10.webp', n: 8, chars: [], el: 'Ο δράκος του θησαυρού', en: 'The Treasure Dragon' },
+    { id: 'pumpkins', ch: 'halloween', src: 'art/level-11.webp', n: 6, chars: [], el: 'Κολοκύθες του Bitcoin', en: 'Bitcoin Pumpkins' },
+    { id: 'bbhalloween', ch: 'halloween', src: 'art/level-12.webp', n: 6, chars: ['bull', 'bear'], el: 'Ταύρος & Αρκούδα: Halloween', en: 'Bull & Bear: Halloween' }
   ];
   const OLD_ORDER = ['bullbear', 'satoshi', 'maxi', 'aether', 'degen']; // play order before chapters, used once to carry over saved progress
   // Tile artwork (tiles/<name>.webp) and the glow colour of each tile.
@@ -480,7 +485,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       overTxt: (b, p) => 'Ρεκόρ <b>' + b + '</b><br>Η εικόνα κρατάει την πρόοδό της: <b>' + p + '</b> κομμάτια.',
       newGame: 'Νέα παρτίδα',
       doneTitle: 'Η εικόνα αποκαλύφθηκε!',
-      doneTxt: 'Μπήκε στη Συλλογή σου.', chapterDone: n => 'Ολοκλήρωσες το κεφάλαιο «' + n + '»!', allDone: 'Ολοκλήρωσες όλη τη Συλλογή! Νέες εικόνες έρχονται σύντομα.', pieces64: 'κομμάτια',
+      doneTxt: 'Μπήκε στη Συλλογή σου.', chapterDone: n => 'Ολοκλήρωσες το κεφάλαιο «' + n + '»!', allDone: 'Ολοκλήρωσες όλη τη Συλλογή! Νέες εικόνες έρχονται σύντομα.', pieces64: 'κομμάτια', ended: 'Έληξε',
       nextPic: 'Επόμενη εικόνα',
       peekTxt: (c, n) => c + ' από ' + n + ' κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
       back: 'Πίσω', resume: 'Συνέχεια', play: 'Παίξε', cont: 'Συνέχισε την παρτίδα',
@@ -537,7 +542,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       overTxt: (b, p) => 'Best <b>' + b + '</b><br>Your picture keeps its progress: <b>' + p + '</b> pieces.',
       newGame: 'New game',
       doneTitle: 'Picture unlocked!',
-      doneTxt: 'Added to your Gallery.', chapterDone: n => 'You completed the chapter "' + n + '"!', allDone: 'You completed the whole Gallery! New pictures are coming soon.', pieces64: 'pieces',
+      doneTxt: 'Added to your Gallery.', chapterDone: n => 'You completed the chapter "' + n + '"!', allDone: 'You completed the whole Gallery! New pictures are coming soon.', pieces64: 'pieces', ended: 'Ended',
       nextPic: 'Next picture',
       peekTxt: (c, n) => c + ' of ' + n + ' pieces unlocked. Every line you clear reveals more.',
       back: 'Back', resume: 'Back to game', play: 'Play', cont: 'Continue game',
@@ -663,6 +668,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   let best = +(store.get('svb_best') || 0);
   const picById = id => PICS.find(p => p.id === id);
   const chapterOf = p => CHAPTERS.find(c => c.id === p.ch);
+  const chActive = c => !c.until || Date.now() < Date.parse(c.until);
+  const isActive = p => chActive(chapterOf(p));
   let done = readJSON('svb_done');
   if (!Array.isArray(done)) done = [];
   done = done.filter(id => picById(id));
@@ -676,17 +683,22 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     saveDone();
   }
   function nextPicId() {
-    const open = PICS.find(p => !done.includes(p.id));
+    const playable = PICS.filter(isActive);
+    const ev = playable.find(p => chapterOf(p).until && !done.includes(p.id));
+    if (ev) return ev.id;                       // a live event comes first
+    const open = playable.find(p => !done.includes(p.id));
     if (open) return open.id;
-    const i = PICS.findIndex(p => rev && p.id === rev.id);
-    return PICS[(i + 1) % PICS.length].id; // everything completed: play them again in order
+    const pool = playable.filter(p => !chapterOf(p).until);
+    const i = pool.findIndex(p => rev && p.id === rev.id);
+    return pool[(i + 1) % pool.length].id;      // everything completed: play them again in order
   }
   function newReveal(id) {
     const n = picById(id).n || 6, order = [...Array(n * n).keys()];
     for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
     return { id, n, count: 0, order };
   }
-  if (!rev || !picById(rev.id) || !Array.isArray(rev.order) || rev.order.length !== (rev.n || 6) ** 2) rev = newReveal(nextPicId());
+  if (!rev || !picById(rev.id) || !Array.isArray(rev.order) || rev.order.length !== (rev.n || 6) ** 2 ||
+      (!isActive(picById(rev.id)) && !done.includes(rev.id))) rev = newReveal(nextPicId());
   const saveRev = () => store.set('svb_reveal', JSON.stringify(rev));
   saveRev();
   function picLabel() {
@@ -1091,7 +1103,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       const got = list.filter(p => done.includes(p.id)).length;
       const h = document.createElement('div');
       h.className = 'ghead' + (got === list.length ? ' full' : '');
-      h.innerHTML = '<span>' + ch[lang] + '</span><b>' + (got === list.length ? '✓ ' : '') + got + '/' + list.length + '</b>';
+      const evTag = ch.until ? ' · ' + (chActive(ch) ? ch[lang === 'el' ? 'untilEl' : 'untilEn'] : t('ended')) : '';
+      h.innerHTML = '<span>' + ch[lang] + '</span><b>' + (got === list.length ? '✓ ' : '') + got + '/' + list.length + evTag + '</b>';
       g.appendChild(h);
       list.forEach(pic => galleryItem(g, pic));
     });
@@ -1116,7 +1129,9 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
         });
       } else {
         b.disabled = true;
-        b.innerHTML = '<span class="lock"><b>?</b>' + t('locked') + (pic.n > 6 ? '<small>' + (pic.n * pic.n) + ' ' + t('pieces64') + '</small>' : '') + '</span>';
+        const ch = chapterOf(pic);
+        const sub = ch.until ? (chActive(ch) ? ch[lang === 'el' ? 'untilEl' : 'untilEn'] : t('ended')) : pic.n > 6 ? (pic.n * pic.n) + ' ' + t('pieces64') : '';
+        b.innerHTML = '<span class="lock"><b>?</b>' + t('locked') + (sub ? '<small>' + sub + '</small>' : '') + '</span>';
       }
       g.appendChild(b);
   }
@@ -1510,7 +1525,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     if (wasNew) { done.push(pic.id); saveDone(); }
     const list = PICS.filter(p => p.ch === pic.ch), chDone = list.every(p => done.includes(p.id));
     $('doneName').textContent = pic[lang];
-    $('doneTxt').textContent = PICS.every(p => done.includes(p.id)) && wasNew ? t('allDone')
+    $('doneTxt').textContent = PICS.filter(isActive).every(p => done.includes(p.id)) && wasNew ? t('allDone')
       : chDone && wasNew ? t('chapterDone')(chapterOf(pic)[lang]) : t('doneTxt');
     $('done').hidden = false;
     if (actx) sfx.complete();
