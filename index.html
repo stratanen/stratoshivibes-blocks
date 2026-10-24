@@ -153,12 +153,14 @@ body{
 .piece > div{width:var(--sz);height:var(--sz)}
 .piece.float{
   position:fixed;left:0;top:0;z-index:30;pointer-events:none;
-  will-change:transform,scale;
-  scale:1.12;
+  will-change:transform;
+  --s:1.12;
+  transform:translate(var(--x,0px),var(--y,0px)) scale(var(--s));
   filter:drop-shadow(0 14px 18px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(34,228,255,.55));
   animation:liftpop .3s cubic-bezier(.25,1.7,.45,1) both;
 }
-@keyframes liftpop{from{scale:.5}to{scale:1.12}}
+@property --s{syntax:'<number>';inherits:false;initial-value:1}
+@keyframes liftpop{from{--s:.5}to{--s:1.12}}
 .cell.drop{animation:drop .26s cubic-bezier(.25,1.6,.45,1) both}
 @keyframes drop{from{transform:scale(1.22);filter:brightness(1.5)}to{transform:scale(1);filter:none}}
 
@@ -919,10 +921,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const g = geom(), gp = g.pitch - g.cell, p = drag.p;
     const W = p.w * g.pitch - gp, H = p.h * g.pitch - gp;
     const x = e.clientX - W / 2;
-    const y = drag.touch ? e.clientY - H - Math.max(40, g.cell * 1.1) : e.clientY - H / 2;
+    const y = drag.touch ? e.clientY - H - Math.max(72, g.cell * 1.8) : e.clientY - H / 2;
     drag.el.style.setProperty('--sz', g.cell + 'px');
     drag.el.style.gap = gp + 'px';
-    drag.el.style.transform = `translate(${x}px, ${y}px)`;
+    drag.el.style.setProperty('--x', x + 'px');
+    drag.el.style.setProperty('--y', y + 'px');
     const c = Math.round((x - g.x) / g.pitch), r = Math.round((y - g.y) / g.pitch);
     if (r !== drag.r || c !== drag.c) {
       drag.r = r; drag.c = c;
