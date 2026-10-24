@@ -232,7 +232,12 @@ body{
 .muted .sndbtn .on{display:none}
 .muted .sndbtn .off{display:block}
 .homesnd{position:fixed;top:calc(env(safe-area-inset-top, 0px) + 12px);right:max(16px, env(safe-area-inset-right, 0px));width:36px;height:36px}
-.ggrid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;width:100%}
+.ggrid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;width:100%;max-height:min(58vh, 520px);overflow-y:auto;padding:2px}
+.ghead{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px;padding:0 2px;font:800 13px var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.ghead:first-child{margin-top:0}
+.ghead b{font-variant-numeric:tabular-nums;color:var(--dim)}
+.ghead.full b{color:var(--gold)}
+.gitem .lock small{display:block;font:600 10px var(--f);color:var(--dim);margin-top:2px}
 .gitem{aspect-ratio:1;border-radius:10px;overflow:hidden;padding:0;border:1px solid color-mix(in srgb, var(--violet) 45%, transparent);background:#0b1235;display:grid;place-items:center;color:var(--dim);font:600 12px var(--f);cursor:pointer}
 .gitem:disabled{cursor:default}
 .gitem img{width:100%;height:100%;object-fit:cover;display:block}
@@ -378,7 +383,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   <div class="card">
     <h2 data-i18n="doneTitle"></h2>
     <canvas id="dc"></canvas>
-    <p data-i18n="doneTxt"></p>
+    <p><b id="doneName"></b><br><span id="doneTxt"></span></p>
     <button class="btn" id="next" type="button" data-i18n="nextPic"></button>
   </div>
 </div>
@@ -438,22 +443,25 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 <script>
 (() => {
   /* ---------- content you can edit ---------- */
-  // Reveal pictures, in order. Add a file to art/ and a line here; after the last one the list starts again.
-  const LEVELS = [
-    'art/level-01.webp',
-    'art/level-02.webp',
-    'art/level-03.webp',
-    'art/level-04.webp',
-    'art/level-05.webp'
+  // Chapters of the Gallery, in play order.
+  const CHAPTERS = [
+    { id: 'degens', el: 'Οι Degens', en: 'The Degens' },
+    { id: 'legends', el: 'Θρύλοι', en: 'Legends' }
   ];
-  // Vol.1 Degens characters shown in each picture (same order as LEVELS). Holders of any of them unlock that picture in the Gallery.
-  const LEVEL_CHARS = [
-    ['bull', 'bear'],
-    [],
-    ['maxi'],
-    [],
-    ['degen']
+  // Reveal pictures, in play order. To add one: put the file in art/ and add a line (and the file to sw.js).
+  // n = pieces per side of the reveal grid: 6 = 36 pieces, 8 = 64 pieces for a harder "boss" picture.
+  // chars = Vol.1 Degens characters in the picture; holders of any of them unlock it in the Gallery right away.
+  const PICS = [
+    { id: 'bullbear', ch: 'degens', src: 'art/level-01.webp', n: 6, chars: ['bull', 'bear'], el: 'Ταύρος vs Αρκούδα', en: 'Bull vs Bear' },
+    { id: 'maxi', ch: 'degens', src: 'art/level-03.webp', n: 6, chars: ['maxi'], el: 'The Maxi', en: 'The Maxi' },
+    { id: 'degen', ch: 'degens', src: 'art/level-05.webp', n: 6, chars: ['degen'], el: 'The Degen', en: 'The Degen' },
+    { id: 'rugpuller', ch: 'degens', src: 'art/level-06.webp', n: 6, chars: ['rugpuller'], el: 'The Rugpuller', en: 'The Rugpuller' },
+    { id: 'diamond', ch: 'degens', src: 'art/level-07.webp', n: 6, chars: ['diamond'], el: 'Diamond Hands', en: 'Diamond Hands' },
+    { id: 'crab', ch: 'degens', src: 'art/level-08.webp', n: 6, chars: ['crab'], el: 'The Crab', en: 'The Crab' },
+    { id: 'satoshi', ch: 'legends', src: 'art/level-02.webp', n: 6, chars: [], el: 'Satoshi', en: 'Satoshi' },
+    { id: 'aether', ch: 'legends', src: 'art/level-04.webp', n: 6, chars: [], el: 'Αιθήρ', en: 'Aether' }
   ];
+  const OLD_ORDER = ['bullbear', 'satoshi', 'maxi', 'aether', 'degen']; // play order before chapters, used once to carry over saved progress
   // Tile artwork (tiles/<name>.webp) and the glow colour of each tile.
   const KINDS = [
     ['btc', '#ffa62b'], ['eth', '#8f7bff'], ['sol', '#2bd98a'], ['diamond', '#3aa8ff'],
@@ -470,11 +478,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       overTxt: (b, p) => 'Ρεκόρ <b>' + b + '</b><br>Η εικόνα κρατάει την πρόοδό της: <b>' + p + '</b> κομμάτια.',
       newGame: 'Νέα παρτίδα',
       doneTitle: 'Η εικόνα αποκαλύφθηκε!',
-      doneTxt: 'Όλα τα 36 κομμάτια ξεκλειδώθηκαν. Η εικόνα μένει εδώ μέχρι να πατήσεις.',
+      doneTxt: 'Μπήκε στη Συλλογή σου.', chapterDone: n => 'Ολοκλήρωσες το κεφάλαιο «' + n + '»!', allDone: 'Ολοκλήρωσες όλη τη Συλλογή! Νέες εικόνες έρχονται σύντομα.', pieces64: 'κομμάτια',
       nextPic: 'Επόμενη εικόνα',
-      peekTxt: c => c + ' από 36 κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
+      peekTxt: (c, n) => c + ' από ' + n + ' κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
       back: 'Πίσω', resume: 'Συνέχεια', play: 'Παίξε', cont: 'Συνέχισε την παρτίδα',
-      gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει εδώ. Όσοι έχουν κάρτες Degens ξεκλειδώνουν αμέσως τις εικόνες των χαρακτήρων τους (★).',
+      gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει στο κεφάλαιό της. Όσοι έχουν κάρτες Degens ξεκλειδώνουν αμέσως τις εικόνες των χαρακτήρων τους (★).',
       wConnect: 'Σύνδεση wallet', wOptional: 'προαιρετικό',
       wIntro: 'Αν έχεις κάρτες StratoshiVibes Vol.1 Degens, οι εικόνες των χαρακτήρων σου ξεκλειδώνουν αμέσως στη Συλλογή. Το παιχνίδι παίζεται κανονικά και χωρίς wallet.',
       wSafe: 'Η σύνδεση μοιράζεται μόνο τη δημόσια διεύθυνσή σου. Το wallet σου θα ζητήσει έγκριση μόνο όταν αγοράζεις κάτι από το Shop, και πάντα για μία μεταφορά. Αν δεις οποιοδήποτε άλλο αίτημα, απόρριψέ το.',
@@ -527,11 +535,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       overTxt: (b, p) => 'Best <b>' + b + '</b><br>Your picture keeps its progress: <b>' + p + '</b> pieces.',
       newGame: 'New game',
       doneTitle: 'Picture unlocked!',
-      doneTxt: 'All 36 pieces are unlocked. The picture stays here until you tap.',
+      doneTxt: 'Added to your Gallery.', chapterDone: n => 'You completed the chapter "' + n + '"!', allDone: 'You completed the whole Gallery! New pictures are coming soon.', pieces64: 'pieces',
       nextPic: 'Next picture',
-      peekTxt: c => c + ' of 36 pieces unlocked. Every line you clear reveals more.',
+      peekTxt: (c, n) => c + ' of ' + n + ' pieces unlocked. Every line you clear reveals more.',
       back: 'Back', resume: 'Back to game', play: 'Play', cont: 'Continue game',
-      gallery: 'Gallery', galleryHint: 'Every picture you complete is added here. Degens card holders unlock their characters\' pictures right away (★).',
+      gallery: 'Gallery', galleryHint: 'Every picture you complete joins its chapter. Degens card holders unlock their characters\' pictures right away (★).',
       wConnect: 'Connect wallet', wOptional: 'optional',
       wIntro: 'If you hold StratoshiVibes Vol.1 Degens cards, your characters\' pictures unlock in the Gallery right away. The game plays the same without a wallet.',
       wSafe: 'Connecting shares only your public address. Your wallet is asked to approve something only when you buy an extra in the Shop, and always one transfer. If you see any other request, reject it.',
@@ -597,7 +605,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
 
   /* ---------- shapes ---------- */
-  const N = 8, T = 6, TT = T * T;
+  const N = 8;
+  const RT = () => rev.n || 6, RTT = () => RT() * RT();
   const norm = cs => {
     const mr = Math.min(...cs.map(p => p[0])), mc = Math.min(...cs.map(p => p[1]));
     return cs.map(([r, c]) => [r - mr, c - mc]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
@@ -650,14 +659,38 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   let tray = [null, null, null];
   let score = 0, combo = 0, chanceUsed = false;
   let best = +(store.get('svb_best') || 0);
+  const picById = id => PICS.find(p => p.id === id);
+  const chapterOf = p => CHAPTERS.find(c => c.id === p.ch);
+  let done = readJSON('svb_done');
+  if (!Array.isArray(done)) done = [];
+  done = done.filter(id => picById(id));
+  const saveDone = () => store.set('svb_done', JSON.stringify(done));
   let rev = readJSON('svb_reveal');
-  if (!rev || !Array.isArray(rev.order) || rev.order.length !== TT) rev = newReveal(1);
-  function newReveal(level) {
-    const order = [...Array(TT).keys()];
-    for (let i = TT - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
-    return { level, count: 0, order };
+  if (rev && !rev.id && rev.level && Array.isArray(rev.order)) {
+    // saves from before chapters: pictures 1..level-1 of the old order were completed
+    const L = Math.max(1, rev.level | 0);
+    done = OLD_ORDER.slice(0, Math.min(L - 1, OLD_ORDER.length));
+    rev.id = OLD_ORDER[(L - 1) % OLD_ORDER.length]; rev.n = 6;
+    saveDone();
   }
+  function nextPicId() {
+    const open = PICS.find(p => !done.includes(p.id));
+    if (open) return open.id;
+    const i = PICS.findIndex(p => rev && p.id === rev.id);
+    return PICS[(i + 1) % PICS.length].id; // everything completed: play them again in order
+  }
+  function newReveal(id) {
+    const n = picById(id).n || 6, order = [...Array(n * n).keys()];
+    for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+    return { id, n, count: 0, order };
+  }
+  if (!rev || !picById(rev.id) || !Array.isArray(rev.order) || rev.order.length !== (rev.n || 6) ** 2) rev = newReveal(nextPicId());
   const saveRev = () => store.set('svb_reveal', JSON.stringify(rev));
+  saveRev();
+  function picLabel() {
+    const p = picById(rev.id), ch = chapterOf(p), list = PICS.filter(q => q.ch === p.ch);
+    return { ch: ch[lang], k: list.indexOf(p) + 1, of: list.length };
+  }
   const saveGame = () => store.set('svb_game', JSON.stringify({
     board, score, combo, chanceUsed, tray: tray.map(p => p ? { cells: p.cells, k: p.k } : null)
   }));
@@ -748,9 +781,10 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   function renderStats() {
     $('score').textContent = score;
     $('best').textContent = best;
-    $('eyebrow').innerHTML = t('picture') + ' <b>' + rev.level + '</b>';
-    $('pct').textContent = rev.count + '/' + TT;
-    $('bar').style.width = (rev.count / TT * 100) + '%';
+    const pl = picLabel();
+    $('eyebrow').innerHTML = pl.ch + ' <b>' + pl.k + '/' + pl.of + '</b>';
+    $('pct').textContent = rev.count + '/' + RTT();
+    $('bar').style.width = (rev.count / RTT() * 100) + '%';
     $('combo').textContent = combo > 1 ? 'Combo ×' + combo : '';
   }
   function refill() {
@@ -876,9 +910,9 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   let pendingOver = false;
   function checkOver() {
     if (tray.some(p => p && anyFit(p))) return;
-    if (!$('done').hidden || rev.count >= TT) { pendingOver = true; return; }
+    if (!$('done').hidden || rev.count >= RTT()) { pendingOver = true; return; }
     $('finalScore').textContent = score;
-    $('overTxt').innerHTML = t('overTxt')(best, rev.count + '/' + TT);
+    $('overTxt').innerHTML = t('overTxt')(best, rev.count + '/' + RTT());
     renderChanceBox();
     $('over').hidden = false;
     sfx.over();
@@ -938,7 +972,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- picture ---------- */
   const images = {};
   function levelImage() {
-    const src = LEVELS[(rev.level - 1) % LEVELS.length];
+    const src = picById(rev.id).src;
     if (!images[src]) {
       const img = new Image();
       img.onload = () => { img.ready = true; kick(); };
@@ -950,12 +984,12 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   const fades = new Map();
   function revealAdd(n) {
     const before = rev.count;
-    rev.count = Math.min(TT, rev.count + n);
+    rev.count = Math.min(RTT(), rev.count + n);
     const now = performance.now();
     rev.order.slice(before, rev.count).forEach((tile, k) => fades.set(tile, now + k * 110));
     saveRev();
     kick();
-    if (rev.count >= TT && before < TT) setTimeout(showDone, (rev.count - before) * 110 + 900);
+    if (rev.count >= RTT() && before < RTT()) setTimeout(showDone, (rev.count - before) * 110 + 900);
     return rev.count - before;
   }
   function drawReveal(cv, all) {
@@ -972,7 +1006,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       ctx.drawImage(img, (sw - m) / 2, (sh - m) / 2, m, m, 0, 0, S, S);
     }
     if (all) return false;
-    const ts = S / T, now = performance.now();
+    const T = RT(), TT = RTT(), ts = S / T, now = performance.now();
     const shown = new Set(rev.order.slice(0, rev.count));
     let active = false;
     for (let tile = 0; tile < TT; tile++) {
@@ -1013,7 +1047,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   window.addEventListener('resize', kick);
 
   $('reveal').addEventListener('click', () => {
-    $('peekTxt').textContent = t('peekTxt')(rev.count);
+    $('peekTxt').textContent = t('peekTxt')(rev.count, RTT());
     $('peek').hidden = false; kick();
   });
   $('closePeek').addEventListener('click', () => { $('peek').hidden = true; });
@@ -1023,7 +1057,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   const inProgress = () => score > 0 || board.some(v => v >= 0);
   function renderHome() {
     $('hbest').textContent = best;
-    $('hlabel').textContent = t('picN')(rev.level) + ' · ' + rev.count + '/' + TT;
+    const pl = picLabel();
+    $('hlabel').textContent = pl.ch + ' ' + pl.k + '/' + pl.of + ' · ' + rev.count + '/' + RTT();
     $('play').textContent = inProgress() ? t('cont') : t('play');
     $('newFromHome').hidden = !inProgress();
   }
@@ -1049,13 +1084,23 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
   function openGallery() {
     const g = $('ggrid'); g.innerHTML = '';
-    const completed = rev.level - 1;
-    LEVELS.forEach((src, i) => {
+    CHAPTERS.forEach(ch => {
+      const list = PICS.filter(p => p.ch === ch.id);
+      const got = list.filter(p => done.includes(p.id)).length;
+      const h = document.createElement('div');
+      h.className = 'ghead' + (got === list.length ? ' full' : '');
+      h.innerHTML = '<span>' + ch[lang] + '</span><b>' + (got === list.length ? '✓ ' : '') + got + '/' + list.length + '</b>';
+      g.appendChild(h);
+      list.forEach(pic => galleryItem(g, pic));
+    });
+    $('gallery').hidden = false;
+  }
+  function galleryItem(g, pic) {
+      const i = PICS.indexOf(pic), src = pic.src;
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'gitem';
-      const byHolder = i >= completed && holderUnlocks(i);
-      if (i < completed || byHolder) {
-        const im = document.createElement('img'); im.src = src; im.alt = t('picN')(i + 1);
+      if (done.includes(pic.id) || holderUnlocks(i)) {
+        const im = document.createElement('img'); im.src = src; im.alt = pic[lang];
         b.appendChild(im);
         if (holderUnlocks(i)) {
           b.classList.add('holder');
@@ -1063,17 +1108,15 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
           b.appendChild(st);
         }
         b.addEventListener('click', () => {
-          $('vimg').src = src; $('vimg').alt = t('picN')(i + 1);
-          $('vtxt').textContent = t('picN')(i + 1);
+          $('vimg').src = src; $('vimg').alt = pic[lang];
+          $('vtxt').textContent = pic[lang];
           $('view').hidden = false;
         });
       } else {
         b.disabled = true;
-        b.innerHTML = '<span class="lock"><b>' + (i + 1) + '</b>' + t('locked') + '</span>';
+        b.innerHTML = '<span class="lock"><b>?</b>' + t('locked') + (pic.n > 6 ? '<small>' + (pic.n * pic.n) + ' ' + t('pieces64') + '</small>' : '') + '</span>';
       }
       g.appendChild(b);
-    });
-    $('gallery').hidden = false;
   }
   $('galleryBtn').addEventListener('click', openGallery);
 
@@ -1095,8 +1138,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   const shortAddr = a => a.slice(0, 4) + '…' + a.slice(-4);
   const saveW = () => store.set('svb_wallet', JSON.stringify(W));
   const escH = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  function holderUnlocks(i) { return (LEVEL_CHARS[i] || []).some(c => W.owned[c]); }
-  function unlockedByHolder() { return LEVELS.filter((_, i) => holderUnlocks(i)).length; }
+  function holderUnlocks(i) { return ((PICS[i] && PICS[i].chars) || []).some(c => W.owned[c]); }
+  function unlockedByHolder() { return PICS.filter((_, i) => holderUnlocks(i)).length; }
 
   async function checkHolder(force) {
     if (!W.addr || wLoading) return W.status;
@@ -1460,14 +1503,21 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
   function showDone() {
     if (!$('over').hidden) { $('over').hidden = true; pendingOver = true; }
+    const pic = picById(rev.id);
+    const wasNew = !done.includes(pic.id);
+    if (wasNew) { done.push(pic.id); saveDone(); }
+    const list = PICS.filter(p => p.ch === pic.ch), chDone = list.every(p => done.includes(p.id));
+    $('doneName').textContent = pic[lang];
+    $('doneTxt').textContent = PICS.every(p => done.includes(p.id)) && wasNew ? t('allDone')
+      : chDone && wasNew ? t('chapterDone')(chapterOf(pic)[lang]) : t('doneTxt');
     $('done').hidden = false;
     if (actx) sfx.complete();
     requestAnimationFrame(() => drawReveal($('dc'), true));
   }
   $('next').addEventListener('click', () => {
-    rev = newReveal(rev.level + 1); saveRev(); fades.clear();
+    rev = newReveal(nextPicId()); saveRev(); fades.clear();
     $('done').hidden = true;
-    renderStats(); kick();
+    renderStats(); renderHome(); kick();
     if (pendingOver) { pendingOver = false; checkOver(); }
   });
 
@@ -1476,7 +1526,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   if (!loadGame()) refill();
   renderBoard(); renderTray(); renderStats(); renderHome();
   kick();
-  if (rev.count >= TT) showDone();
+  if (rev.count >= RTT()) showDone();
 })();
 </script>
 <script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
