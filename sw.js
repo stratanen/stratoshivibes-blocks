@@ -1,6 +1,6 @@
 // Offline support: keeps a copy of the game on the device after the first online launch.
 // Pages load network-first (players get updates when online), everything falls back to the cache offline.
-const CACHE = 'sv-blocks-v23';
+const CACHE = 'sv-blocks-v24';
 const CORE = [
   './',
   './index.html',

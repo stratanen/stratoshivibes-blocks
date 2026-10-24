@@ -632,23 +632,24 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   };
   const rot = cs => norm(cs.map(([r, c]) => [c, -r]));
   const key = cs => cs.map(p => p.join(',')).join(';');
+  // [cells, base weight, hard?]  Hard pieces become more frequent as the difficulty rises.
   const BASE = [
-    [[[0,0]], 2],
-    [[[0,0],[0,1]], 3],
-    [[[0,0],[0,1],[0,2]], 3],
-    [[[0,0],[0,1],[0,2],[0,3]], 2],
-    [[[0,0],[0,1],[0,2],[0,3],[0,4]], 1.2],
-    [[[0,0],[0,1],[1,0],[1,1]], 3],
-    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]], 1],
-    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2]], 1.2],
-    [[[0,0],[1,0],[1,1]], 2.5],
-    [[[0,0],[1,0],[2,0],[2,1]], 2.5],
-    [[[0,0],[0,1],[0,2],[1,1]], 2],
-    [[[0,1],[0,2],[1,0],[1,1]], 1.4],
-    [[[0,0],[1,0],[2,0],[2,1],[2,2]], 1.2]
+    [[[0,0]], 2, false],
+    [[[0,0],[0,1]], 3, false],
+    [[[0,0],[0,1],[0,2]], 3, false],
+    [[[0,0],[0,1],[0,2],[0,3]], 2, true],
+    [[[0,0],[0,1],[0,2],[0,3],[0,4]], 1.2, true],
+    [[[0,0],[0,1],[1,0],[1,1]], 3, false],
+    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]], 1, true],
+    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2]], 1.2, true],
+    [[[0,0],[1,0],[1,1]], 2.5, false],
+    [[[0,0],[1,0],[2,0],[2,1]], 2.5, true],
+    [[[0,0],[0,1],[0,2],[1,1]], 2, true],
+    [[[0,1],[0,2],[1,0],[1,1]], 1.4, true],
+    [[[0,0],[1,0],[2,0],[2,1],[2,2]], 1.2, true]
   ];
   const SHAPES = [];
-  for (const [b, w] of BASE) {
+  for (const [b, w, hard] of BASE) {
     const seen = new Set(), rots = [];
     let cs = norm(b);
     for (let i = 0; i < 4; i++) {
@@ -656,13 +657,21 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       if (!seen.has(k)) { seen.add(k); rots.push(cs); }
       cs = rot(cs);
     }
-    rots.forEach(r => SHAPES.push({ cells: r, w: w / rots.length }));
+    rots.forEach(r => SHAPES.push({ cells: r, w: w / rots.length, hard }));
   }
-  const TOTALW = SHAPES.reduce((a, s) => a + s.w, 0);
   const sizeOf = cells => ({ h: Math.max(...cells.map(p => p[0])) + 1, w: Math.max(...cells.map(p => p[1])) + 1 });
+  // Difficulty from 0 (relaxed) to 0.8: rises gently with the score of the current game and with the chapter.
+  const CH_DIFF = { degens: 0, halloween: 0.05, legends: 0.2 };
+  function difficulty() {
+    const pic = rev && picById(rev.id);
+    const ch = pic ? (CH_DIFF[pic.ch] || 0) + (pic.n > 6 ? 0.1 : 0) : 0;
+    return Math.min(0.8, ch + Math.min(0.55, score / 4000 * 0.55));
+  }
   function makePiece() {
-    let x = Math.random() * TOTALW, s = SHAPES[0];
-    for (const sh of SHAPES) { x -= sh.w; if (x <= 0) { s = sh; break; } }
+    const d = difficulty();
+    const wOf = sh => sh.w * (sh.hard ? 1 + d : 1 - 0.35 * d);
+    let x = Math.random() * SHAPES.reduce((a, sh) => a + wOf(sh), 0), s = SHAPES[0];
+    for (const sh of SHAPES) { x -= wOf(sh); if (x <= 0) { s = sh; break; } }
     return { cells: s.cells, ...sizeOf(s.cells), k: Math.floor(Math.random() * KINDS.length) };
   }
 
