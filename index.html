@@ -304,6 +304,24 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
 .rateTitle{font:800 22px/1.2 var(--f)!important;letter-spacing:0!important}
 .rateBtn{display:inline-block;text-decoration:none}
+.lbbtn{display:flex;align-items:center;justify-content:center;gap:8px;border-color:color-mix(in srgb, var(--gold) 45%, transparent)}
+.hrow .shopbtn{min-width:0}
+.hrow:has(> .shopbtn[hidden]) .lbbtn{grid-column:1/-1}
+#lbCard h2{font:800 22px/1.2 var(--f);letter-spacing:0}
+.lbtabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;padding:4px;border-radius:12px;background:rgba(0,0,0,.25)}
+.lbtabs button{padding:8px;border:0;border-radius:9px;background:none;color:var(--dim);font:800 13px var(--f);cursor:pointer}
+.lbtabs button.on{background:rgba(34,228,255,.14);color:#fff}
+.lbtabs button:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+.lblist{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:4px;max-height:min(46vh, 420px);overflow-y:auto}
+.lblist li{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);font-size:14px;font-variant-numeric:tabular-nums;text-align:left}
+.lblist li .r{font:800 13px var(--f);color:var(--dim)}
+.lblist li:nth-child(-n+3) .r{color:var(--gold)}
+.lblist li .a{font:600 13px ui-monospace,Menlo,monospace;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.lblist li .s{font:800 14px var(--f);color:#fff}
+.lblist li.me{background:rgba(255,176,46,.14);box-shadow:inset 0 0 0 1px var(--gold)}
+.lbme{width:100%;font-size:13px;color:var(--dim)}
+.lbme b{color:var(--gold)}
+.lbempty{color:var(--dim);font-size:14px}
 #done{z-index:60}
 #done .card{width:min(100%, 560px);gap:16px}
 #done canvas{
@@ -339,7 +357,10 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       <button class="btn2" id="galleryBtn" type="button" data-i18n="gallery"></button>
       <button class="btn2" id="howBtn" type="button" data-i18n="howTitle"></button>
     </div>
-    <button class="btn2 shopbtn" id="shopBtn" type="button"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 10.5h10.6L20.5 8H7"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg><span><span data-i18n="shop"></span> <small>SKR · SOL · USDC</small></span></button>
+    <div class="hrow">
+  <button class="btn2 shopbtn" id="shopBtn" type="button"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 10.5h10.6L20.5 8H7"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg><span><span data-i18n="shop"></span></span></button>
+      <button class="btn2 lbbtn" id="lbBtn" type="button" hidden><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M9 20h6"/></svg><span data-i18n="lb"></span></button>
+    </div>
     <button class="btn2 wbtn" id="walletBtn" type="button"></button>
   </div>
 </section>
@@ -375,6 +396,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     <h2 data-i18n="overTitle"></h2>
     <canvas id="oc"></canvas>
     <div class="big" id="finalScore">0</div>
+    <p class="fine" id="overRank" hidden></p>
     <p id="overTxt"></p>
     <div class="chancebox" id="chanceBox"></div>
     <button class="btn" id="again" type="button" data-i18n="newGame"></button>
@@ -430,6 +452,10 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     <a class="btn rateBtn" id="rateGo" href="solanadappstore://details?id=com.stratoshivibes.blocks" data-i18n="rateGo"></a>
     <button class="btn2" id="rateLater" type="button" data-i18n="notNow"></button>
   </div>
+</div>
+
+<div class="ov" id="lb" hidden>
+  <div class="card" id="lbCard" role="dialog" aria-modal="true"></div>
 </div>
 
 <div class="ov" id="help" hidden>
@@ -504,7 +530,15 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει στο κεφάλαιό της. Όσοι έχουν κάρτες Degens ξεκλειδώνουν αμέσως τις εικόνες των χαρακτήρων τους (★).',
       wConnect: 'Σύνδεση wallet', wOptional: 'προαιρετικό',
       wIntro: 'Αν έχεις κάρτες StratoshiVibes Vol.1 Degens, οι εικόνες των χαρακτήρων σου ξεκλειδώνουν αμέσως στη Συλλογή. Το παιχνίδι παίζεται κανονικά και χωρίς wallet.',
-      wSafe: 'Η σύνδεση μοιράζεται μόνο τη δημόσια διεύθυνσή σου. Το wallet σου θα ζητήσει έγκριση μόνο όταν αγοράζεις κάτι από το Shop, και πάντα για μία μεταφορά. Αν δεις οποιοδήποτε άλλο αίτημα, απόρριψέ το.',
+      wSafe: 'Η σύνδεση μοιράζεται μόνο τη δημόσια διεύθυνσή σου. Το wallet σου θα ζητήσει έγκριση μόνο σε δύο περιπτώσεις: μια υπογραφή μηνύματος (όχι συναλλαγή) αν μπεις στην κατάταξη, και μία μεταφορά όταν αγοράζεις κάτι από το Shop. Αν δεις οποιοδήποτε άλλο αίτημα, απόρριψέ το.',
+      lb: 'Κατάταξη', lbWeek: 'Αυτή την εβδομάδα', lbAll: 'Όλων των εποχών', lbYou: 'Εσύ',
+      lbJoinTxt: 'Μπες στην κατάταξη με το wallet σου. Υπογράφεις μία φορά ένα μήνυμα για να αποδείξεις ότι η διεύθυνση είναι δική σου. Δεν είναι συναλλαγή και δεν κοστίζει τίποτα. Μετά, το σκορ κάθε παρτίδας μπαίνει αυτόματα.',
+      lbJoin: 'Μπες στην κατάταξη', lbSigning: 'Υπόγραψε το μήνυμα στο wallet σου…', lbJoined: 'Μπήκες στην κατάταξη',
+      lbSignFail: 'Δεν έγινε η σύνδεση. Δοκίμασε ξανά.', lbOtherWallet: 'Άνοιξε διαφορετικό wallet από αυτό που είναι συνδεδεμένο.',
+      lbEmpty: 'Κανείς ακόμα. Το πρώτο σκορ μπορεί να είναι το δικό σου.', lbLoading: 'Φόρτωση…', lbErr: 'Η κατάταξη δεν φορτώνει τώρα. Δοκίμασε αργότερα.',
+      lbMe: (r, b) => 'Η θέση σου: <b>#' + r + '</b> με <b>' + b + '</b>', lbNoScore: 'Δεν έχεις σκορ σε αυτή την κατάταξη ακόμα.',
+      lbFine: 'Η εβδομαδιαία κατάταξη ξεκινάει από την αρχή κάθε Δευτέρα. Χωρίς έπαθλα, μόνο για τη δόξα.',
+      lbRank: r => 'Θέση στην κατάταξη της εβδομάδας: #' + r, lbLeave: 'Έξοδος από την κατάταξη',
       shop: 'Shop', shopIntro: 'Προαιρετικά extras. Το παιχνίδι μένει δωρεάν. Πληρωμή σε SKR, SOL ή USDC, απευθείας στο wallet του δημιουργού.',
       supDesc: n => 'Χρυσά τουβλάκια, σήμα Supporter στην αρχική και ' + n + ' Δεύτερες ευκαιρίες. Ευχαριστώ που στηρίζεις το StratoshiVibes.',
       chanceName: 'Δεύτερη ευκαιρία', chanceDesc: 'Καθαρίζει τις 3 πιο γεμάτες γραμμές για να συνεχίσεις. Μία φορά ανά παρτίδα.',
@@ -561,7 +595,15 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       gallery: 'Gallery', galleryHint: 'Every picture you complete joins its chapter. Degens card holders unlock their characters\' pictures right away (★).',
       wConnect: 'Connect wallet', wOptional: 'optional',
       wIntro: 'If you hold StratoshiVibes Vol.1 Degens cards, your characters\' pictures unlock in the Gallery right away. The game plays the same without a wallet.',
-      wSafe: 'Connecting shares only your public address. Your wallet is asked to approve something only when you buy an extra in the Shop, and always one transfer. If you see any other request, reject it.',
+      wSafe: 'Connecting shares only your public address. Your wallet is asked to approve something in two cases only: signing a message (not a transaction) if you join the leaderboard, and one transfer when you buy an extra in the Shop. If you see any other request, reject it.',
+      lb: 'Leaderboard', lbWeek: 'This week', lbAll: 'All time', lbYou: 'You',
+      lbJoinTxt: 'Join the leaderboard with your wallet. You sign one message to prove the address is yours. It is not a transaction and costs nothing. After that, every game\'s score is added automatically.',
+      lbJoin: 'Join the leaderboard', lbSigning: 'Sign the message in your wallet…', lbJoined: 'You joined the leaderboard',
+      lbSignFail: 'Sign-in did not go through. Try again.', lbOtherWallet: 'A different wallet opened than the one connected.',
+      lbEmpty: 'Nobody yet. The first score could be yours.', lbLoading: 'Loading…', lbErr: 'The leaderboard is not loading right now. Try again later.',
+      lbMe: (r, b) => 'Your rank: <b>#' + r + '</b> with <b>' + b + '</b>', lbNoScore: 'You have no score on this board yet.',
+      lbFine: 'The weekly board starts over every Monday. No prizes, just glory.',
+      lbRank: r => 'This week\'s rank: #' + r, lbLeave: 'Leave the leaderboard',
       shop: 'Shop', shopIntro: 'Optional extras. The game stays free. Paid with SKR, SOL or USDC, straight to the creator\'s wallet.',
       supDesc: n => 'Gold tiles, a Supporter badge on the home screen and ' + n + ' Second Chances. Thank you for backing StratoshiVibes.',
       chanceName: 'Second Chance', chanceDesc: 'Clears your 3 fullest rows so you can keep playing. Once per game.',
@@ -685,7 +727,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- state ---------- */
   let board = new Array(N * N).fill(-1);
   let tray = [null, null, null];
-  let score = 0, combo = 0, chanceUsed = false;
+  let score = 0, combo = 0, chanceUsed = false, lbSent = 0;
   let best = +(store.get('svb_best') || 0);
   const picById = id => PICS.find(p => p.id === id);
   const chapterOf = p => CHAPTERS.find(c => c.id === p.ch);
@@ -727,13 +769,13 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     return { ch: ch[lang], k: list.indexOf(p) + 1, of: list.length };
   }
   const saveGame = () => store.set('svb_game', JSON.stringify({
-    board, score, combo, chanceUsed, tray: tray.map(p => p ? { cells: p.cells, k: p.k } : null)
+    board, score, combo, chanceUsed, lbSent, tray: tray.map(p => p ? { cells: p.cells, k: p.k } : null)
   }));
   function loadGame() {
     const g = readJSON('svb_game');
     if (!g || !Array.isArray(g.board) || g.board.length !== N * N || !Array.isArray(g.tray)) return false;
     board = g.board.map(v => (Number.isInteger(v) && v >= 0 && v < KINDS.length) ? v : -1);
-    score = +g.score || 0; combo = +g.combo || 0; chanceUsed = !!g.chanceUsed;
+    score = +g.score || 0; combo = +g.combo || 0; chanceUsed = !!g.chanceUsed; lbSent = +g.lbSent || 0;
     tray = g.tray.slice(0, 3).map(p => (p && Array.isArray(p.cells) && p.cells.length) ? { cells: p.cells, ...sizeOf(p.cells), k: p.k % KINDS.length } : null);
     while (tray.length < 3) tray.push(null);
     if (tray.every(p => !p)) refill();
@@ -949,12 +991,15 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     $('finalScore').textContent = score;
     $('overTxt').innerHTML = t('overTxt')(best, rev.count + '/' + RTT());
     renderChanceBox();
+    $('overRank').hidden = true;
+    lbSubmit();
     $('over').hidden = false;
     sfx.over();
     requestAnimationFrame(() => drawReveal($('oc')));
   }
   function resetGame() {
-    board.fill(-1); score = 0; combo = 0; chanceUsed = false; refill();
+    lbSubmit();
+    board.fill(-1); score = 0; combo = 0; chanceUsed = false; lbSent = 0; refill();
     $('over').hidden = true;
     renderBoard(); renderTray(); renderStats(); saveGame();
   }
@@ -1098,7 +1143,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     $('newFromHome').hidden = !inProgress();
   }
   function showHome() {
-    ['over', 'peek', 'help', 'gallery', 'view', 'wallet', 'shop'].forEach(id => $(id).hidden = true);
+    ['over', 'peek', 'help', 'gallery', 'view', 'wallet', 'shop', 'lb'].forEach(id => $(id).hidden = true);
     endDrag(false);
     $('game').hidden = true; $('home').hidden = false;
     renderHome(); kick();
@@ -1287,6 +1332,81 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     };
     $('wallet').hidden = false;
   }
+
+  /* ---------- leaderboard (Cloudflare Worker; sign-in = one signed message, never a transaction) ---------- */
+  const LB_API = store.get('svb_lb_api') || 'https://lb.stratoshivibes.com';
+  let LBS = readJSON('svb_lb') || {};          // { addr, token }
+  const lbSignedIn = () => !!(LBS.token && W.addr && LBS.addr === W.addr);
+  let lbOn = false, lbScope = 'week';
+  const lbFetch = (path, opt) => {
+    const c = new AbortController(); const to = setTimeout(() => c.abort(), 8000);
+    return fetch(LB_API + path, { ...(opt || {}), signal: c.signal }).then(r => r.json().then(b => ({ s: r.status, b }))).finally(() => clearTimeout(to));
+  };
+  lbFetch('/health').then(r => { if (r.b && r.b.ok) { lbOn = true; $('lbBtn').hidden = false; } }).catch(() => {});
+
+  function lbSubmit() {
+    if (!lbOn || !lbSignedIn() || score <= lbSent) return Promise.resolve();
+    const sent = score; lbSent = sent; saveGame();
+    return lbFetch('/score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: LBS.token, score: sent }) })
+      .then(r => {
+        if (r.s === 401) { LBS = {}; store.set('svb_lb', '{}'); return; }
+        if (r.b && r.b.me && !$('over').hidden) { $('overRank').textContent = t('lbRank')(r.b.me.rank); $('overRank').hidden = false; }
+      }).catch(() => { if (lbSent === sent) { lbSent = 0; saveGame(); } });
+  }
+
+  const lb$ = () => $('lbCard');
+  async function openLb() {
+    $('lb').hidden = false;
+    lb$().innerHTML = '<h2>' + t('lb') + '</h2><div class="lbtabs" role="tablist">' +
+      '<button type="button" role="tab" data-s="week" class="' + (lbScope === 'week' ? 'on' : '') + '">' + t('lbWeek') + '</button>' +
+      '<button type="button" role="tab" data-s="all" class="' + (lbScope === 'all' ? 'on' : '') + '">' + t('lbAll') + '</button></div>' +
+      '<ol class="lblist" id="lbList"><li class="lbempty" style="display:block;background:none">' + t('lbLoading') + '</li></ol>' +
+      '<div class="lbme" id="lbMe"></div>' +
+      (lbSignedIn() ? '' : '<p>' + t('lbJoinTxt') + '</p><button class="btn" type="button" id="lbJoin">' + t('lbJoin') + '</button><p class="serr" id="lbErr" hidden></p>') +
+      '<p class="fine">' + t('lbFine') + '</p>' +
+      '<div class="wbtns">' + (lbSignedIn() ? '<button class="btn2" type="button" id="lbLeave">' + t('lbLeave') + '</button>' : '') +
+      '<button class="btn2" type="button" id="lbClose">' + t('close') + '</button></div>';
+    lb$().querySelectorAll('.lbtabs button').forEach(b => b.onclick = () => { lbScope = b.dataset.s; openLb(); });
+    $('lbClose').onclick = () => { $('lb').hidden = true; };
+    const j = $('lbJoin'); if (j) j.onclick = lbJoin;
+    const lv = $('lbLeave'); if (lv) lv.onclick = () => { LBS = {}; store.set('svb_lb', '{}'); openLb(); };
+    try {
+      const r = await lbFetch('/top?scope=' + lbScope + (W.addr ? '&addr=' + W.addr : ''));
+      const list = $('lbList'); if (!list) return;
+      const top = (r.b && r.b.top) || [];
+      list.innerHTML = top.length ? top.map((x, i) => '<li class="' + (x.addr === W.addr ? 'me' : '') + '"><span class="r">' + (i + 1) + '</span><span class="a">' +
+        (x.addr === W.addr ? t('lbYou') + ' · ' : '') + shortAddr(x.addr) + '</span><span class="s">' + x.best + '</span></li>').join('')
+        : '<li class="lbempty" style="display:block;background:none">' + t('lbEmpty') + '</li>';
+      if (W.addr) $('lbMe').innerHTML = r.b && r.b.me ? t('lbMe')(r.b.me.rank, r.b.me.best) : t('lbNoScore');
+    } catch (e) { const list = $('lbList'); if (list) list.innerHTML = '<li class="lbempty" style="display:block;background:none">' + t('lbErr') + '</li>'; }
+  }
+  const uerr = m => Object.assign(new Error(m), { user: true });
+  async function lbJoin() {
+    if (!W.addr) { $('lb').hidden = true; loadBundle(); openPicker(); toast(t('connectFirst')); return; }
+    const btn = $('lbJoin'), err = $('lbErr');
+    btn.disabled = true; btn.textContent = t('lbSigning'); err.hidden = true;
+    try {
+      await waitWallet();
+      await SVWallet.ensure();
+      if (SVWallet.address && SVWallet.address !== W.addr) throw uerr(t('lbOtherWallet'));
+      const n = await lbFetch('/nonce?addr=' + W.addr);
+      if (!n.b || !n.b.message) throw uerr(t('lbSignFail'));
+      const sig = await SVWallet.signMessage(new TextEncoder().encode(n.b.message));
+      const b64 = btoa(String.fromCharCode(...new Uint8Array(sig)));
+      const r = await lbFetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ addr: W.addr, nonce: n.b.nonce, signature: b64 }) });
+      if (!r.b || !r.b.token) throw uerr(t('lbSignFail'));
+      LBS = { addr: W.addr, token: r.b.token }; store.set('svb_lb', JSON.stringify(LBS));
+      toast(t('lbJoined'));
+      if (best > 0 && score === 0) { /* no game in progress: send this device's best once */ score = best; const pr = lbSubmit(); score = 0; lbSent = 0; saveGame(); await pr; }
+      openLb();
+    } catch (e) {
+      console.warn(e);
+      btn.disabled = false; btn.textContent = t('lbJoin');
+      err.textContent = e && e.user ? e.message : t('lbSignFail');
+      err.hidden = false;
+    }
+  }
+  $('lbBtn').addEventListener('click', openLb);
 
   $('walletBtn').addEventListener('click', () => {
     if (W.addr) { openAccount(); checkHolder(false); }
