@@ -2,9 +2,9 @@
 
 Neon block puzzle for the Solana Seeker. Drag pieces onto an 8×8 board, clear rows and columns, and every clear reveals part of a picture. Free to play, no wallet connection, no tokens or rewards.
 
-- Play in the browser: https://stratanen.github.io/stratoshivibes-blocks/
-- Privacy policy: https://stratanen.github.io/stratoshivibes-blocks/privacy.html
-- Terms of use: https://stratanen.github.io/stratoshivibes-blocks/terms.html
+- Play in the browser: https://blockspace.stratoshivibes.com/
+- Privacy policy: https://blockspace.stratoshivibes.com/privacy.html
+- Terms of use: https://blockspace.stratoshivibes.com/terms.html
 
 ## One-time setup
 
