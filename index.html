@@ -258,6 +258,45 @@ body{
 .gitem.holder{border:2px solid var(--gold);box-shadow:0 0 12px color-mix(in srgb, var(--gold) 50%, transparent)}
 .gitem .star{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1a1405;font:900 12px/20px system-ui,sans-serif;text-align:center}
 #walletCard h2{font:800 22px/1.2 var(--f);letter-spacing:0}
+/* shop */
+.badge{display:inline-block;margin-top:8px;font:800 11px var(--f);letter-spacing:.12em;text-transform:uppercase;color:#1a1405;background:var(--gold);padding:3px 10px;border-radius:99px;box-shadow:0 0 14px color-mix(in srgb, var(--gold) 60%, transparent)}
+.shopbtn{display:flex;align-items:center;justify-content:center;gap:8px;border-color:color-mix(in srgb, var(--pink) 45%, transparent);background:rgba(255,79,216,.07)}
+.shopbtn small{color:var(--dim);font-weight:600}
+#shopCard h2{font:800 22px/1.2 var(--f);letter-spacing:0}
+.sitem{display:flex;gap:12px;align-items:flex-start;width:100%;padding:12px;border-radius:14px;border:1px solid color-mix(in srgb, var(--violet) 40%, transparent);background:rgba(255,255,255,.03);text-align:left}
+.sitem .ic{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font:900 22px var(--f);color:var(--gold);background:rgba(255,176,46,.12)}
+.sitem .bd{flex:1;min-width:0}
+.sitem b{display:block;font:800 15px var(--f);color:#fff}
+.sitem .ds{margin:4px 0 8px;font-size:12.5px;line-height:1.45;color:var(--dim)}
+.sitem .rw{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.sitem .pr{font:800 16px var(--f);color:var(--gold);font-variant-numeric:tabular-nums}
+.sitem .own{font:800 12px var(--f);color:#3fe08a}
+.sitem .muted2{font-size:12px;color:var(--dim)}
+.sbuy{height:36px;border-radius:99px;border:0;padding:0 16px;font:800 13px var(--f);color:#1a1405;background:var(--gold);cursor:pointer}
+.sbuy:focus-visible,.scur button:focus-visible,.stog:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.stog{height:32px;border-radius:99px;padding:0 12px;font:700 12px var(--f);color:var(--text);background:rgba(255,255,255,.06);border:1px solid color-mix(in srgb, var(--gold) 50%, transparent);cursor:pointer}
+.scur{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.scur button{padding:10px 4px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:var(--text);font:800 13px var(--f);cursor:pointer;font-variant-numeric:tabular-nums}
+.scur button small{display:block;font-weight:600;font-size:11px;color:var(--dim);margin-top:3px}
+.scur button .disc{color:#3fe08a}
+.scur button.on{border-color:var(--gold);background:rgba(255,176,46,.14)}
+.scur button:disabled{opacity:.4;cursor:default}
+.ssum{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;width:100%;font-size:13px;background:rgba(0,0,0,.3);border-radius:12px;padding:12px;text-align:left}
+.ssum span{color:var(--dim)}
+.ssum b{color:#fff;text-align:right;word-break:break-all;font-variant-numeric:tabular-nums}
+.ssum a{color:var(--gold)}
+.sok{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;color:var(--dim);text-align:left}
+.sok input{margin-top:2px;accent-color:var(--gold);flex:none;width:16px;height:16px}
+.sspin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--gold);animation:sspin 1s linear infinite}
+@keyframes sspin{to{transform:rotate(360deg)}}
+.serr{color:#ffb4ad!important}
+.chancebox{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.chancebtn{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--gold);background:rgba(255,176,46,.12);color:#fff;font:800 15px var(--f);cursor:pointer}
+.chancebtn small{display:block;font-weight:600;font-size:12px;color:var(--gold);margin-top:2px}
+.chancebox .fine{margin:0}
+body.gold .blk{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg) brightness(1.06) contrast(1.05);box-shadow:0 0 10px rgba(255,190,60,.65)}
+body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
+
 #done{z-index:60}
 #done .card{width:min(100%, 560px);gap:16px}
 #done canvas{
@@ -283,7 +322,7 @@ body{
 <body>
 <section class="home" id="home">
   <button class="help sndbtn homesnd" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button>
-  <div class="brand"><span class="sv">StratoshiVibes</span><h1>BLOCKSPACE</h1></div>
+  <div class="brand"><span class="sv">StratoshiVibes</span><h1>BLOCKSPACE</h1><span class="badge" id="supBadge" hidden>★ Supporter</span></div>
   <button class="hpic" id="hpic" type="button" data-i18n-aria="peekAria"><canvas id="hc"></canvas><span class="hlabel" id="hlabel"></span></button>
   <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b></div>
   <div class="hbtns">
@@ -293,6 +332,7 @@ body{
       <button class="btn2" id="galleryBtn" type="button" data-i18n="gallery"></button>
       <button class="btn2" id="howBtn" type="button" data-i18n="howTitle"></button>
     </div>
+    <button class="btn2 shopbtn" id="shopBtn" type="button"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 10.5h10.6L20.5 8H7"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg><span><span data-i18n="shop"></span> <small>SKR · SOL · USDC</small></span></button>
     <button class="btn2 wbtn" id="walletBtn" type="button"></button>
   </div>
 </section>
@@ -329,6 +369,7 @@ body{
     <canvas id="oc"></canvas>
     <div class="big" id="finalScore">0</div>
     <p id="overTxt"></p>
+    <div class="chancebox" id="chanceBox"></div>
     <button class="btn" id="again" type="button" data-i18n="newGame"></button>
   </div>
 </div>
@@ -369,6 +410,10 @@ body{
 
 <div class="ov" id="wallet" hidden>
   <div class="card" id="walletCard" role="dialog" aria-modal="true"></div>
+</div>
+
+<div class="ov" id="shop" hidden>
+  <div class="card" id="shopCard" role="dialog" aria-modal="true"></div>
 </div>
 
 <div class="ov" id="help" hidden>
@@ -432,7 +477,28 @@ body{
       gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει εδώ. Όσοι έχουν κάρτες Degens ξεκλειδώνουν αμέσως τις εικόνες των χαρακτήρων τους (★).',
       wConnect: 'Σύνδεση wallet', wOptional: 'προαιρετικό',
       wIntro: 'Αν έχεις κάρτες StratoshiVibes Vol.1 Degens, οι εικόνες των χαρακτήρων σου ξεκλειδώνουν αμέσως στη Συλλογή. Το παιχνίδι παίζεται κανονικά και χωρίς wallet.',
-      wSafe: 'Η σύνδεση μοιράζεται μόνο τη δημόσια διεύθυνσή σου. Το παιχνίδι δεν θα σου ζητήσει ποτέ υπογραφή ή συναλλαγή. Αν δεις τέτοιο αίτημα, απόρριψέ το.',
+      wSafe: 'Η σύνδεση μοιράζεται μόνο τη δημόσια διεύθυνσή σου. Το wallet σου θα ζητήσει έγκριση μόνο όταν αγοράζεις κάτι από το Shop, και πάντα για μία μεταφορά. Αν δεις οποιοδήποτε άλλο αίτημα, απόρριψέ το.',
+      shop: 'Shop', shopIntro: 'Προαιρετικά extras. Το παιχνίδι μένει δωρεάν. Πληρωμή σε SKR, SOL ή USDC, απευθείας στο wallet του δημιουργού.',
+      supDesc: n => 'Χρυσά τουβλάκια, σήμα Supporter στην αρχική και ' + n + ' Δεύτερες ευκαιρίες. Ευχαριστώ που στηρίζεις το StratoshiVibes.',
+      chanceName: 'Δεύτερη ευκαιρία', chanceDesc: 'Καθαρίζει τις 3 πιο γεμάτες γραμμές για να συνεχίσεις. Μία φορά ανά παρτίδα.',
+      chanceWhere: 'Στο τέλος μιας παρτίδας', youHave: n => 'Έχεις ' + n, useOne: n => 'Χρησιμοποίησε 1 (έχεις ' + n + ')',
+      chanceUsed: 'Η δεύτερη ευκαιρία χρησιμοποιήθηκε σε αυτή την παρτίδα.', chanceToast: 'Καθάρισαν 3 γραμμές',
+      owned: 'Το έχεις', goldTiles: 'Χρυσά τουβλάκια', on: 'Ναι', off: 'Όχι', buy: 'Αγορά', close: 'Κλείσιμο', restore: 'Επαναφορά αγορών',
+      shopNote: (d, a) => 'Με SKR έχεις ' + d + '% έκπτωση. Το wallet σου θα ζητήσει έγκριση για μία μεταφορά προς ' + a + ' και τίποτα άλλο.',
+      connectFirst: 'Σύνδεσε πρώτα το wallet σου', loading: 'Φόρτωση', gettingPrices: 'Παίρνω τις σημερινές τιμές…', noPrice: 'χωρίς τιμή',
+      youPay: 'Πληρώνεις', to: 'Προς', from: 'Από', memo: 'Σημείωση στο blockchain', pay: 'Πλήρωσε',
+      withdrawal: 'Θέλω το extra να παραδοθεί αμέσως. Καταλαβαίνω ότι μια πληρωμή στο blockchain είναι οριστική και ότι μετά την παράδοση χάνω το δικαίωμα υπαναχώρησης 14 ημερών.',
+      checkingBal: 'Ελέγχω το υπόλοιπό σου…', approve: 'Έγκρινε την πληρωμή στο wallet σου…', confirming: 'Περιμένω επιβεβαίωση από το δίκτυο…',
+      noFunds: (s, b) => 'Δεν υπάρχει αρκετό ' + s + ' σε αυτό το wallet. Έχεις ' + b + ' ' + s + '.',
+      needSol: 'Χρειάζεσαι λίγο SOL για τα fees του δικτύου (περίπου 0.0001 SOL).',
+      otherWallet: 'Άνοιξε διαφορετικό wallet από αυτό που είναι συνδεδεμένο. Σύνδεσε το ίδιο wallet και δοκίμασε ξανά.',
+      cancelled: 'Η πληρωμή ακυρώθηκε στο wallet. Δεν χρεώθηκε τίποτα.', txFailed: 'Η συναλλαγή απέτυχε στο δίκτυο. Δεν χρεώθηκε τίποτα.',
+      genericErr: 'Κάτι πήγε στραβά πριν γίνει οποιαδήποτε πληρωμή. Έλεγξε τη σύνδεση και δοκίμασε ξανά.',
+      tryAgain: 'Δοκίμασε ξανά', thanks: 'Ευχαριστώ!', paid: 'Πλήρωσες', receipt: 'Απόδειξη', done: 'Τέλεια',
+      supThanks: n => 'Το Supporter Pack ενεργοποιήθηκε: χρυσά τουβλάκια, σήμα Supporter και ' + n + ' Δεύτερες ευκαιρίες.',
+      pendingNote: 'Η πληρωμή δεν έχει επιβεβαιωθεί ακόμα. Αν χρειαστεί, πάτα «Επαναφορά αγορών» σε λίγα λεπτά.',
+      readingHistory: 'Διαβάζω το ιστορικό του wallet σου…', restored: n => n === 1 ? 'Επανήλθε 1 αγορά.' : 'Επανήλθαν ' + n + ' αγορές.', allRestored: 'Ό,τι έχεις αγοράσει είναι ήδη ενεργό.',
+      noneFound: 'Δεν βρέθηκαν αγορές του Blockspace σε αυτό το wallet.', historyErr: 'Δεν ήταν δυνατή η ανάγνωση του ιστορικού τώρα. Δοκίμασε αργότερα.',
       wSeeker: 'Seeker / Android wallet', wSeekerSub: 'Seed Vault, Phantom, Solflare κ.ά.', wBrowser: 'Wallet του browser',
       wNone: 'Δεν βρέθηκε wallet. Στο Seeker άνοιξε το παιχνίδι από το dApp Store. Σε άλλα κινητά εγκατάστησε ένα Solana wallet, όπως Phantom ή Solflare.',
       wWaiting: 'Περιμένει έγκριση στο wallet σου…', wRetry: 'Δεν συνδέθηκε. Πάτα για νέα προσπάθεια.',
@@ -468,7 +534,28 @@ body{
       gallery: 'Gallery', galleryHint: 'Every picture you complete is added here. Degens card holders unlock their characters\' pictures right away (★).',
       wConnect: 'Connect wallet', wOptional: 'optional',
       wIntro: 'If you hold StratoshiVibes Vol.1 Degens cards, your characters\' pictures unlock in the Gallery right away. The game plays the same without a wallet.',
-      wSafe: 'Connecting shares only your public address. This game will never ask you to sign a message or a transaction. If you see such a request, reject it.',
+      wSafe: 'Connecting shares only your public address. Your wallet is asked to approve something only when you buy an extra in the Shop, and always one transfer. If you see any other request, reject it.',
+      shop: 'Shop', shopIntro: 'Optional extras. The game stays free. Paid with SKR, SOL or USDC, straight to the creator\'s wallet.',
+      supDesc: n => 'Gold tiles, a Supporter badge on the home screen and ' + n + ' Second Chances. Thank you for backing StratoshiVibes.',
+      chanceName: 'Second Chance', chanceDesc: 'Clears your 3 fullest rows so you can keep playing. Once per game.',
+      chanceWhere: 'At the end of a game', youHave: n => 'You have ' + n, useOne: n => 'Use 1 (you have ' + n + ')',
+      chanceUsed: 'Second Chance already used in this game.', chanceToast: '3 rows cleared',
+      owned: 'Owned', goldTiles: 'Gold tiles', on: 'On', off: 'Off', buy: 'Buy', close: 'Close', restore: 'Restore purchases',
+      shopNote: (d, a) => 'Pay with SKR and get ' + d + '% off. Your wallet will ask you to approve one transfer to ' + a + ' and nothing else.',
+      connectFirst: 'Connect your wallet first', loading: 'Loading', gettingPrices: 'Getting today\'s prices…', noPrice: 'price unavailable',
+      youPay: 'You pay', to: 'To', from: 'From', memo: 'Note on chain', pay: 'Pay',
+      withdrawal: 'I want the extra delivered right away. I understand that a payment on the blockchain is final, and that after delivery I lose the 14-day right of withdrawal.',
+      checkingBal: 'Checking your balance…', approve: 'Approve the payment in your wallet…', confirming: 'Waiting for the network to confirm…',
+      noFunds: (s, b) => 'Not enough ' + s + ' in this wallet. You have ' + b + ' ' + s + '.',
+      needSol: 'You need a little SOL for the network fee (about 0.0001 SOL).',
+      otherWallet: 'A different wallet opened than the one connected. Connect the same wallet and try again.',
+      cancelled: 'Payment cancelled in the wallet. Nothing was charged.', txFailed: 'The transaction failed on the network. Nothing was charged.',
+      genericErr: 'Something went wrong before any payment was made. Check your connection and try again.',
+      tryAgain: 'Try again', thanks: 'Thank you!', paid: 'Paid', receipt: 'Receipt', done: 'Done',
+      supThanks: n => 'Supporter Pack is active: gold tiles, a Supporter badge and ' + n + ' Second Chances.',
+      pendingNote: 'The payment is not confirmed yet. If needed, tap Restore purchases in a few minutes.',
+      readingHistory: 'Reading your wallet\'s history…', restored: n => 'Restored ' + n + (n === 1 ? ' purchase.' : ' purchases.'), allRestored: 'Everything you bought is already active.',
+      noneFound: 'No Blockspace purchases found for this wallet.', historyErr: 'Could not read your wallet\'s history right now. Try again later.',
       wSeeker: 'Seeker / Android wallet', wSeekerSub: 'Seed Vault, Phantom, Solflare and more', wBrowser: 'Browser wallet',
       wNone: 'No wallet found. On Seeker, open the game from the dApp Store. On other phones, install a Solana wallet such as Phantom or Solflare.',
       wWaiting: 'Waiting for approval in your wallet…', wRetry: 'Not connected. Tap to try again.',
@@ -561,7 +648,7 @@ body{
   /* ---------- state ---------- */
   let board = new Array(N * N).fill(-1);
   let tray = [null, null, null];
-  let score = 0, combo = 0;
+  let score = 0, combo = 0, chanceUsed = false;
   let best = +(store.get('svb_best') || 0);
   let rev = readJSON('svb_reveal');
   if (!rev || !Array.isArray(rev.order) || rev.order.length !== TT) rev = newReveal(1);
@@ -572,13 +659,13 @@ body{
   }
   const saveRev = () => store.set('svb_reveal', JSON.stringify(rev));
   const saveGame = () => store.set('svb_game', JSON.stringify({
-    board, score, combo, tray: tray.map(p => p ? { cells: p.cells, k: p.k } : null)
+    board, score, combo, chanceUsed, tray: tray.map(p => p ? { cells: p.cells, k: p.k } : null)
   }));
   function loadGame() {
     const g = readJSON('svb_game');
     if (!g || !Array.isArray(g.board) || g.board.length !== N * N || !Array.isArray(g.tray)) return false;
     board = g.board.map(v => (Number.isInteger(v) && v >= 0 && v < KINDS.length) ? v : -1);
-    score = +g.score || 0; combo = +g.combo || 0;
+    score = +g.score || 0; combo = +g.combo || 0; chanceUsed = !!g.chanceUsed;
     tray = g.tray.slice(0, 3).map(p => (p && Array.isArray(p.cells) && p.cells.length) ? { cells: p.cells, ...sizeOf(p.cells), k: p.k % KINDS.length } : null);
     while (tray.length < 3) tray.push(null);
     if (tray.every(p => !p)) refill();
@@ -792,12 +879,13 @@ body{
     if (!$('done').hidden || rev.count >= TT) { pendingOver = true; return; }
     $('finalScore').textContent = score;
     $('overTxt').innerHTML = t('overTxt')(best, rev.count + '/' + TT);
+    renderChanceBox();
     $('over').hidden = false;
     sfx.over();
     requestAnimationFrame(() => drawReveal($('oc')));
   }
   function resetGame() {
-    board.fill(-1); score = 0; combo = 0; refill();
+    board.fill(-1); score = 0; combo = 0; chanceUsed = false; refill();
     $('over').hidden = true;
     renderBoard(); renderTray(); renderStats(); saveGame();
   }
@@ -940,7 +1028,7 @@ body{
     $('newFromHome').hidden = !inProgress();
   }
   function showHome() {
-    ['over', 'peek', 'help', 'gallery', 'view', 'wallet'].forEach(id => $(id).hidden = true);
+    ['over', 'peek', 'help', 'gallery', 'view', 'wallet', 'shop'].forEach(id => $(id).hidden = true);
     endDrag(false);
     $('game').hidden = true; $('home').hidden = false;
     renderHome(); kick();
@@ -1119,6 +1207,237 @@ body{
   });
   paintWallet();
   if (W.addr) checkHolder(false);
+
+  /* ---------- Shop: optional extras paid in SKR, SOL or USDC ---------- */
+  // One purchase = one transfer to the creator's wallet with a memo ("svblocks:<item>"). Nothing else is ever requested from the wallet.
+  const SHOP = {
+    treasury: '9PRzwoMb8ULXYHXFRjcT685BYvdKioC6sUjGkLuqJdY6', // StratoshiVibes revenue wallet, shared with the Arcade (receives payments only)
+    prefix: 'svblocks:',
+    skrDiscount: 0.10,
+    priceApi: 'https://lite-api.jup.ag/price/v3?ids=',
+    mints: { SOL: 'So11111111111111111111111111111111111111112', SKR: 'SKRbvo6Gf7GondiT3BbTfuRDPqLWei4j2Qy2NPGZhW3' }
+  };
+  const PRODUCTS = {
+    supporter: { usd: 4.99, ic: '★', restorable: true },
+    chance: { usd: 0.10, ic: '↻', restorable: false }
+  };
+  const SUPPORTER_CHANCES = 10;
+  let SH = readJSON('svb_shop') || {};
+  SH.own = SH.own || {}; SH.credits = Math.max(0, +SH.credits || 0);
+  const saveSH = () => store.set('svb_shop', JSON.stringify(SH));
+  const isSupporter = () => !!SH.own.supporter;
+  const usdTxt = n => '$' + n.toFixed(2);
+
+  function applyPerks() {
+    document.body.classList.toggle('gold', isSupporter() && SH.gold !== false);
+    $('supBadge').hidden = !isSupporter();
+  }
+
+  let prices = null, pricesT = 0;
+  async function getPrices() {
+    if (prices && Date.now() - pricesT < 60e3) return prices;
+    try {
+      const r = await fetch(SHOP.priceApi + [SHOP.mints.SOL, SHOP.mints.SKR].join(','));
+      const j = await r.json();
+      const p = k => { const v = j[SHOP.mints[k]] || (j.data && j.data[SHOP.mints[k]]); return v ? +(v.usdPrice || v.price) : null; };
+      prices = { SOL: p('SOL'), SKR: p('SKR'), USDC: 1 }; pricesT = Date.now();
+    } catch (e) { console.warn(e); prices = { SOL: null, SKR: null, USDC: 1 }; }
+    return prices;
+  }
+  function quote(id, sym) {
+    const pr = prices && prices[sym]; if (!pr) return null;
+    const u = PRODUCTS[id].usd * (sym === 'SKR' ? 1 - SHOP.skrDiscount : 1);
+    const dp = sym === 'SOL' ? 5 : 2;
+    return { sym, amount: Math.ceil(u / pr * 10 ** dp) / 10 ** dp, usd: u };
+  }
+
+  function waitWallet() {
+    if (window.SVWallet) return Promise.resolve();
+    loadBundle();
+    return new Promise((res, rej) => {
+      const to = setTimeout(() => rej(new Error('wallet module timeout')), 15000);
+      addEventListener('svwallet-ready', () => { clearTimeout(to); res(); }, { once: true });
+    });
+  }
+  let payLib = null;
+  function loadPay() {
+    if (payLib) return Promise.resolve(payLib);
+    return new Promise((res, rej) => {
+      if (window.SVPay) { payLib = SVPay.make(WCFG.rpc); return res(payLib); }
+      const sc = document.createElement('script'); sc.src = 'pay.bundle.js';
+      sc.onload = () => { payLib = SVPay.make(WCFG.rpc); res(payLib); };
+      sc.onerror = () => rej(new Error('pay module'));
+      document.head.appendChild(sc);
+    });
+  }
+
+  let shopBusy = false;
+  const sc$ = () => $('shopCard');
+  function shopShow(html) {
+    sc$().innerHTML = html; $('shop').hidden = false;
+    const f = sc$().querySelector('button:not([disabled])'); if (f) f.focus({ preventScroll: true });
+  }
+  function closeShop() { if (!shopBusy) $('shop').hidden = true; }
+  $('shop').addEventListener('click', e => { if (e.target === $('shop')) closeShop(); });
+
+  function openShop() {
+    const sup = isSupporter();
+    shopShow('<h2>' + t('shop') + '</h2><p>' + t('shopIntro') + '</p>' +
+      '<div class="sitem"><span class="ic" aria-hidden="true">★</span><div class="bd"><b>Supporter Pack</b><div class="ds">' + t('supDesc')(SUPPORTER_CHANCES) + '</div>' +
+        '<div class="rw"><span class="pr">' + usdTxt(PRODUCTS.supporter.usd) + '</span>' +
+        (sup ? '<span class="own">✓ ' + t('owned') + '</span><button class="stog" type="button" id="goldTog">' + t('goldTiles') + ': ' + (SH.gold !== false ? t('on') : t('off')) + '</button>'
+             : '<button class="sbuy" type="button" data-buy="supporter">' + t('buy') + '</button>') +
+        '</div></div></div>' +
+      '<div class="sitem"><span class="ic" aria-hidden="true">↻</span><div class="bd"><b>' + t('chanceName') + '</b><div class="ds">' + t('chanceDesc') + '</div>' +
+        '<div class="rw"><span class="pr">' + usdTxt(PRODUCTS.chance.usd) + '</span><span class="muted2">' +
+        (SH.credits ? t('youHave')(SH.credits) : t('chanceWhere')) + '</span></div></div></div>' +
+      '<p class="fine">' + t('shopNote')(Math.round(SHOP.skrDiscount * 100), shortAddr(SHOP.treasury)) + '</p>' +
+      '<div class="wbtns"><button class="btn2" type="button" data-restore>' + t('restore') + '</button><button class="btn2" type="button" data-x>' + t('close') + '</button></div>');
+    sc$().querySelector('[data-x]').onclick = closeShop;
+    sc$().querySelector('[data-restore]').onclick = () => restore();
+    const b = sc$().querySelector('[data-buy]'); if (b) b.onclick = () => checkout('supporter');
+    const g = $('goldTog'); if (g) g.onclick = () => { SH.gold = SH.gold === false; saveSH(); applyPerks(); openShop(); };
+  }
+
+  function needWallet() {
+    if (W.addr) return true;
+    $('shop').hidden = true; $('over').hidden = true;
+    toast(t('connectFirst'));
+    loadBundle(); openPicker();
+    return false;
+  }
+
+  async function checkout(id) {
+    if (!needWallet()) return;
+    const name = id === 'supporter' ? 'Supporter Pack' : t('chanceName');
+    shopShow('<h2>' + name + '</h2><div class="sspin" role="status" aria-label="' + t('loading') + '"></div><p>' + t('gettingPrices') + '</p>');
+    await getPrices();
+    let sym = SH.curr && prices[SH.curr] ? SH.curr : prices.SKR ? 'SKR' : prices.SOL ? 'SOL' : 'USDC';
+    const draw = () => {
+      const q = quote(id, sym);
+      shopShow('<h2>' + name + '</h2>' +
+        '<div class="scur">' + ['SKR', 'SOL', 'USDC'].map(k => { const qq = quote(id, k);
+          return '<button type="button" data-k="' + k + '" class="' + (k === sym ? 'on' : '') + '"' + (qq ? '' : ' disabled') + '>' + k +
+            '<small>' + (qq ? qq.amount + ' ' + k : t('noPrice')) + '</small>' + (k === 'SKR' && qq ? '<small class="disc">−' + Math.round(SHOP.skrDiscount * 100) + '%</small>' : '') + '</button>'; }).join('') + '</div>' +
+        '<div class="ssum"><span>' + t('youPay') + '</span><b>' + q.amount + ' ' + sym + ' (≈ ' + usdTxt(q.usd) + ')</b><span>' + t('to') + '</span><b>' + shortAddr(SHOP.treasury) +
+          '</b><span>' + t('from') + '</span><b>' + shortAddr(W.addr) + '</b><span>' + t('memo') + '</span><b>' + SHOP.prefix + id + '</b></div>' +
+        '<label class="sok"><input type="checkbox" id="shOk"><span>' + t('withdrawal') + '</span></label>' +
+        '<div class="wbtns"><button class="btn" type="button" id="shPay" disabled>' + t('pay') + ' ' + q.amount + ' ' + sym + '</button><button class="btn2" type="button" id="shBack">' + t('back') + '</button></div>');
+      sc$().querySelectorAll('.scur button').forEach(b => b.onclick = () => { sym = b.dataset.k; SH.curr = sym; saveSH(); draw(); });
+      const ok = $('shOk'), pay = $('shPay');
+      ok.onchange = () => { pay.disabled = !ok.checked; };
+      $('shBack').onclick = () => { if (id === 'supporter') openShop(); else { $('shop').hidden = true; $('over').hidden = false; } };
+      pay.onclick = () => payNow(id, name, q);
+    };
+    draw();
+  }
+
+  async function payNow(id, name, q) {
+    shopBusy = true;
+    shopShow('<h2>' + name + '</h2><div class="sspin"></div><p id="shStep" role="status">' + t('checkingBal') + '</p>');
+    const step = x => { const e = $('shStep'); if (e) e.textContent = x; };
+    const fail = msg => {
+      shopBusy = false;
+      shopShow('<h2>' + name + '</h2><p class="serr">' + msg + '</p><div class="wbtns"><button class="btn2" type="button" id="shAgain">' + t('tryAgain') + '</button><button class="btn2" type="button" id="shX">' + t('close') + '</button></div>');
+      $('shAgain').onclick = () => checkout(id);
+      $('shX').onclick = () => { $('shop').hidden = true; if (id === 'chance' && !$('game').hidden) checkOver(); };
+    };
+    try {
+      await waitWallet();
+      const L = await loadPay();
+      const bal = await L.balance(W.addr, q.sym);
+      if (bal < q.amount + (q.sym === 'SOL' ? 0.0002 : 0)) return fail(t('noFunds')(q.sym, +bal.toFixed(4)));
+      if (q.sym !== 'SOL' && await L.balance(W.addr, 'SOL') < 0.0001) return fail(t('needSol'));
+      step(t('approve'));
+      await SVWallet.ensure();
+      if (SVWallet.address && SVWallet.address !== W.addr) return fail(t('otherWallet'));
+      const { bytes } = await L.build({ payer: W.addr, treasury: SHOP.treasury, sym: q.sym, amount: q.amount, memo: SHOP.prefix + id });
+      let sig;
+      try { const r = await SVWallet.signAndSend(bytes); sig = r.signature ? L.bs58.encode(r.signature) : await L.send(r.signed); }
+      catch (e) { console.warn(e); return fail(t('cancelled')); }
+      step(t('confirming'));
+      let confirmed = false;
+      try { confirmed = await L.confirm(sig); } catch (e) { return fail(t('txFailed')); }
+      shopBusy = false;
+      const rec = { sig, sym: q.sym, amount: q.amount, t: Date.now(), pending: !confirmed };
+      if (id === 'supporter') {
+        const first = !isSupporter();
+        SH.own.supporter = rec; if (first) SH.credits += SUPPORTER_CHANCES; SH.gold = true;
+        saveSH(); applyPerks();
+        shopShow('<h2>' + t('thanks') + '</h2><p>' + t('supThanks')(SUPPORTER_CHANCES) + (confirmed ? '' : ' ' + t('pendingNote')) + '</p>' +
+          '<div class="ssum"><span>' + t('paid') + '</span><b>' + q.amount + ' ' + q.sym + '</b><span>' + t('receipt') + '</span><b><a href="https://solscan.io/tx/' + sig + '" target="_blank" rel="noopener">' + shortAddr(sig) + '</a></b></div>' +
+          '<button class="btn" type="button" id="shX">' + t('done') + '</button>');
+        $('shX').onclick = () => { $('shop').hidden = true; };
+        sfx.complete();
+      } else {
+        SH.lastChance = rec; saveSH();
+        $('shop').hidden = true;
+        applyChance();
+      }
+    } catch (e) { console.warn(e); fail(t('genericErr')); }
+    finally { shopBusy = false; }
+  }
+
+  async function restore() {
+    if (!needWallet()) return;
+    shopShow('<h2>' + t('restore') + '</h2><div class="sspin"></div><p>' + t('readingHistory') + '</p>');
+    try {
+      const L = await loadPay(); await getPrices();
+      const pays = await L.payments(W.addr, SHOP.treasury, SHOP.prefix);
+      let found = 0;
+      for (const p of pays) {
+        const id = p.memo.slice(SHOP.prefix.length), prod = PRODUCTS[id];
+        if (!prod || !prod.restorable) continue;
+        const worth = p.sym === 'USDC' ? p.amount : (prices[p.sym] ? p.amount * prices[p.sym] : null);
+        const floor = p.sym === 'USDC' ? prod.usd * 0.95 * (1 - SHOP.skrDiscount) : prod.usd * 0.4 * (1 - SHOP.skrDiscount);
+        if (worth != null && worth < floor) continue;
+        if (!SH.own[id]) {
+          SH.own[id] = { sig: p.sig, sym: p.sym, amount: p.amount, t: (p.time || 0) * 1000, restored: true };
+          if (id === 'supporter') { SH.credits += SUPPORTER_CHANCES; SH.gold = true; }
+          found++;
+        }
+      }
+      saveSH(); applyPerks();
+      shopShow('<h2>' + t('restore') + '</h2><p>' + (found ? t('restored')(found) : isSupporter() ? t('allRestored') : t('noneFound')) + '</p><button class="btn2" type="button" id="shX">' + t('back') + '</button>');
+    } catch (e) {
+      console.warn(e);
+      shopShow('<h2>' + t('restore') + '</h2><p class="serr">' + t('historyErr') + '</p><button class="btn2" type="button" id="shX">' + t('back') + '</button>');
+    }
+    $('shX').onclick = openShop;
+  }
+
+  /* second chance: clears the three fullest rows, once per game */
+  function applyChance() {
+    const rows = [...Array(N).keys()].map(r => [r, board.slice(r * N, r * N + N).filter(v => v >= 0).length])
+      .sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]);
+    const idx = [];
+    rows.forEach(r => { for (let c = 0; c < N; c++) { const i = r * N + c; if (board[i] >= 0) { idx.push([i, board[i]]); board[i] = -1; } } });
+    chanceUsed = true; combo = 0;
+    if (!tray.some(p => p && anyFit(p))) refill();
+    $('over').hidden = true;
+    if ($('game').hidden) showGame();
+    renderBoard();
+    idx.forEach(([i, k], n) => { cells[i].className = 'cell blk k' + k + ' pop'; cells[i].style.animationDelay = Math.min(n * 14, 200) + 'ms'; });
+    setTimeout(() => { idx.forEach(([i]) => cells[i].style.animationDelay = ''); renderBoard(); }, 640);
+    renderTray(); renderStats(); saveGame();
+    sfx.clear(3, 1); buzz([20, 40, 30]);
+    toast(t('chanceName') + '!', t('chanceToast'));
+  }
+  function renderChanceBox() {
+    const box = $('chanceBox');
+    if (chanceUsed) { box.innerHTML = '<p class="fine">' + t('chanceUsed') + '</p>'; return; }
+    box.innerHTML = '<button class="chancebtn" type="button" id="chanceBtn">' + t('chanceName') +
+      '<small>' + (SH.credits ? t('useOne')(SH.credits) : usdTxt(PRODUCTS.chance.usd) + ' · SKR / SOL / USDC') + '</small></button>' +
+      '<p class="fine">' + t('chanceDesc') + '</p>';
+    $('chanceBtn').onclick = () => {
+      if (SH.credits > 0) { SH.credits--; saveSH(); applyChance(); }
+      else { $('over').hidden = true; checkout('chance'); }
+    };
+  }
+
+  $('shopBtn').addEventListener('click', openShop);
+  applyPerks();
+
   $('closeGallery').addEventListener('click', () => { $('gallery').hidden = true; });
   $('closeView').addEventListener('click', () => { $('view').hidden = true; });
   $('closeHelp').addEventListener('click', () => { $('help').hidden = true; });
