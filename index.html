@@ -1152,6 +1152,12 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const sc = document.createElement('script'); sc.src = 'wallet.bundle.js'; sc.onerror = () => { bundleState = 0; }; document.head.appendChild(sc);
   }
 
+  // closing the wallet dialog during a game brings back the end-of-game screen if no piece fits
+  function closeWallet() {
+    $('wallet').hidden = true;
+    if (!$('game').hidden) setTimeout(checkOver, 50);
+  }
+
   function openPicker() {
     const ws = window.SVWallet ? SVWallet.list() : [];
     const card = $('walletCard');
@@ -1161,7 +1167,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
         : (bundleState === 2 ? '<p>' + t('wNone') + '</p>' : '<p>…</p>')) +
       '<p class="fine">' + t('wSafe') + '</p>' +
       '<button class="btn2" type="button" data-x>' + t('notNow') + '</button>';
-    card.querySelector('[data-x]').onclick = () => { $('wallet').hidden = true; };
+    card.querySelector('[data-x]').onclick = closeWallet;
     card.querySelectorAll('.witem').forEach(b => b.onclick = async () => {
       const w = ws[+b.dataset.i];
       b.disabled = true; b.querySelector('small').textContent = t('wWaiting');
@@ -1190,13 +1196,13 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
         '<button class="btn2" type="button" data-r>' + t('wRefresh') + '</button>' +
         '<button class="btn2" type="button" data-d>' + t('wDisconnect') + '</button></div>' +
       '<button class="btn" type="button" data-x>' + t('back') + '</button>';
-    card.querySelector('[data-x]').onclick = () => { $('wallet').hidden = true; };
+    card.querySelector('[data-x]').onclick = closeWallet;
     card.querySelector('[data-r]').onclick = () => checkHolder(true);
     const g = card.querySelector('[data-g]'); if (g) g.onclick = () => { $('wallet').hidden = true; openGallery(); };
     card.querySelector('[data-d]').onclick = async () => {
       try { window.SVWallet && await SVWallet.disconnect(); } catch (e) {}
       W = { owned: {} }; try { localStorage.removeItem('svb_wallet'); } catch (e) {}
-      $('wallet').hidden = true; paintWallet(); toast(t('wDone'));
+      closeWallet(); paintWallet(); toast(t('wDone'));
     };
     $('wallet').hidden = false;
   }
