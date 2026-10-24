@@ -154,16 +154,8 @@ body{
 .piece.float{
   position:fixed;left:0;top:0;z-index:30;pointer-events:none;
   will-change:transform;
-  --s:1.05;
-  transform:translate(var(--x,0px),var(--y,0px)) scale(var(--s));
-  filter:drop-shadow(0 8px 12px rgba(0,0,0,.5)) drop-shadow(0 0 6px rgba(34,228,255,.4));
-  animation:liftpop .18s ease-out backwards;
+  filter:drop-shadow(0 10px 14px rgba(0,0,0,.5));
 }
-@property --s{syntax:'<number>';inherits:false;initial-value:1}
-@keyframes liftpop{from{--s:.75}to{--s:1.05}}
-.piece.float.fit{--s:1;transition:--s .12s ease-out}
-.cell.drop{animation:drop .26s cubic-bezier(.25,1.6,.45,1) both}
-@keyframes drop{from{transform:scale(1.22);filter:brightness(1.5)}to{transform:scale(1);filter:none}}
 
 .toast{
   position:fixed;left:50%;top:42%;z-index:40;
@@ -322,7 +314,6 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 #done p,#done .btn{animation:fadeup .6s 1.3s ease-out both}
 @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){
-  .piece.float,.cell.drop{animation:none}
   .score.bump,.cell.pop,.toast.show,#done canvas,#done h2,#done p,#done .btn{animation-duration:.01s;animation-delay:0s}
   .bar i{transition:none}
 }
@@ -848,8 +839,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- placing ---------- */
   function place(i, r, c) {
     const p = tray[i];
-    const placed = p.cells.map(([dr, dc]) => (r + dr) * N + c + dc);
-    for (const j of placed) board[j] = p.k;
+    for (const [dr, dc] of p.cells) board[(r + dr) * N + c + dc] = p.k;
     score += p.cells.length;
     tray[i] = null;
     const { idx, lines } = fullLines(board);
@@ -870,7 +860,6 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     }
     if (tray.every(x => !x)) refill();
     renderBoard();
-    placed.forEach(j => { if (board[j] >= 0) cells[j].classList.add('drop'); });
     idx.forEach((j, n) => {
       const d = cells[j];
       d.className = 'cell blk k' + kinds[n] + ' pop';
@@ -922,25 +911,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const g = geom(), gp = g.pitch - g.cell, p = drag.p;
     const W = p.w * g.pitch - gp, H = p.h * g.pitch - gp;
     const x = e.clientX - W / 2;
-    const y = drag.touch ? e.clientY - H - Math.max(44, g.cell * 1.1) : e.clientY - H / 2;
+    const y = drag.touch ? e.clientY - H - Math.max(40, g.cell * 1.1) : e.clientY - H / 2;
     drag.el.style.setProperty('--sz', g.cell + 'px');
     drag.el.style.gap = gp + 'px';
-    drag.el.style.setProperty('--x', x + 'px');
-    drag.el.style.setProperty('--y', y + 'px');
-    // snap to the nearest free spot within about one cell of where the piece is held
-    const fc = (x - g.x) / g.pitch, fr = (y - g.y) / g.pitch;
-    let best = null, bd = 1.05;
-    for (let r = Math.floor(fr) - 1; r <= Math.ceil(fr) + 1; r++) {
-      for (let c = Math.floor(fc) - 1; c <= Math.ceil(fc) + 1; c++) {
-        const d = Math.hypot(r - fr, c - fc);
-        if (d < bd && canPlace(p, r, c)) { bd = d; best = [r, c]; }
-      }
-    }
-    const [r, c] = best || [null, null];
+    drag.el.style.transform = `translate(${x}px, ${y}px)`;
+    const c = Math.round((x - g.x) / g.pitch), r = Math.round((y - g.y) / g.pitch);
     if (r !== drag.r || c !== drag.c) {
       drag.r = r; drag.c = c;
-      drag.ok = !!best;
-      drag.el.classList.toggle('fit', drag.ok);
+      drag.ok = canPlace(p, r, c);
       renderBoard();
       if (drag.ok) showGhost(p, r, c);
     }
@@ -955,7 +933,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   window.addEventListener('pointermove', e => { if (drag) { e.preventDefault(); moveDrag(e); } }, { passive: false });
   window.addEventListener('pointerup', () => endDrag(true));
-  window.addEventListener('pointercancel', () => endDrag(!!(drag && drag.ok)));
+  window.addEventListener('pointercancel', () => endDrag(false));
 
   /* ---------- picture ---------- */
   const images = {};
