@@ -239,6 +239,25 @@ body{
 .gitem .lock{display:flex;flex-direction:column;align-items:center;gap:4px}
 .gitem .lock b{font:400 20px var(--fd);color:#3a4380}
 #vimg{width:min(86vw, 60vh, 480px);height:auto;aspect-ratio:1;border-radius:14px;border:1px solid color-mix(in srgb, var(--cyan) 45%, transparent)}
+/* wallet */
+.wbtn{display:flex;align-items:center;justify-content:center;gap:8px;border-color:color-mix(in srgb, var(--gold) 45%, transparent);background:rgba(255,176,46,.06)}
+.wbtn .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.wbtn small{color:var(--dim);font-weight:600}
+.wlist{display:flex;flex-direction:column;gap:8px;width:100%}
+.witem{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;border:1px solid color-mix(in srgb, var(--cyan) 35%, transparent);background:rgba(34,228,255,.05);color:var(--text);font:800 14px var(--f);cursor:pointer;text-align:left}
+.witem img{width:32px;height:32px;border-radius:8px;flex:none}
+.witem small{display:block;font-weight:400;font-size:12px;color:var(--dim)}
+.witem:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.waddr{width:100%;font:600 13px ui-monospace,Menlo,monospace;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 10px;word-break:break-all;color:var(--text);user-select:text;-webkit-user-select:text}
+.wchars{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%}
+.wchars figure{margin:0;font-size:10px;color:var(--dim);text-align:center}
+.wchars img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:2px solid var(--gold);display:block;background:#1a1f3d}
+.wbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.wbtns .btn2{flex:1;min-width:110px}
+.gitem{position:relative}
+.gitem.holder{border:2px solid var(--gold);box-shadow:0 0 12px color-mix(in srgb, var(--gold) 50%, transparent)}
+.gitem .star{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1a1405;font:900 12px/20px system-ui,sans-serif;text-align:center}
+#walletCard h2{font:800 22px/1.2 var(--f);letter-spacing:0}
 #done{z-index:60}
 #done .card{width:min(100%, 560px);gap:16px}
 #done canvas{
@@ -274,6 +293,7 @@ body{
       <button class="btn2" id="galleryBtn" type="button" data-i18n="gallery"></button>
       <button class="btn2" id="howBtn" type="button" data-i18n="howTitle"></button>
     </div>
+    <button class="btn2 wbtn" id="walletBtn" type="button"></button>
   </div>
 </section>
 
@@ -347,6 +367,10 @@ body{
   </div>
 </div>
 
+<div class="ov" id="wallet" hidden>
+  <div class="card" id="walletCard" role="dialog" aria-modal="true"></div>
+</div>
+
 <div class="ov" id="help" hidden>
   <div class="card">
     <h2 data-i18n="howTitle"></h2>
@@ -377,6 +401,14 @@ body{
     'art/level-04.webp',
     'art/level-05.webp'
   ];
+  // Vol.1 Degens characters shown in each picture (same order as LEVELS). Holders of any of them unlock that picture in the Gallery.
+  const LEVEL_CHARS = [
+    ['bull', 'bear'],
+    [],
+    ['maxi'],
+    [],
+    ['degen']
+  ];
   // Tile artwork (tiles/<name>.webp) and the glow colour of each tile.
   const KINDS = [
     ['btc', '#ffa62b'], ['eth', '#8f7bff'], ['sol', '#2bd98a'], ['diamond', '#3aa8ff'],
@@ -397,7 +429,20 @@ body{
       nextPic: 'Επόμενη εικόνα',
       peekTxt: c => c + ' από 36 κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
       back: 'Πίσω', resume: 'Συνέχεια', play: 'Παίξε', cont: 'Συνέχισε την παρτίδα',
-      gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει εδώ.', locked: 'Κλειδωμένη',
+      gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει εδώ. Όσοι έχουν κάρτες Degens ξεκλειδώνουν αμέσως τις εικόνες των χαρακτήρων τους (★).',
+      wConnect: 'Σύνδεση wallet', wOptional: 'προαιρετικό',
+      wIntro: 'Αν έχεις κάρτες StratoshiVibes Vol.1 Degens, οι εικόνες των χαρακτήρων σου ξεκλειδώνουν αμέσως στη Συλλογή. Το παιχνίδι παίζεται κανονικά και χωρίς wallet.',
+      wSafe: 'Η σύνδεση μοιράζεται μόνο τη δημόσια διεύθυνσή σου. Το παιχνίδι δεν θα σου ζητήσει ποτέ υπογραφή ή συναλλαγή. Αν δεις τέτοιο αίτημα, απόρριψέ το.',
+      wSeeker: 'Seeker / Android wallet', wSeekerSub: 'Seed Vault, Phantom, Solflare κ.ά.', wBrowser: 'Wallet του browser',
+      wNone: 'Δεν βρέθηκε wallet. Στο Seeker άνοιξε το παιχνίδι από το dApp Store. Σε άλλα κινητά εγκατάστησε ένα Solana wallet, όπως Phantom ή Solflare.',
+      wWaiting: 'Περιμένει έγκριση στο wallet σου…', wRetry: 'Δεν συνδέθηκε. Πάτα για νέα προσπάθεια.',
+      notNow: 'Όχι τώρα', wYour: 'Το wallet σου', wChecking: 'Έλεγχος για κάρτες Degens…',
+      wErr: 'Δεν ήταν δυνατός ο έλεγχος τώρα. Έλεγξε τη σύνδεση στο internet και δοκίμασε ξανά.',
+      wNoCards: 'Δεν βρέθηκαν κάρτες Vol.1 Degens σε αυτό το wallet.',
+      wHolder: n => 'Έχεις ' + n + (n === 1 ? ' κάρτα' : ' κάρτες') + ' Vol.1 Degens.',
+      wUnlocked: n => n ? 'Ξεκλείδωσαν ' + n + (n === 1 ? ' εικόνα' : ' εικόνες') + ' στη Συλλογή.' : 'Οι χαρακτήρες σου δεν έχουν ακόμα δική τους εικόνα. Θα έρθουν σε επόμενες εικόνες.',
+      wRefresh: 'Ανανέωση', wDisconnect: 'Αποσύνδεση', wDone: 'Αποσυνδέθηκε',
+      wConnected: 'Συνδέθηκε', wCards: n => n + ' Degens', locked: 'Κλειδωμένη',
       homeAria: 'Αρχική', picN: n => 'Εικόνα ' + n,
       howTitle: 'Πώς παίζεται',
       r1: 'Σύρε τα κομμάτια στο ταμπλό.',
@@ -420,7 +465,20 @@ body{
       nextPic: 'Next picture',
       peekTxt: c => c + ' of 36 pieces unlocked. Every line you clear reveals more.',
       back: 'Back', resume: 'Back to game', play: 'Play', cont: 'Continue game',
-      gallery: 'Gallery', galleryHint: 'Every picture you complete is added here.', locked: 'Locked',
+      gallery: 'Gallery', galleryHint: 'Every picture you complete is added here. Degens card holders unlock their characters\' pictures right away (★).',
+      wConnect: 'Connect wallet', wOptional: 'optional',
+      wIntro: 'If you hold StratoshiVibes Vol.1 Degens cards, your characters\' pictures unlock in the Gallery right away. The game plays the same without a wallet.',
+      wSafe: 'Connecting shares only your public address. This game will never ask you to sign a message or a transaction. If you see such a request, reject it.',
+      wSeeker: 'Seeker / Android wallet', wSeekerSub: 'Seed Vault, Phantom, Solflare and more', wBrowser: 'Browser wallet',
+      wNone: 'No wallet found. On Seeker, open the game from the dApp Store. On other phones, install a Solana wallet such as Phantom or Solflare.',
+      wWaiting: 'Waiting for approval in your wallet…', wRetry: 'Not connected. Tap to try again.',
+      notNow: 'Not now', wYour: 'Your wallet', wChecking: 'Checking for Degens cards…',
+      wErr: 'Could not check right now. Check your internet connection and try again.',
+      wNoCards: 'No Vol.1 Degens cards found in this wallet.',
+      wHolder: n => 'You hold ' + n + ' Vol.1 Degens ' + (n === 1 ? 'card.' : 'cards.'),
+      wUnlocked: n => n ? n + (n === 1 ? ' picture' : ' pictures') + ' unlocked in your Gallery.' : 'Your characters don\'t have their own picture yet. They will come in future pictures.',
+      wRefresh: 'Refresh', wDisconnect: 'Disconnect', wDone: 'Disconnected',
+      wConnected: 'Connected', wCards: n => n + ' Degens', locked: 'Locked',
       homeAria: 'Home', picN: n => 'Picture ' + n,
       howTitle: 'How to play',
       r1: 'Drag the pieces onto the board.',
@@ -882,7 +940,7 @@ body{
     $('newFromHome').hidden = !inProgress();
   }
   function showHome() {
-    ['over', 'peek', 'help', 'gallery', 'view'].forEach(id => $(id).hidden = true);
+    ['over', 'peek', 'help', 'gallery', 'view', 'wallet'].forEach(id => $(id).hidden = true);
     endDrag(false);
     $('game').hidden = true; $('home').hidden = false;
     renderHome(); kick();
@@ -907,9 +965,15 @@ body{
     LEVELS.forEach((src, i) => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'gitem';
-      if (i < completed) {
+      const byHolder = i >= completed && holderUnlocks(i);
+      if (i < completed || byHolder) {
         const im = document.createElement('img'); im.src = src; im.alt = t('picN')(i + 1);
         b.appendChild(im);
+        if (holderUnlocks(i)) {
+          b.classList.add('holder');
+          const st = document.createElement('span'); st.className = 'star'; st.textContent = '★'; st.setAttribute('aria-hidden', 'true');
+          b.appendChild(st);
+        }
         b.addEventListener('click', () => {
           $('vimg').src = src; $('vimg').alt = t('picN')(i + 1);
           $('vtxt').textContent = t('picN')(i + 1);
@@ -924,13 +988,144 @@ body{
     $('gallery').hidden = false;
   }
   $('galleryBtn').addEventListener('click', openGallery);
+
+  /* ---------- optional wallet (read-only: public address only, never a signature) ---------- */
+  const WCFG = {
+    rpc: 'https://mainnet.helius-rpc.com/?api-key=b9b945b9-2831-4343-aab8-9d8a62c5719f', // same key as the Arcade, restricted to stratanen.github.io
+    collection: 'DDERmEEpPv5wuWNbNyiNQu5uVVVea6xmUdw6JcECGG6p'                         // StratoshiVibes Vol.1 Degens
+  };
+  const CHAR_MATCH = [['paperhands', /paper\s*hands?/i], ['diamond', /diamond\s*hands?/i], ['rugpuller', /rug/i], ['shiller', /shill/i],
+    ['fudster', /fud/i], ['nocoiner', /no\s*coin/i], ['whale', /whale/i], ['shrimp', /shrimp/i], ['crab', /crab/i], ['maxi', /maxi/i],
+    ['bull', /bull/i], ['bear', /bear/i], ['degen', /degen/i]];
+  const CHAR_NAME = { bull: 'Bull', bear: 'Bear', whale: 'Whale', diamond: 'Diamond Hands', rugpuller: 'Rugpuller', maxi: 'Maxi', degen: 'Degen',
+    shiller: 'Shiller', fudster: 'FUDster', crab: 'Crab', shrimp: 'Shrimp', paperhands: 'Paper Hands', nocoiner: 'Nocoiner' };
+  const validAddr = a => typeof a === 'string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a);
+  let W = readJSON('svb_wallet') || {};
+  if (!validAddr(W.addr)) W = {};
+  W.owned = W.owned || {};
+  let wLoading = false;
+  const shortAddr = a => a.slice(0, 4) + '…' + a.slice(-4);
+  const saveW = () => store.set('svb_wallet', JSON.stringify(W));
+  const escH = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function holderUnlocks(i) { return (LEVEL_CHARS[i] || []).some(c => W.owned[c]); }
+  function unlockedByHolder() { return LEVELS.filter((_, i) => holderUnlocks(i)).length; }
+
+  async function checkHolder(force) {
+    if (!W.addr || wLoading) return W.status;
+    if (!force && W.status === 'ok' && Date.now() - (W.t || 0) < 5 * 60e3) return 'ok';
+    wLoading = true; paintWallet();
+    try {
+      let page = 1, items = [];
+      while (page <= 5) {
+        const r = await fetch(WCFG.rpc, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jsonrpc: '2.0', id: 'svb', method: 'searchAssets',
+            params: { ownerAddress: W.addr, grouping: ['collection', WCFG.collection], page, limit: 1000 } }) });
+        const j = await r.json();
+        if (j.error) throw new Error(j.error.message);
+        const it = (j.result && j.result.items) || [];
+        items = items.concat(it);
+        if (it.length < 1000) break;
+        page++;
+      }
+      const owned = {}; let total = 0;
+      for (const it of items) {
+        const md = (it.content && it.content.metadata) || {};
+        const hit = CHAR_MATCH.find(([, re]) => re.test(md.name || '')) ||
+          CHAR_MATCH.find(([, re]) => re.test((md.attributes || []).map(x => x.value).join(' ')));
+        if (hit) { owned[hit[0]] = (owned[hit[0]] || 0) + 1; total++; }
+      }
+      W.owned = owned; W.total = total; W.status = 'ok'; W.t = Date.now();
+    } catch (e) { console.warn(e); W.status = 'error'; }
+    finally { wLoading = false; saveW(); paintWallet(); }
+    return W.status;
+  }
+
+  function paintWallet() {
+    const b = $('walletBtn');
+    if (W.addr) {
+      b.innerHTML = (W.total ? '<span class="dot"></span>' : '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 9h14a4 4 0 0 1 4 4"/><circle cx="16.5" cy="13" r="1.3" fill="currentColor"/></svg>') + '<span>' + shortAddr(W.addr) +
+        (W.total ? ' · ' + t('wCards')(W.total) : '') + '</span>';
+    } else {
+      b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 9h14a4 4 0 0 1 4 4"/><circle cx="16.5" cy="13" r="1.3" fill="currentColor"/></svg><span>' + t('wConnect') + ' <small>(' + t('wOptional') + ')</small></span>';
+    }
+    if (!$('wallet').hidden && W.addr) openAccount();
+  }
+
+  let bundleState = 0; // 0 not loaded, 1 loading, 2 ready
+  function loadBundle() {
+    if (bundleState) return;
+    bundleState = 1;
+    addEventListener('svwallet-ready', () => {
+      bundleState = 2;
+      const re = () => { if (!$('wallet').hidden && !W.addr) openPicker(); };
+      try { SVWallet.onList(re); } catch (e) {}
+      re();
+    }, { once: true });
+    const sc = document.createElement('script'); sc.src = 'wallet.bundle.js'; sc.onerror = () => { bundleState = 0; }; document.head.appendChild(sc);
+  }
+
+  function openPicker() {
+    const ws = window.SVWallet ? SVWallet.list() : [];
+    const card = $('walletCard');
+    card.innerHTML = '<h2>' + t('wConnect') + '</h2><p>' + t('wIntro') + '</p>' +
+      (ws.length ? '<div class="wlist">' + ws.map((w, i) => '<button class="witem" type="button" data-i="' + i + '"><img src="' + escH(w.icon) + '" alt="">' +
+        '<span>' + (w.mwa ? t('wSeeker') : escH(w.name)) + '<small>' + (w.mwa ? t('wSeekerSub') : t('wBrowser')) + '</small></span></button>').join('') + '</div>'
+        : (bundleState === 2 ? '<p>' + t('wNone') + '</p>' : '<p>…</p>')) +
+      '<p class="fine">' + t('wSafe') + '</p>' +
+      '<button class="btn2" type="button" data-x>' + t('notNow') + '</button>';
+    card.querySelector('[data-x]').onclick = () => { $('wallet').hidden = true; };
+    card.querySelectorAll('.witem').forEach(b => b.onclick = async () => {
+      const w = ws[+b.dataset.i];
+      b.disabled = true; b.querySelector('small').textContent = t('wWaiting');
+      try {
+        const a = await SVWallet.connect(w.name);
+        if (!validAddr(a)) throw new Error('bad address');
+        if (a !== W.addr) W = { addr: a, owned: {}, total: 0 };
+        saveW(); paintWallet(); openAccount();
+        await checkHolder(true);
+      } catch (e) { b.disabled = false; b.querySelector('small').textContent = t('wRetry'); }
+    });
+    $('wallet').hidden = false;
+  }
+
+  function openAccount() {
+    const card = $('walletCard');
+    const ids = Object.keys(W.owned);
+    card.innerHTML = '<h2>' + t('wYour') + '</h2><div class="waddr">' + escH(W.addr) + '</div>' +
+      (wLoading ? '<p>' + t('wChecking') + '</p>' :
+        W.status === 'error' ? '<p>' + t('wErr') + '</p>' :
+        W.total ? '<p><b>' + t('wHolder')(W.total) + '</b><br>' + t('wUnlocked')(unlockedByHolder()) + '</p><div class="wchars">' +
+          ids.map(id => '<figure><img src="art/chars/' + id + '.webp" alt=""><figcaption>' + CHAR_NAME[id] + ' ×' + W.owned[id] + '</figcaption></figure>').join('') + '</div>'
+        : '<p>' + t('wNoCards') + '</p>') +
+      '<div class="wbtns">' +
+        (W.total && unlockedByHolder() ? '<button class="btn2" type="button" data-g>' + t('gallery') + '</button>' : '') +
+        '<button class="btn2" type="button" data-r>' + t('wRefresh') + '</button>' +
+        '<button class="btn2" type="button" data-d>' + t('wDisconnect') + '</button></div>' +
+      '<button class="btn" type="button" data-x>' + t('back') + '</button>';
+    card.querySelector('[data-x]').onclick = () => { $('wallet').hidden = true; };
+    card.querySelector('[data-r]').onclick = () => checkHolder(true);
+    const g = card.querySelector('[data-g]'); if (g) g.onclick = () => { $('wallet').hidden = true; openGallery(); };
+    card.querySelector('[data-d]').onclick = async () => {
+      try { window.SVWallet && await SVWallet.disconnect(); } catch (e) {}
+      W = { owned: {} }; try { localStorage.removeItem('svb_wallet'); } catch (e) {}
+      $('wallet').hidden = true; paintWallet(); toast(t('wDone'));
+    };
+    $('wallet').hidden = false;
+  }
+
+  $('walletBtn').addEventListener('click', () => {
+    if (W.addr) { openAccount(); checkHolder(false); }
+    else { loadBundle(); openPicker(); }
+  });
+  paintWallet();
+  if (W.addr) checkHolder(false);
   $('closeGallery').addEventListener('click', () => { $('gallery').hidden = true; });
   $('closeView').addEventListener('click', () => { $('view').hidden = true; });
   $('closeHelp').addEventListener('click', () => { $('help').hidden = true; });
   $('langBtn').addEventListener('click', () => {
     lang = lang === 'el' ? 'en' : 'el';
     store.set('svb_lang', lang);
-    applyLang(); renderStats(); renderHome();
+    applyLang(); renderStats(); renderHome(); paintWallet();
   });
 
   function showDone() {
