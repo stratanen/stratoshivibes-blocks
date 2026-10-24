@@ -157,10 +157,11 @@ body{
   --s:1.12;
   transform:translate(var(--x,0px),var(--y,0px)) scale(var(--s));
   filter:drop-shadow(0 14px 18px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(34,228,255,.55));
-  animation:liftpop .3s cubic-bezier(.25,1.7,.45,1) both;
+  animation:liftpop .3s cubic-bezier(.25,1.7,.45,1) backwards;
 }
 @property --s{syntax:'<number>';inherits:false;initial-value:1}
 @keyframes liftpop{from{--s:.5}to{--s:1.12}}
+.piece.float.fit{--s:1;transition:--s .12s ease-out}
 .cell.drop{animation:drop .26s cubic-bezier(.25,1.6,.45,1) both}
 @keyframes drop{from{transform:scale(1.22);filter:brightness(1.5)}to{transform:scale(1);filter:none}}
 
@@ -921,15 +922,25 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const g = geom(), gp = g.pitch - g.cell, p = drag.p;
     const W = p.w * g.pitch - gp, H = p.h * g.pitch - gp;
     const x = e.clientX - W / 2;
-    const y = drag.touch ? e.clientY - H - Math.max(72, g.cell * 1.8) : e.clientY - H / 2;
+    const y = drag.touch ? e.clientY - H - Math.max(52, g.cell * 1.35) : e.clientY - H / 2;
     drag.el.style.setProperty('--sz', g.cell + 'px');
     drag.el.style.gap = gp + 'px';
     drag.el.style.setProperty('--x', x + 'px');
     drag.el.style.setProperty('--y', y + 'px');
-    const c = Math.round((x - g.x) / g.pitch), r = Math.round((y - g.y) / g.pitch);
+    // snap to the nearest free spot within about one cell of where the piece is held
+    const fc = (x - g.x) / g.pitch, fr = (y - g.y) / g.pitch;
+    let best = null, bd = 1.05;
+    for (let r = Math.floor(fr) - 1; r <= Math.ceil(fr) + 1; r++) {
+      for (let c = Math.floor(fc) - 1; c <= Math.ceil(fc) + 1; c++) {
+        const d = Math.hypot(r - fr, c - fc);
+        if (d < bd && canPlace(p, r, c)) { bd = d; best = [r, c]; }
+      }
+    }
+    const [r, c] = best || [null, null];
     if (r !== drag.r || c !== drag.c) {
       drag.r = r; drag.c = c;
-      drag.ok = canPlace(p, r, c);
+      drag.ok = !!best;
+      drag.el.classList.toggle('fit', drag.ok);
       renderBoard();
       if (drag.ok) showGhost(p, r, c);
     }
@@ -944,7 +955,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   window.addEventListener('pointermove', e => { if (drag) { e.preventDefault(); moveDrag(e); } }, { passive: false });
   window.addEventListener('pointerup', () => endDrag(true));
-  window.addEventListener('pointercancel', () => endDrag(false));
+  window.addEventListener('pointercancel', () => endDrag(!!(drag && drag.ok)));
 
   /* ---------- picture ---------- */
   const images = {};
