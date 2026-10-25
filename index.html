@@ -762,6 +762,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   if (!rev || !picById(rev.id) || !Array.isArray(rev.order) || rev.order.length !== (rev.n || 6) ** 2 ||
       (!isActive(picById(rev.id)) && !done.includes(rev.id))) rev = newReveal(nextPicId());
+  // A live event takes over right away when the current picture is only a replay or has not been started.
+  {
+    const ev = PICS.find(p => isActive(p) && chapterOf(p).until && !done.includes(p.id));
+    if (ev && rev.id !== ev.id && !chapterOf(picById(rev.id)).until && (done.includes(rev.id) || rev.count === 0)) rev = newReveal(ev.id);
+  }
   const saveRev = () => store.set('svb_reveal', JSON.stringify(rev));
   saveRev();
   function picLabel() {
@@ -1163,7 +1168,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   window.addEventListener('popstate', () => { if ($('home').hidden) showHome(); });
 
   function openGallery() {
-    const g = $('ggrid'); g.innerHTML = '';
+    const g = $('ggrid'); g.innerHTML = ''; g.scrollTop = 0;
     CHAPTERS.forEach(ch => {
       const list = PICS.filter(p => p.ch === ch.id);
       const got = list.filter(p => done.includes(p.id)).length;
@@ -1175,6 +1180,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       list.forEach(pic => galleryItem(g, pic));
     });
     $('gallery').hidden = false;
+    g.scrollTop = 0;
   }
   function galleryItem(g, pic) {
       const i = PICS.indexOf(pic), src = pic.src;
