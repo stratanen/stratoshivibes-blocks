@@ -596,7 +596,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       supThanks: n => 'Το Supporter Pack ενεργοποιήθηκε: χρυσά τουβλάκια, σήμα Supporter και ' + n + ' Δεύτερες ευκαιρίες.',
       pendingNote: 'Η πληρωμή δεν έχει επιβεβαιωθεί ακόμα. Αν χρειαστεί, πάτα «Επαναφορά αγορών» σε λίγα λεπτά.',
       readingHistory: 'Διαβάζω το ιστορικό του wallet σου…', restored: n => n === 1 ? 'Επανήλθε 1 αγορά.' : 'Επανήλθαν ' + n + ' αγορές.', allRestored: 'Ό,τι έχεις αγοράσει είναι ήδη ενεργό.',
-      noneFound: 'Δεν βρέθηκαν αγορές του Blockspace σε αυτό το wallet.', historyErr: 'Δεν ήταν δυνατή η ανάγνωση του ιστορικού τώρα. Δοκίμασε αργότερα.',
+      noneFound: 'Δεν βρέθηκε Supporter Pack σε αυτό το wallet.', chancesSeen: n => 'Βρέθηκαν ' + n + (n === 1 ? ' αγορά' : ' αγορές') + ' Δεύτερης ευκαιρίας. Αυτές χρησιμοποιούνται τη στιγμή της αγοράς, γι\' αυτό δεν επαναφέρονται. Η επαναφορά αφορά το Supporter Pack.', historyErr: 'Δεν ήταν δυνατή η ανάγνωση του ιστορικού τώρα. Δοκίμασε αργότερα.',
       wSeeker: 'Seeker / Android wallet', wSeekerSub: 'Seed Vault, Phantom, Solflare κ.ά.', wBrowser: 'Wallet του browser',
       wNone: 'Δεν βρέθηκε wallet. Στο Seeker άνοιξε το παιχνίδι από το dApp Store. Σε άλλα κινητά εγκατάστησε ένα Solana wallet, όπως Phantom ή Solflare.',
       wWaiting: 'Περιμένει έγκριση στο wallet σου…', wRetry: 'Δεν συνδέθηκε. Πάτα για νέα προσπάθεια.',
@@ -671,7 +671,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       supThanks: n => 'Supporter Pack is active: gold tiles, a Supporter badge and ' + n + ' Second Chances.',
       pendingNote: 'The payment is not confirmed yet. If needed, tap Restore purchases in a few minutes.',
       readingHistory: 'Reading your wallet\'s history…', restored: n => 'Restored ' + n + (n === 1 ? ' purchase.' : ' purchases.'), allRestored: 'Everything you bought is already active.',
-      noneFound: 'No Blockspace purchases found for this wallet.', historyErr: 'Could not read your wallet\'s history right now. Try again later.',
+      noneFound: 'No Supporter Pack found for this wallet.', chancesSeen: n => 'Found ' + n + ' Second Chance ' + (n === 1 ? 'purchase' : 'purchases') + '. Those are used the moment you buy them, so there is nothing to restore. Restoring brings back the Supporter Pack.', historyErr: 'Could not read your wallet\'s history right now. Try again later.',
       wSeeker: 'Seeker / Android wallet', wSeekerSub: 'Seed Vault, Phantom, Solflare and more', wBrowser: 'Browser wallet',
       wNone: 'No wallet found. On Seeker, open the game from the dApp Store. On other phones, install a Solana wallet such as Phantom or Solflare.',
       wWaiting: 'Waiting for approval in your wallet…', wRetry: 'Not connected. Tap to try again.',
@@ -1767,9 +1767,10 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     try {
       const L = await loadPay(); await getPrices();
       const pays = await L.payments(W.addr, SHOP.treasury, SHOP.prefix);
-      let found = 0;
+      let found = 0, chances = 0;
       for (const p of pays) {
         const id = p.memo.slice(SHOP.prefix.length), prod = PRODUCTS[id];
+        if (id === 'chance') chances++;
         if (!prod || !prod.restorable) continue;
         const worth = p.sym === 'USDC' ? p.amount : (prices[p.sym] ? p.amount * prices[p.sym] : null);
         const floor = p.sym === 'USDC' ? prod.usd * 0.95 * (1 - SHOP.skrDiscount) : prod.usd * 0.4 * (1 - SHOP.skrDiscount);
@@ -1781,7 +1782,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
         }
       }
       saveSH(); applyPerks();
-      shopShow('<h2>' + t('restore') + '</h2><p>' + (found ? t('restored')(found) : isSupporter() ? t('allRestored') : t('noneFound')) + '</p><button class="btn2" type="button" id="shX">' + t('back') + '</button>');
+      shopShow('<h2>' + t('restore') + '</h2><p>' + (found ? t('restored')(found) : isSupporter() ? t('allRestored') : t('noneFound')) + '</p>' +
+        (chances ? '<p class="fine">' + t('chancesSeen')(chances) + '</p>' : '') + '<button class="btn2" type="button" id="shX">' + t('back') + '</button>');
     } catch (e) {
       console.warn(e);
       shopShow('<h2>' + t('restore') + '</h2><p class="serr">' + t('historyErr') + '</p><button class="btn2" type="button" id="shX">' + t('back') + '</button>');
