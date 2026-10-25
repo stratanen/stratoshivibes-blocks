@@ -45,7 +45,7 @@ export default {
       }
 
       if (url.pathname === '/score' && req.method === 'POST') {
-        const { token, score } = await req.json();
+        const { token, score, mode } = await req.json();
         const s = await env.DB.prepare('SELECT addr, exp, last FROM sessions WHERE token = ?').bind(String(token || '')).first();
         if (!s || s.exp < Date.now()) return json({ error: 'please sign in again' }, 401);
         if (!Number.isInteger(score) || score < 0 || score > MAX_SCORE) return json({ error: 'score not accepted' }, 400);
@@ -53,17 +53,19 @@ export default {
         if (now - s.last < MIN_GAP_MS) return json({ error: 'too fast' }, 429);
         await env.DB.prepare('UPDATE sessions SET last = ? WHERE token = ?').bind(now, token).run();
         const week = isoWeek(now);
-        for (const period of [week, 'all']) {
+        const periods = mode === 'daily' ? ['d-' + utcDay(now)] : [week, 'all'];   // daily challenge has its own board per UTC day
+        for (const period of periods) {
           await env.DB.prepare(
             'INSERT INTO scores (addr, period, best, at) VALUES (?1, ?2, ?3, ?4) ' +
             'ON CONFLICT(addr, period) DO UPDATE SET best = excluded.best, at = excluded.at WHERE excluded.best > scores.best'
           ).bind(s.addr, period, score, now).run();
         }
-        return json({ ok: true, ...(await standing(env, s.addr, week)) });
+        return json({ ok: true, ...(await standing(env, s.addr, periods[0])) });
       }
 
       if (url.pathname === '/top' && req.method === 'GET') {
-        const scope = url.searchParams.get('scope') === 'all' ? 'all' : isoWeek(Date.now());
+        const sc = url.searchParams.get('scope');
+        const scope = sc === 'all' ? 'all' : sc === 'day' ? 'd-' + utcDay(Date.now()) : isoWeek(Date.now());
         const addr = url.searchParams.get('addr');
         const top = await env.DB.prepare('SELECT addr, best FROM scores WHERE period = ? ORDER BY best DESC, at ASC LIMIT 20').bind(scope).all();
         const out = { scope, top: top.results || [] };
@@ -90,6 +92,8 @@ function signInMessage(addr, nonce) {
     'This is a sign-in, not a transaction. It costs nothing and cannot move any funds.\n\n' +
     'Address: ' + addr + '\nNonce: ' + nonce;
 }
+
+function utcDay(ms) { return new Date(ms).toISOString().slice(0, 10); }
 
 function isoWeek(ms) {
   const d = new Date(ms); d.setUTCHours(0, 0, 0, 0);

@@ -23,6 +23,7 @@ p,li{color:var(--fg)} .muted{color:var(--muted)} a{color:var(--gold)}
 <li>the current game in progress (board, pieces, score)</li>
 <li>your best score and how much of each picture you have revealed</li>
 <li>your language and sound settings</li>
+<li>your daily challenge game, today's best and your streak of days played</li>
 <li>if you choose to connect a wallet: your public wallet address and which Vol.1 Degens characters it holds</li>
 <li>if you buy an extra: what you bought, the transaction link, and your preferred currency</li>
 </ul>
@@ -33,7 +34,7 @@ p,li{color:var(--fg)} .muted{color:var(--muted)} a{color:var(--gold)}
 <p>To check which Vol.1 Degens cards you hold, the game sends your public address to Helius, a Solana data provider, which looks up public blockchain data. Your public address is already visible to anyone on the Solana blockchain. See <a href="https://www.helius.dev/privacy-policy">Helius's privacy policy</a>. Tap Disconnect at any time to remove the address from your device.</p>
 
 <h2>Leaderboard</h2>
-<p>The leaderboard is optional. To join, you sign one plain message with your wallet. It is not a transaction and cannot move funds; it only proves the address is yours. After that, the game sends your score at the end of each game to the StratoshiVibes leaderboard server, which runs on Cloudflare. The server stores your public wallet address, your best score per week and overall, and when you set it. The leaderboard shows a shortened form of your address to everyone. Tap "Leave the leaderboard" to stop sending scores; to have your scores removed, contact us.</p>
+<p>The leaderboard is optional. To join, you sign one plain message with your wallet. It is not a transaction and cannot move funds; it only proves the address is yours. After that, the game sends your score at the end of each game to the StratoshiVibes leaderboard server, which runs on Cloudflare. The server stores your public wallet address, your best score per day (daily challenge), per week and overall, and when you set it. The leaderboard shows a shortened form of your address to everyone. Tap "Leave the leaderboard" to stop sending scores; to have your scores removed, contact us.</p>
 
 <h2>Purchases</h2>
 <p>When you buy an extra, the payment is a public Solana transaction from your wallet to the StratoshiVibes wallet, with a note naming the item (for example "svblocks:supporter"). Like every blockchain transaction, it is permanently visible to anyone. To show prices, the game asks Jupiter for current SOL and SKR prices; this request does not include your address. "Restore purchases" reads your wallet's public transaction history through Helius.</p>

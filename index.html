@@ -217,7 +217,7 @@ body{
 .home{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding-block:16px;text-align:center}
 .brand .sv{display:block;font:600 12px var(--f);letter-spacing:.3em;text-transform:uppercase;color:var(--cyan)}
 .brand h1{margin:6px 0 0;font:400 clamp(34px, 11vw, 60px)/1 var(--fd);color:#fff;text-shadow:0 0 18px var(--pink),0 0 40px var(--violet)}
-.hpic{position:relative;width:min(70vw, 40vh, 340px);aspect-ratio:1;max-width:100%;padding:0;border-radius:16px;overflow:hidden;border:1px solid color-mix(in srgb, var(--violet) 60%, transparent);box-shadow:0 0 30px color-mix(in srgb, var(--violet) 45%, transparent);background:var(--panel);cursor:pointer}
+.hpic{position:relative;width:min(70vw, 34vh, 340px);aspect-ratio:1;max-width:100%;padding:0;border-radius:16px;overflow:hidden;border:1px solid color-mix(in srgb, var(--violet) 60%, transparent);box-shadow:0 0 30px color-mix(in srgb, var(--violet) 45%, transparent);background:var(--panel);cursor:pointer}
 .hpic canvas{width:100%;height:100%;display:block}
 .hlabel{position:absolute;left:8px;bottom:8px;font-size:12px;font-weight:600;letter-spacing:.05em;padding:3px 8px;border-radius:7px;background:rgba(6,10,30,.82);color:var(--cyan);font-variant-numeric:tabular-nums}
 .hbest{color:var(--dim);font-size:14px;font-variant-numeric:tabular-nums}
@@ -308,7 +308,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 .hrow .shopbtn{min-width:0}
 .hrow:has(> .shopbtn[hidden]) .lbbtn{grid-column:1/-1}
 #lbCard h2{font:800 22px/1.2 var(--f);letter-spacing:0}
-.lbtabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;padding:4px;border-radius:12px;background:rgba(0,0,0,.25)}
+.lbtabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;padding:4px;border-radius:12px;background:rgba(0,0,0,.25)}
 .lbtabs button{padding:8px;border:0;border-radius:9px;background:none;color:var(--dim);font:800 13px var(--f);cursor:pointer}
 .lbtabs button.on{background:rgba(34,228,255,.14);color:#fff}
 .lbtabs button:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
@@ -328,6 +328,20 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 @keyframes sppulse{50%{transform:scale(1.12);box-shadow:0 0 18px var(--k)}}
 .cell.zap{box-shadow:inset 0 0 0 2px #fff,0 0 12px var(--gold)!important;background:rgba(255,176,46,.22)}
 @media (prefers-reduced-motion: reduce){.slot .blk.sp-bomb,.slot .blk.sp-lightning{animation:none}}
+.dailybtn{display:flex;align-items:center;justify-content:center;gap:10px;padding-block:10px;border-color:color-mix(in srgb, var(--gold) 60%, transparent);background:linear-gradient(90deg,rgba(255,176,46,.14),rgba(255,79,216,.10))}
+.dailybtn > span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
+.dailybtn small{font:600 11.5px var(--f);color:var(--gold)}
+.coach{position:fixed;inset:0;z-index:45;pointer-events:none;transition:opacity .2s}
+.coach .bubble{position:fixed;left:50%;transform:translateX(-50%);width:min(88vw, 340px);padding:12px 14px;border-radius:14px;background:rgba(10,15,46,.94);border:1px solid var(--gold);box-shadow:0 0 22px rgba(255,176,46,.35);color:#fff;font:600 14px/1.45 var(--f);text-align:center}
+.coach .bubble b{color:var(--gold)}
+.coach .bubble button{pointer-events:auto;margin-top:10px}
+.coach .hand{position:fixed;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:rgba(255,255,255,.4);border:2px solid #fff;box-shadow:0 0 16px rgba(255,255,255,.7);will-change:transform}
+.coach .skip{pointer-events:auto;position:fixed;right:max(16px, env(safe-area-inset-right, 0px));bottom:calc(14px + env(safe-area-inset-bottom, 0px));background:none;border:0;color:var(--dim);font:600 13px var(--f);text-decoration:underline;cursor:pointer}
+.cell.tgt{box-shadow:inset 0 0 0 2px var(--gold),0 0 12px rgba(255,176,46,.6);animation:tgt 1s ease-in-out infinite}
+@keyframes tgt{50%{background:rgba(255,176,46,.25)}}
+.reveal.point{animation:point 1s ease-in-out infinite}
+@keyframes point{50%{box-shadow:0 0 0 3px var(--gold),0 0 30px var(--gold)}}
+@media (prefers-reduced-motion: reduce){.cell.tgt,.reveal.point{animation:none}}
 #done{z-index:60}
 #done .card{width:min(100%, 560px);gap:16px}
 #done canvas{
@@ -358,6 +372,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b></div>
   <div class="hbtns">
     <button class="btn" id="play" type="button"></button>
+    <button class="btn2 dailybtn" id="dailyBtn" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span><span data-i18n="daily"></span><small id="dailySub"></small></span></button>
     <button class="btn2" id="newFromHome" type="button" data-i18n="newGame"></button>
     <div class="hrow">
       <button class="btn2" id="galleryBtn" type="button" data-i18n="gallery"></button>
@@ -395,6 +410,12 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   </section>
 </main>
 
+<div class="coach" id="coach" hidden>
+  <div class="bubble" id="coachTxt"></div>
+  <div class="hand" id="coachHand" aria-hidden="true"></div>
+  <button class="skip" id="coachSkip" type="button" data-i18n="skip"></button>
+</div>
+
 <div class="toast" id="toast" aria-live="polite"></div>
 
 <div class="ov" id="over" hidden>
@@ -406,6 +427,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     <p id="overTxt"></p>
     <div class="chancebox" id="chanceBox"></div>
     <button class="btn" id="again" type="button" data-i18n="newGame"></button>
+    <button class="btn2" id="overHome" type="button" data-i18n="homeAria" hidden></button>
   </div>
 </div>
 
@@ -527,6 +549,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       picture: 'Εικόνα', best: 'Ρεκόρ', line: 'Γραμμή!', lines: n => n + ' γραμμές!',
       pieces: n => '+' + n + ' κομμάτια εικόνας',
       overTitle: 'Δεν χωράει άλλο κομμάτι',
+      daily: 'Ημερήσια πρόκληση', dailyShort: 'Ημερήσια',
+      dailySub: (s, b) => (s ? 'Σερί ' + s + (s === 1 ? ' μέρα' : ' μέρες') : 'Ίδια παρτίδα για όλους') + (b ? ' · σήμερα ' + b : ''),
+      streakTag: s => 'σερί ' + s,
+      dailyOver: (b, s) => 'Καλύτερο σήμερα <b>' + b + '</b><br>Σερί: <b>' + s + (s === 1 ? ' μέρα' : ' μέρες') + '</b>. Δοκίμασε ξανά την ίδια παρτίδα όσες φορές θέλεις.',
+      tryAgain2: 'Ξανά η ίδια παρτίδα', lbDay: 'Σήμερα',
+      tut1: 'Σύρε το κομμάτι στο <b>φωτισμένο κενό</b> για να γεμίσεις τη γραμμή.',
+      tut2: 'Μπράβο! Κάθε γραμμή που καθαρίζεις <b>ξεκλειδώνει κομμάτια της εικόνας</b> πάνω αριστερά. Ολοκλήρωσέ την για να μπει στη Συλλογή σου.',
+      tutOk: 'Πάμε!', skip: 'Παράλειψη',
       overTxt: (b, p) => 'Ρεκόρ <b>' + b + '</b><br>Η εικόνα κρατάει την πρόοδό της: <b>' + p + '</b> κομμάτια.',
       newGame: 'Νέα παρτίδα',
       doneTitle: 'Η εικόνα αποκαλύφθηκε!',
@@ -594,6 +624,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       picture: 'Picture', best: 'Best', line: 'Line!', lines: n => n + ' lines!',
       pieces: n => '+' + n + ' picture pieces',
       overTitle: 'No room left',
+      daily: 'Daily challenge', dailyShort: 'Daily',
+      dailySub: (s, b) => (s ? s + '-day streak' : 'Same game for everyone') + (b ? ' · today ' + b : ''),
+      streakTag: s => 'streak ' + s,
+      dailyOver: (b, s) => 'Best today <b>' + b + '</b><br>Streak: <b>' + s + (s === 1 ? ' day' : ' days') + '</b>. Replay the same game as often as you like.',
+      tryAgain2: 'Same game again', lbDay: 'Today',
+      tut1: 'Drag the piece onto the <b>glowing gap</b> to fill the row.',
+      tut2: 'Nice! Every line you clear <b>unlocks pieces of the picture</b> at the top left. Finish it to add it to your Gallery.',
+      tutOk: 'Let\'s go!', skip: 'Skip',
       overTxt: (b, p) => 'Best <b>' + b + '</b><br>Your picture keeps its progress: <b>' + p + '</b> pieces.',
       newGame: 'New game',
       doneTitle: 'Picture unlocked!',
@@ -720,12 +758,24 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const ch = pic ? (CH_DIFF[pic.ch] || 0) + (pic.n > 6 ? 0.1 : 0) : 0;
     return Math.min(0.8, ch + Math.min(0.55, score / 4000 * 0.55));
   }
-  function makePiece() {
-    const d = difficulty();
+  function makePiece(rand = Math.random, d = difficulty()) {
     const wOf = sh => sh.w * (sh.hard ? 1 + d : 1 - 0.35 * d);
-    let x = Math.random() * SHAPES.reduce((a, sh) => a + wOf(sh), 0), s = SHAPES[0];
+    let x = rand() * SHAPES.reduce((a, sh) => a + wOf(sh), 0), s = SHAPES[0];
     for (const sh of SHAPES) { x -= wOf(sh); if (x <= 0) { s = sh; break; } }
-    return { cells: s.cells, ...sizeOf(s.cells), k: Math.floor(Math.random() * KINDS.length) };
+    return { cells: s.cells, ...sizeOf(s.cells), k: Math.floor(rand() * KINDS.length) };
+  }
+  // ---- daily challenge: same start and same piece sequence for everyone on a UTC day ----
+  const utcDay = (ms = Date.now()) => new Date(ms).toISOString().slice(0, 10);
+  const DAILY_DIFF = 0.35;
+  function seedOf(str) { let h = 2166136261; for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function dailyPiece(day, n) { return makePiece(rng(seedOf(day + '#' + n)), DAILY_DIFF); }
+  function dailyStartBoard(day) {
+    const r = rng(seedOf(day + '#board')), b = new Array(N * N).fill(-1);
+    for (let k = 0; k < 14; k++) { const i = Math.floor(r() * N * N); b[i] = Math.floor(r() * KINDS.length); }
+    for (let y = 0; y < N; y++) if (b.slice(y * N, y * N + N).every(v => v >= 0)) b[y * N] = -1;
+    for (let x = 0; x < N; x++) { let full = true; for (let y = 0; y < N; y++) if (b[y * N + x] < 0) full = false; if (full) b[x] = -1; }
+    return b;
   }
 
   /* ---------- tile styles ---------- */
@@ -739,7 +789,13 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   let board = new Array(N * N).fill(-1);
   let tray = [null, null, null];
   let score = 0, combo = 0, chanceUsed = false, lbSent = 0;
+  let mode = 'main';                     // 'main' (pictures) or 'daily' (daily challenge)
+  let dseq = 0, dday = utcDay();         // daily: next piece index and the day being played
   let best = +(store.get('svb_best') || 0);
+  const dailyBest = () => { const d = readJSON('svb_dbest'); return d && d.day === utcDay() ? +d.best || 0 : 0; };
+  function saveBest() { if (mode === 'daily') store.set('svb_dbest', JSON.stringify({ day: dday, best })); else store.set('svb_best', String(best)); }
+  let streak = readJSON('svb_streak') || { last: '', n: 0 };
+  const streakNow = () => { const y = utcDay(Date.now() - 864e5); return streak.last === utcDay() || streak.last === y ? streak.n : 0; };
   const picById = id => PICS.find(p => p.id === id);
   const chapterOf = p => CHAPTERS.find(c => c.id === p.ch);
   const chActive = c => !c.until || Date.now() < Date.parse(c.until);
@@ -784,12 +840,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const p = picById(rev.id), ch = chapterOf(p), list = PICS.filter(q => q.ch === p.ch);
     return { ch: ch[lang], k: list.indexOf(p) + 1, of: list.length };
   }
-  const saveGame = () => store.set('svb_game', JSON.stringify({
-    board, score, combo, chanceUsed, lbSent, tray: tray.map(p => p ? (p.sp ? { sp: p.sp } : { cells: p.cells, k: p.k }) : null)
+  const saveGame = () => store.set(mode === 'daily' ? 'svb_daily' : 'svb_game', JSON.stringify({
+    board, score, combo, chanceUsed, lbSent, day: dday, seq: dseq,
+    tray: tray.map(p => p ? (p.sp ? { sp: p.sp } : { cells: p.cells, k: p.k }) : null)
   }));
   function loadGame() {
-    const g = readJSON('svb_game');
+    const g = readJSON(mode === 'daily' ? 'svb_daily' : 'svb_game');
     if (!g || !Array.isArray(g.board) || g.board.length !== N * N || !Array.isArray(g.tray)) return false;
+    if (mode === 'daily') { if (g.day !== utcDay()) return false; dday = g.day; dseq = +g.seq || 0; }
     board = g.board.map(v => (Number.isInteger(v) && v >= 0 && v < KINDS.length) ? v : -1);
     score = +g.score || 0; combo = +g.combo || 0; chanceUsed = !!g.chanceUsed; lbSent = +g.lbSent || 0;
     tray = g.tray.slice(0, 3).map(p => p && (p.sp === 'bomb' || p.sp === 'lightning') ? makeSpecial(p.sp) : (p && Array.isArray(p.cells) && p.cells.length) ? { cells: p.cells, ...sizeOf(p.cells), k: p.k % KINDS.length } : null);
@@ -887,13 +945,20 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   function renderStats() {
     $('score').textContent = score;
     $('best').textContent = best;
-    const pl = picLabel();
-    $('eyebrow').innerHTML = pl.ch + ' <b>' + pl.k + '/' + pl.of + '</b>';
-    $('pct').textContent = rev.count + '/' + RTT();
-    $('bar').style.width = (rev.count / RTT() * 100) + '%';
+    if (mode === 'daily') {
+      $('eyebrow').innerHTML = t('dailyShort') + ' <b>' + dday.slice(8) + '/' + dday.slice(5, 7) + '</b>';
+      $('pct').textContent = t('streakTag')(streakNow());
+      $('bar').style.width = '0%';
+    } else {
+      const pl = picLabel();
+      $('eyebrow').innerHTML = pl.ch + ' <b>' + pl.k + '/' + pl.of + '</b>';
+      $('pct').textContent = rev.count + '/' + RTT();
+      $('bar').style.width = (rev.count / RTT() * 100) + '%';
+    }
     $('combo').textContent = combo > 1 ? 'Combo ×' + combo : '';
   }
   function refill() {
+    if (mode === 'daily') { tray = [dailyPiece(dday, dseq), dailyPiece(dday, dseq + 1), dailyPiece(dday, dseq + 2)]; dseq += 3; return; }
     for (let i = 0; i < 40; i++) {
       tray = [makePiece(), makePiece(), makePiece()];
       if (tray.some(p => anyFit(p))) return;
@@ -986,14 +1051,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const kinds = area.map(j => board[j]);
     area.forEach(j => board[j] = -1);
     score += area.length * 3;
-    const got = area.length ? revealAdd(Math.max(1, Math.round(area.length / 4))) : 0;
+    const got = area.length && mode === 'main' ? revealAdd(Math.max(1, Math.round(area.length / 4))) : 0;
     toast(t(p.sp), got ? t('pieces')(got) : '');
     if (p.sp === 'bomb') { sfx.boom(); buzz([40, 30, 60]); } else { sfx.zap(); buzz([15, 20, 15, 20, 30]); }
     if (tray.every(x => !x)) refill();
     renderBoard();
     area.forEach((j, n) => { const d = cells[j]; d.className = 'cell blk k' + kinds[n] + ' pop'; d.style.animationDelay = Math.min(n * 18, 240) + 'ms'; });
     if (area.length) setTimeout(() => { area.forEach(j => cells[j].style.animationDelay = ''); renderBoard(); }, 700);
-    if (score > best) { best = score; store.set('svb_best', String(best)); }
+    if (score > best) { best = score; saveBest(); }
     renderStats(); renderTray(); saveGame();
     setTimeout(checkOver, area.length ? 760 : 120);
   }
@@ -1009,7 +1074,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     if (lines) {
       combo++;
       score += Math.round(lines * 10 * (1 + (lines - 1) * 0.5) * Math.min(combo, 8));
-      const got = revealAdd(lines * 2 + (lines > 1 ? lines - 1 : 0) + (combo > 1 ? 1 : 0));
+      const got = mode === 'main' ? revealAdd(lines * 2 + (lines > 1 ? lines - 1 : 0) + (combo > 1 ? 1 : 0)) : 0;
+      if (tut === 1) setTimeout(tutStep2, 700);
       const label = lines > 1 ? t('lines')(lines) : (combo > 1 ? 'Combo ×' + combo : t('line'));
       toast(label, got ? t('pieces')(got) : '');
       buzz(lines > 1 ? [20, 40, 30] : 20);
@@ -1032,7 +1098,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       d.style.animationDelay = Math.min(n * 14, 200) + 'ms';
     });
     if (idx.length) setTimeout(() => { idx.forEach(j => cells[j].style.animationDelay = ''); renderBoard(); }, 640);
-    if (score > best) { best = score; store.set('svb_best', String(best)); }
+    if (score > best) { best = score; saveBest(); }
     const sc = $('score'); sc.classList.remove('bump'); void sc.offsetWidth; if (lines) sc.classList.add('bump');
     renderStats();
     renderTray();
@@ -1042,6 +1108,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   let pendingOver = false;
   function checkOver() {
     if (tray.some(p => p && anyFit(p))) return;
+    if (mode === 'daily') return dailyOver();
+    $('oc').hidden = false; $('overHome').hidden = true; $('again').textContent = t('newGame');
     if (!$('done').hidden || rev.count >= RTT()) { pendingOver = true; return; }
     $('finalScore').textContent = score;
     $('overTxt').innerHTML = t('overTxt')(best, rev.count + '/' + RTT());
@@ -1052,8 +1120,30 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     sfx.over();
     requestAnimationFrame(() => drawReveal($('oc')));
   }
+  function dailyOver() {
+    if (!$('over').hidden) return;
+    const y = utcDay(Date.now() - 864e5);
+    if (streak.last !== dday) { streak = { last: dday, n: streak.last === y ? streak.n + 1 : 1 }; store.set('svb_streak', JSON.stringify(streak)); }
+    if (score > best) { best = score; saveBest(); }
+    $('finalScore').textContent = score;
+    $('overTxt').innerHTML = t('dailyOver')(best, streakNow());
+    $('chanceBox').innerHTML = '';
+    $('oc').hidden = true;
+    $('again').textContent = t('tryAgain2');
+    $('overHome').hidden = false;
+    $('overRank').hidden = true;
+    renderStats();
+    lbSubmit();
+    $('over').hidden = false;
+    sfx.over();
+  }
   function resetGame() {
     lbSubmit();
+    if (mode === 'daily') {
+      dday = utcDay(); dseq = 0; board = dailyStartBoard(dday); score = 0; combo = 0; chanceUsed = false; lbSent = 0; refill();
+      best = dailyBest();
+      $('over').hidden = true; renderBoard(); renderTray(); renderStats(); saveGame(); return;
+    }
     board.fill(-1); score = 0; combo = 0; chanceUsed = false; lbSent = 0; refill();
     $('over').hidden = true;
     renderBoard(); renderTray(); renderStats(); saveGame();
@@ -1172,7 +1262,20 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     ctx.restore();
   }
   let rafOn = false;
+  function drawDaily(cv) {
+    const css = cv.getBoundingClientRect().width; if (!css) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 3), S = Math.round(css * dpr);
+    if (cv.width !== S) { cv.width = S; cv.height = S; }
+    const c = cv.getContext('2d'), g = c.createLinearGradient(0, 0, S, S);
+    g.addColorStop(0, '#2a1240'); g.addColorStop(1, '#0c1336'); c.fillStyle = g; c.fillRect(0, 0, S, S);
+    c.textAlign = 'center'; c.fillStyle = '#ffb02e'; c.shadowColor = '#ff8c28'; c.shadowBlur = S * 0.08;
+    c.font = Math.round(S * 0.42) + 'px Bungee, sans-serif'; c.fillText(String(+dday.slice(8)), S / 2, S * 0.5);
+    c.shadowBlur = 0; c.fillStyle = '#e8edff'; c.font = '800 ' + Math.round(S * 0.11) + 'px Commissioner, sans-serif';
+    const mon = new Date(dday + 'T12:00:00Z').toLocaleString(lang === 'el' ? 'el-GR' : 'en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
+    c.fillText(mon, S / 2, S * 0.68);
+  }
   function tick() {
+    if (mode === 'daily' && $('home').hidden) { drawDaily($('rc')); rafOn = false; return; }
     let act = $('home').hidden ? drawReveal($('rc')) : drawReveal($('hc'));
     if (!$('peek').hidden) act = drawReveal($('pc')) || act;
     if (!$('done').hidden) drawReveal($('dc'), true);
@@ -1182,6 +1285,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   window.addEventListener('resize', kick);
 
   $('reveal').addEventListener('click', () => {
+    if (mode === 'daily') return;
     $('peekTxt').textContent = t('peekTxt')(rev.count, RTT());
     $('peek').hidden = false; kick();
   });
@@ -1191,13 +1295,23 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- home, gallery, back button ---------- */
   const inProgress = () => score > 0 || board.some(v => v >= 0);
   function renderHome() {
+    $('dailySub').textContent = t('dailySub')(streakNow(), dailyBest());
     $('hbest').textContent = best;
     const pl = picLabel();
     $('hlabel').textContent = pl.ch + ' ' + pl.k + '/' + pl.of + ' · ' + rev.count + '/' + RTT();
     $('play').textContent = inProgress() ? t('cont') : t('play');
     $('newFromHome').hidden = !inProgress();
   }
+  function setMode(m) {
+    if (mode === m) return;
+    endDrag(false); saveGame();
+    mode = m;
+    if (m === 'daily') { best = dailyBest(); if (!loadGame()) { dday = utcDay(); dseq = 0; board = dailyStartBoard(dday); score = 0; combo = 0; chanceUsed = false; lbSent = 0; refill(); saveGame(); } }
+    else { best = +(store.get('svb_best') || 0); if (!loadGame()) { board.fill(-1); score = 0; combo = 0; chanceUsed = false; lbSent = 0; refill(); } }
+    $('reveal').style.cursor = m === 'daily' ? 'default' : '';
+  }
   function showHome() {
+    setMode('main');
     ['over', 'peek', 'help', 'gallery', 'view', 'wallet', 'shop', 'lb'].forEach(id => $(id).hidden = true);
     endDrag(false);
     $('game').hidden = true; $('home').hidden = false;
@@ -1209,8 +1323,10 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     renderBoard(); renderTray(); renderStats(); kick();
     setTimeout(checkOver, 300);
   }
-  $('play').addEventListener('click', showGame);
-  $('newFromHome').addEventListener('click', () => { resetGame(); showGame(); });
+  $('play').addEventListener('click', () => { setMode('main'); showGame(); if (tutDue()) tutStart(); });
+  $('dailyBtn').addEventListener('click', () => { setMode('daily'); showGame(); });
+  $('overHome').addEventListener('click', () => { if (history.state && history.state.s === 'game') history.back(); else showHome(); });
+  $('newFromHome').addEventListener('click', () => { setMode('main'); resetGame(); showGame(); });
   $('hpic').addEventListener('click', () => $('reveal').click());
   $('homeBtn').addEventListener('click', () => {
     if (history.state && history.state.s === 'game') history.back(); else showHome();
@@ -1403,10 +1519,10 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   function lbSubmit() {
     if (!lbOn || !lbSignedIn() || score <= lbSent) return Promise.resolve();
     const sent = score; lbSent = sent; saveGame();
-    return lbFetch('/score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: LBS.token, score: sent }) })
+    return lbFetch('/score', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: LBS.token, score: sent, mode }) })
       .then(r => {
         if (r.s === 401) { LBS = {}; store.set('svb_lb', '{}'); return; }
-        if (r.b && r.b.me && !$('over').hidden) { $('overRank').textContent = t('lbRank')(r.b.me.rank); $('overRank').hidden = false; }
+        if (r.b && r.b.me && !$('over').hidden) { $('overRank').textContent = mode === 'daily' ? t('lbDay') + ': #' + r.b.me.rank : t('lbRank')(r.b.me.rank); $('overRank').hidden = false; }
       }).catch(() => { if (lbSent === sent) { lbSent = 0; saveGame(); } });
   }
 
@@ -1414,6 +1530,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   async function openLb() {
     $('lb').hidden = false;
     lb$().innerHTML = '<h2>' + t('lb') + '</h2><div class="lbtabs" role="tablist">' +
+      '<button type="button" role="tab" data-s="day" class="' + (lbScope === 'day' ? 'on' : '') + '">' + t('lbDay') + '</button>' +
       '<button type="button" role="tab" data-s="week" class="' + (lbScope === 'week' ? 'on' : '') + '">' + t('lbWeek') + '</button>' +
       '<button type="button" role="tab" data-s="all" class="' + (lbScope === 'all' ? 'on' : '') + '">' + t('lbAll') + '</button></div>' +
       '<ol class="lblist" id="lbList"><li class="lbempty" style="display:block;background:none">' + t('lbLoading') + '</li></ol>' +
@@ -1742,6 +1859,53 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     renderStats(); renderHome(); kick();
     if (pendingOver) { pendingOver = false; checkOver(); }
   });
+
+  /* ---------- first-game coach (once) ---------- */
+  let tut = 0, tutRaf = 0;
+  const tutDue = () => !store.get('svb_tut') && done.length === 0 && !(+store.get('svb_best')) && score === 0;
+  function tutEnd() {
+    tut = 0; store.set('svb_tut', 'done'); cancelAnimationFrame(tutRaf);
+    $('coach').hidden = true; $('reveal').classList.remove('point');
+    document.querySelectorAll('.cell.tgt').forEach(c => c.classList.remove('tgt'));
+  }
+  function tutStart() {
+    board.fill(-1); score = 0; combo = 0;
+    for (let c = 0; c < 6; c++) board[7 * N + c] = [0, 3, 8, 10, 2, 11][c];
+    [[6, 0, 9], [6, 1, 12], [6, 3, 6], [5, 0, 13]].forEach(([r, c, k]) => board[r * N + c] = k);
+    tray = [{ cells: [[0, 0], [0, 1]], h: 1, w: 2, k: 0 }, { cells: [[0, 0], [1, 0], [1, 1]], h: 2, w: 2, k: 5 }, { cells: [[0, 0], [0, 1], [1, 0], [1, 1]], h: 2, w: 2, k: 3 }];
+    renderBoard(); renderTray(); renderStats(); saveGame();
+    tut = 1;
+    $('coachTxt').innerHTML = t('tut1');
+    $('coach').hidden = false; $('coach').style.opacity = 1;
+    const bb = $('board').getBoundingClientRect(); $('coachTxt').style.top = (bb.top + 12) + 'px';
+    const anim = () => {
+      if (tut !== 1) return;
+      [7 * N + 6, 7 * N + 7].forEach(i => cells[i].classList.add('tgt'));
+      const s = slots[0].getBoundingClientRect(), c0 = cells[7 * N + 6].getBoundingClientRect(), c1 = cells[7 * N + 7].getBoundingClientRect();
+      const g = geom(), off = Math.max(40, g.cell * 1.1);
+      const sx = s.left + s.width / 2, sy = s.top + s.height / 2, tx = (c0.left + c1.right) / 2, ty = c0.top + g.cell + off;
+      const ph = (performance.now() % 2200) / 2200, e = ph < 0.15 ? 0 : ph > 0.85 ? 1 : (ph - 0.15) / 0.7, k = e < .5 ? 2 * e * e : 1 - Math.pow(-2 * e + 2, 2) / 2;
+      $('coachHand').style.transform = 'translate(' + (sx + (tx - sx) * k) + 'px,' + (sy + (ty - sy) * k) + 'px)';
+      $('coachHand').style.opacity = ph > 0.92 ? 0 : 1;
+      tutRaf = requestAnimationFrame(anim);
+    };
+    anim();
+  }
+  function tutStep2() {
+    if (tut !== 1) return;
+    tut = 2; cancelAnimationFrame(tutRaf);
+    document.querySelectorAll('.cell.tgt').forEach(c => c.classList.remove('tgt'));
+    $('coachHand').style.opacity = 0; $('coach').style.opacity = 1;
+    const rb = $('reveal').getBoundingClientRect();
+    $('coachTxt').style.top = (rb.bottom + 14) + 'px';
+    $('coachTxt').innerHTML = t('tut2') + '<br><button class="btn" type="button" id="tutOk">' + t('tutOk') + '</button>';
+    $('reveal').classList.add('point');
+    $('tutOk').onclick = tutEnd;
+  }
+  $('coachSkip').addEventListener('click', tutEnd);
+  // hide the coach while dragging so it never covers the board
+  document.addEventListener('pointerdown', e => { if (tut === 1 && e.target.closest && e.target.closest('.slot')) $('coach').style.opacity = 0; }, true);
+  document.addEventListener('pointerup', () => { if (tut === 1) $('coach').style.opacity = 1; }, true);
 
   /* ---------- start ---------- */
   applyLang();
