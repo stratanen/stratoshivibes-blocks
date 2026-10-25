@@ -816,23 +816,33 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const playable = PICS.filter(isActive);
     const ev = playable.find(p => chapterOf(p).until && !done.includes(p.id));
     if (ev) return ev.id;                       // a live event comes first
+    const back = playable.find(p => paused[p.id] && !done.includes(p.id));
+    if (back) return back.id;                   // then any picture that was paused
     const open = playable.find(p => !done.includes(p.id));
     if (open) return open.id;
     const pool = playable.filter(p => !chapterOf(p).until);
     const i = pool.findIndex(p => rev && p.id === rev.id);
     return pool[(i + 1) % pool.length].id;      // everything completed: play them again in order
   }
+  // progress of pictures that were paused (e.g. when an event took over), so they resume where they were
+  let paused = readJSON('svb_paused') || {};
+  const savePaused = () => store.set('svb_paused', JSON.stringify(paused));
   function newReveal(id) {
+    const keep = paused[id];
+    if (keep && Array.isArray(keep.order) && keep.order.length === (keep.n || 6) ** 2 && !done.includes(id)) { delete paused[id]; savePaused(); return keep; }
     const n = picById(id).n || 6, order = [...Array(n * n).keys()];
     for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
     return { id, n, count: 0, order };
   }
   if (!rev || !picById(rev.id) || !Array.isArray(rev.order) || rev.order.length !== (rev.n || 6) ** 2 ||
       (!isActive(picById(rev.id)) && !done.includes(rev.id))) rev = newReveal(nextPicId());
-  // A live event takes over right away when the current picture is only a replay or has not been started.
+  // A live event takes over right away; an unfinished picture is paused and resumes later with its progress.
   {
     const ev = PICS.find(p => isActive(p) && chapterOf(p).until && !done.includes(p.id));
-    if (ev && rev.id !== ev.id && !chapterOf(picById(rev.id)).until && (done.includes(rev.id) || rev.count === 0)) rev = newReveal(ev.id);
+    if (ev && rev.id !== ev.id && !chapterOf(picById(rev.id)).until) {
+      if (rev.count > 0 && !done.includes(rev.id)) { paused[rev.id] = rev; savePaused(); }
+      rev = newReveal(ev.id);
+    }
   }
   const saveRev = () => store.set('svb_reveal', JSON.stringify(rev));
   saveRev();
