@@ -3,7 +3,7 @@
 // The worker checks the ed25519 signature, then accepts end-of-game scores from that address.
 
 const ALLOWED_ORIGINS = ['https://blockspace.stratoshivibes.com', 'https://stratanen.github.io'];
-const MAX_SCORE = 100000;          // anything above is treated as tampering
+const MAX_SCORE = 5000000;         // anything above is treated as tampering (scores are 10x since Oct 2026)
 const MIN_GAP_MS = 15000;          // at most one score every 15 seconds per player
 const SESSION_DAYS = 60;
 

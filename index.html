@@ -111,14 +111,16 @@ body{
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));box-shadow:0 0 10px var(--pink);transition:width .5s ease}
 
 .board{
+  --b1:#0e1640;--b2:#080d29;--bc:var(--cyan);
+  transition:box-shadow .6s,border-color .6s;
   display:grid;
   grid-template-columns:repeat(8,var(--cell));
   grid-template-rows:repeat(8,var(--cell));
   gap:var(--gap);
   padding:9px;
   border-radius:16px;
-  background:linear-gradient(160deg,#0e1640,#080d29);
-  border:1px solid color-mix(in srgb, var(--cyan) 35%, transparent);
+  background:linear-gradient(160deg,var(--b1),var(--b2));
+  border:1px solid color-mix(in srgb, var(--bc) 45%, transparent);
   box-shadow:0 0 24px color-mix(in srgb, var(--cyan) 22%, transparent), inset 0 0 30px rgba(0,0,0,.5);
 }
 .cell{
@@ -342,6 +344,27 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 .reveal.point{animation:point 1s ease-in-out infinite}
 @keyframes point{50%{box-shadow:0 0 0 3px var(--gold),0 0 30px var(--gold)}}
 @media (prefers-reduced-motion: reduce){.cell.tgt,.reveal.point{animation:none}}
+.board.bt1{--b1:#2a0f3d;--b2:#12061f;--bc:#ff4fd8}
+.board.bt2{--b1:#2e1c06;--b2:#140b02;--bc:#ffb02e}
+.board.bt3{--b1:#062a1e;--b2:#021209;--bc:#2bff9a}
+.board.bt4{--b1:#1b0f45;--b2:#0a0526;--bc:#a45cff}
+.board{box-shadow:0 0 24px color-mix(in srgb, var(--bc) 30%, transparent), inset 0 0 30px rgba(0,0,0,.5)!important}
+.board.shake1{animation:shk .25s linear}
+.board.shake2{animation:shk .35s linear}
+.board.shake3{animation:shkBig .5s linear}
+@keyframes shk{20%{transform:translate(-3px,2px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,-1px)}80%{transform:translate(2px,1px)}}
+@keyframes shkBig{10%{transform:translate(-7px,4px) rotate(-.6deg)}25%{transform:translate(7px,-4px) rotate(.6deg)}40%{transform:translate(-6px,-3px)}55%{transform:translate(5px,3px)}70%{transform:translate(-3px,2px)}85%{transform:translate(2px,-1px)}}
+.fx{position:fixed;inset:0;width:100%;height:100%;z-index:34;pointer-events:none}
+.fpts{position:fixed;z-index:36;pointer-events:none;transform:translate(-50%,-50%);font:400 22px var(--fd);color:#fff;text-shadow:0 0 10px var(--gold),0 0 22px var(--pink);white-space:nowrap;animation:fpts 1s ease-out both}
+@keyframes fpts{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-260%) scale(1)}}
+.toast.l2{font-size:30px}
+.toast.l3{font-size:34px;text-shadow:0 0 14px var(--gold),0 0 30px var(--pink)}
+.toast.l4{font-size:38px;color:#fff6c8;text-shadow:0 0 16px var(--gold),0 0 36px var(--pink),0 0 60px var(--violet)}
+.toast.perfect{font-size:46px;color:#fff;background:linear-gradient(90deg,#22e4ff,#ffb02e,#ff4fd8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(255,176,46,.8))}
+.toast.perfect small{-webkit-text-fill-color:var(--gold);color:var(--gold)}
+.toast.show.l3,.toast.show.l4,.toast.show.perfect{animation:toastBig 1.5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes toastBig{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-8deg)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(2deg)}35%{transform:translate(-50%,-50%) scale(1) rotate(0)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-65%) scale(1)}}
+@media (prefers-reduced-motion: reduce){.board.shake1,.board.shake2,.board.shake3,.fpts,.toast.show.l3,.toast.show.l4,.toast.show.perfect{animation-duration:.01s}}
 #done{z-index:60}
 #done .card{width:min(100%, 560px);gap:16px}
 #done canvas{
@@ -416,6 +439,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   <button class="skip" id="coachSkip" type="button" data-i18n="skip"></button>
 </div>
 
+<canvas class="fx" id="fx" aria-hidden="true"></canvas>
 <div class="toast" id="toast" aria-live="polite"></div>
 
 <div class="ov" id="over" hidden>
@@ -546,7 +570,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
   const TEXT = {
     el: {
-      picture: 'Εικόνα', best: 'Ρεκόρ', line: 'Γραμμή!', lines: n => n + ' γραμμές!',
+      picture: 'Εικόνα', best: 'Ρεκόρ', line: 'Γραμμή!', lines: n => n + ' γραμμές!', praise: n => ['', 'Ωραία!', 'Τέλεια!', 'Εξαιρετικό!', 'Απίστευτο!'][Math.min(n, 4)], perfectSub: b => 'Καθαρό ταμπλό · +' + b,
       pieces: n => '+' + n + ' κομμάτια εικόνας',
       overTitle: 'Δεν χωράει άλλο κομμάτι',
       daily: 'Ημερήσια πρόκληση', dailyShort: 'Ημερήσια',
@@ -621,7 +645,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια'
     },
     en: {
-      picture: 'Picture', best: 'Best', line: 'Line!', lines: n => n + ' lines!',
+      picture: 'Picture', best: 'Best', line: 'Line!', lines: n => n + ' lines!', praise: n => ['', 'Good!', 'Great!', 'Excellent!', 'Unbelievable!'][Math.min(n, 4)], perfectSub: b => 'Board cleared · +' + b,
       pieces: n => '+' + n + ' picture pieces',
       overTitle: 'No room left',
       daily: 'Daily challenge', dailyShort: 'Daily',
@@ -756,7 +780,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   function difficulty() {
     const pic = rev && picById(rev.id);
     const ch = pic ? (CH_DIFF[pic.ch] || 0) + (pic.n > 6 ? 0.1 : 0) : 0;
-    return Math.min(0.8, ch + Math.min(0.55, score / 4000 * 0.55));
+    return Math.min(0.8, ch + Math.min(0.55, score / 40000 * 0.55));
   }
   function makePiece(rand = Math.random, d = difficulty()) {
     const wOf = sh => sh.w * (sh.hard ? 1 + d : 1 - 0.35 * d);
@@ -786,6 +810,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   })();
 
   /* ---------- state ---------- */
+  // Scores became 10x larger; scale up what is already saved, once.
+  if (!store.get('svb_x10')) {
+    const b0 = +(store.get('svb_best') || 0); if (b0) store.set('svb_best', String(b0 * 10));
+    const db = readJSON('svb_dbest'); if (db && db.best) { db.best *= 10; store.set('svb_dbest', JSON.stringify(db)); }
+    for (const k of ['svb_game', 'svb_daily']) { const g = readJSON(k); if (g) { g.score = (+g.score || 0) * 10; g.lbSent = (+g.lbSent || 0) * 10; store.set(k, JSON.stringify(g)); } }
+    store.set('svb_x10', '1');
+  }
+  const fmt = n => Math.round(n).toLocaleString(lang === 'el' ? 'el-GR' : 'en-US');
   let board = new Array(N * N).fill(-1);
   let tray = [null, null, null];
   let score = 0, combo = 0, chanceUsed = false, lbSent = 0;
@@ -953,8 +985,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     });
   }
   function renderStats() {
-    $('score').textContent = score;
-    $('best').textContent = best;
+    countTo(score);
+    $('best').textContent = fmt(best);
     if (mode === 'daily') {
       $('eyebrow').innerHTML = t('dailyShort') + ' <b>' + dday.slice(8) + '/' + dday.slice(5, 7) + '</b>';
       $('pct').textContent = t('streakTag')(streakNow());
@@ -969,19 +1001,113 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   function refill() {
     if (mode === 'daily') { tray = [dailyPiece(dday, dseq), dailyPiece(dday, dseq + 1), dailyPiece(dday, dseq + 2)]; dseq += 3; return; }
-    for (let i = 0; i < 40; i++) {
-      tray = [makePiece(), makePiece(), makePiece()];
-      if (tray.some(p => anyFit(p))) return;
+    // Early in a game, offer the set that lets you clear the most lines, so the first boards flow quickly.
+    const tries = tut ? 1 : score < 5000 ? 8 : score < 15000 ? 3 : 1;
+    let bestSet = null, bestVal = -1, valid = 0;
+    for (let i = 0; i < 60 && valid < tries; i++) {
+      const set = [makePiece(), makePiece(), makePiece()];
+      if (!set.some(p => anyFit(p))) continue;
+      valid++;
+      const val = tries > 1 ? set.filter(canClear).length : 0;
+      if (val > bestVal) { bestVal = val; bestSet = set; }
     }
+    tray = bestSet || [makePiece(), makePiece(), makePiece()];
   }
+  function canClear(p) {
+    for (let r = 0; r <= N - p.h; r++) for (let c = 0; c <= N - p.w; c++) {
+      if (!canPlace(p, r, c)) continue;
+      const tmp = board.slice(); for (const [dr, dc] of p.cells) tmp[(r + dr) * N + c + dc] = 0;
+      if (fullLines(tmp).lines) return true;
+    }
+    return false;
+  }
+  // the first pictures complete faster
+  const revealBoost = n => Math.round(n * (done.length === 0 ? 2 : done.length < 3 ? 1.5 : 1));
+
+  /* ---------- effects: particles, beams, shake, floating points, counting score ---------- */
+  const fx = $('fx'), fctx = fx.getContext('2d');
+  let parts = [], beams = [], fxOn = false, fdpr = 1;
+  function fxResize() { fdpr = Math.min(window.devicePixelRatio || 1, 2); fx.width = innerWidth * fdpr; fx.height = innerHeight * fdpr; }
+  fxResize(); addEventListener('resize', fxResize);
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fxClear(list, power, perfect) {
+    if (!list.length) return;
+    const b = $('board'); b.classList.remove('shake1', 'shake2', 'shake3'); void b.offsetWidth;
+    if (!reduceMotion) b.classList.add(perfect || power >= 3 ? 'shake3' : power >= 2 ? 'shake2' : 'shake1');
+    if (reduceMotion) return;
+    const per = Math.min(14, 5 + power * 3) + (perfect ? 6 : 0);
+    const rows = new Set(), colsS = new Set();
+    for (const [j, k] of list) {
+      const rc = cells[j].getBoundingClientRect(), cx = rc.left + rc.width / 2, cy = rc.top + rc.height / 2;
+      const col = (KINDS[k] || KINDS[0])[1];
+      for (let q = 0; q < per && parts.length < 700; q++) {
+        const a = Math.random() * Math.PI * 2, sp = (110 + Math.random() * 320) * (1 + power * 0.25);
+        parts.push({ x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 140, life: 0, max: 0.55 + Math.random() * 0.5, s: 2.5 + Math.random() * 4.5, c: q % 4 === 0 ? '#ffffff' : col, r: Math.random() * 6 });
+      }
+      rows.add(Math.floor(j / N)); colsS.add(j % N);
+    }
+    // light beams along every full row / column that was cleared
+    const bb = $('board').getBoundingClientRect();
+    const inList = new Set(list.map(x => x[0]));
+    rows.forEach(r => { if ([...Array(N).keys()].every(c => inList.has(r * N + c))) { const rc = cells[r * N].getBoundingClientRect(); beams.push({ x: bb.left, y: rc.top, w: bb.width, h: rc.height, life: 0 }); } });
+    colsS.forEach(c => { if ([...Array(N).keys()].every(r => inList.has(r * N + c))) { const rc = cells[c].getBoundingClientRect(); beams.push({ x: rc.left, y: bb.top, w: rc.width, h: bb.height, life: 0 }); } });
+    if (perfect) beams.push({ x: bb.left, y: bb.top, w: bb.width, h: bb.height, life: 0, full: true });
+    if (!fxOn) { fxOn = true; lastFx = performance.now(); requestAnimationFrame(fxTick); }
+  }
+  let lastFx = 0;
+  function fxTick(now) {
+    const dt = Math.min(0.05, (now - lastFx) / 1000); lastFx = now;
+    fctx.setTransform(fdpr, 0, 0, fdpr, 0, 0); fctx.clearRect(0, 0, innerWidth, innerHeight);
+    fctx.globalCompositeOperation = 'lighter';
+    beams = beams.filter(b => (b.life += dt) < (b.full ? 0.7 : 0.38));
+    for (const b of beams) {
+      const a = 1 - b.life / (b.full ? 0.7 : 0.38);
+      fctx.globalAlpha = a * (b.full ? 0.55 : 0.9); fctx.fillStyle = b.full ? '#ffb02e' : '#ffffff';
+      const grow = b.full ? 0 : (b.w > b.h ? 0 : 0);
+      fctx.fillRect(b.x - grow, b.y, b.w, b.h);
+    }
+    parts = parts.filter(p => (p.life += dt) < p.max);
+    for (const p of parts) {
+      p.vy += 900 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.985;
+      fctx.globalAlpha = Math.max(0, 1 - p.life / p.max); fctx.fillStyle = p.c;
+      fctx.fillRect(p.x - p.s / 2, p.y - p.s / 2, p.s, p.s);
+    }
+    fctx.globalAlpha = 1; fctx.globalCompositeOperation = 'source-over';
+    if (parts.length || beams.length) requestAnimationFrame(fxTick); else { fxOn = false; fctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+  function floatPoints(list, pts) {
+    if (!list.length || pts <= 0) return;
+    let x = 0, y = 0;
+    for (const [j] of list) { const rc = cells[j].getBoundingClientRect(); x += rc.left + rc.width / 2; y += rc.top + rc.height / 2; }
+    const el = document.createElement('div'); el.className = 'fpts'; el.textContent = '+' + fmt(pts);
+    el.style.left = (x / list.length) + 'px'; el.style.top = (y / list.length) + 'px';
+    if (pts >= 1000) el.style.fontSize = '28px';
+    document.body.appendChild(el); setTimeout(() => el.remove(), 1050);
+  }
+  let shown = -1, countRaf = 0;
+  function countTo(target) {
+    const el = $('score');
+    const setTxt = v => { el.textContent = fmt(v); const len = el.textContent.length; el.style.fontSize = len > 5 ? 'calc(var(--cell) * ' + (0.98 * 5 / len).toFixed(3) + ')' : ''; };
+    if (shown < 0 || reduceMotion || target < shown || target - shown < 30) { shown = target; cancelAnimationFrame(countRaf); setTxt(target); return; }
+    const from = shown, t0 = performance.now(), dur = Math.min(900, 250 + (target - from) * 0.25);
+    cancelAnimationFrame(countRaf);
+    const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); shown = Math.round(from + (target - from) * e); setTxt(shown); if (k < 1) countRaf = requestAnimationFrame(step); };
+    countRaf = requestAnimationFrame(step);
+  }
+  // board colour themes, changed by a PERFECT clear
+  let boardTheme = +(store.get('svb_bt') || 0) % 5;
+  function applyBoardTheme() { const b = $('board'); for (let k = 1; k < 5; k++) b.classList.toggle('bt' + k, boardTheme === k); }
+  function nextBoardTheme() { boardTheme = (boardTheme + 1) % 5; store.set('svb_bt', String(boardTheme)); applyBoardTheme(); }
+  applyBoardTheme();
 
   let toastTimer;
-  function toast(main, sub) {
+  function toast(main, sub, lvl) {
     const el = $('toast');
+    el.className = 'toast' + (lvl ? ' ' + lvl : '');
     el.textContent = main;
     if (sub) { const s = document.createElement('small'); s.textContent = sub; el.appendChild(s); }
     el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 1150);
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), lvl && lvl !== 'l2' ? 1550 : 1150);
   }
   /* ---------- sound (synthesised, no files) ---------- */
   let muted = store.get('svb_sound') === 'off';
@@ -1060,9 +1186,13 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const area = spArea(p.sp, r, c).filter(j => board[j] >= 0);
     const kinds = area.map(j => board[j]);
     area.forEach(j => board[j] = -1);
-    score += area.length * 3;
-    const got = area.length && mode === 'main' ? revealAdd(Math.max(1, Math.round(area.length / 4))) : 0;
-    toast(t(p.sp), got ? t('pieces')(got) : '');
+    const before = score;
+    score += area.length * 30;
+    const fxCells = area.map((j, n) => [j, kinds[n]]);
+    const got = area.length && mode === 'main' ? revealAdd(revealBoost(Math.max(1, Math.round(area.length / 4)))) : 0;
+    toast(t(p.sp), got ? t('pieces')(got) : '', 'l3');
+    fxClear(fxCells, p.sp === 'bomb' ? 3 : 2, false);
+    if (area.length) floatPoints(fxCells, score - before);
     if (p.sp === 'bomb') { sfx.boom(); buzz([40, 30, 60]); } else { sfx.zap(); buzz([15, 20, 15, 20, 30]); }
     if (tray.every(x => !x)) refill();
     renderBoard();
@@ -1076,18 +1206,25 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const p = tray[i];
     if (p.sp) return placeSpecial(i, r, c);
     for (const [dr, dc] of p.cells) board[(r + dr) * N + c + dc] = p.k;
-    score += p.cells.length;
+    const before = score;
+    score += p.cells.length * 10;
     tray[i] = null;
     const { idx, lines } = fullLines(board);
+    const fxCells = idx.map(j => [j, board[j]]);
     const kinds = idx.map(j => board[j]);
     idx.forEach(j => board[j] = -1);
     if (lines) {
       combo++;
-      score += Math.round(lines * 10 * (1 + (lines - 1) * 0.5) * Math.min(combo, 8));
-      const got = mode === 'main' ? revealAdd(lines * 2 + (lines > 1 ? lines - 1 : 0) + (combo > 1 ? 1 : 0)) : 0;
+      score += Math.round(lines * 100 * (1 + (lines - 1) * 0.5) * Math.min(combo, 8));
+      const perfect = board.every(v => v < 0);
+      if (perfect) score += 3000;
+      const got = mode === 'main' ? revealAdd(revealBoost(lines * 2 + (lines > 1 ? lines - 1 : 0) + (combo > 1 ? 1 : 0) + (perfect ? 4 : 0))) : 0;
       if (tut === 1) setTimeout(tutStep2, 700);
-      const label = lines > 1 ? t('lines')(lines) : (combo > 1 ? 'Combo ×' + combo : t('line'));
-      toast(label, got ? t('pieces')(got) : '');
+      const sub = [combo > 1 ? 'Combo ×' + combo : '', got ? t('pieces')(got) : ''].filter(Boolean).join(' · ');
+      if (perfect) { toast('PERFECT!', t('perfectSub')(fmt(3000)), 'perfect'); nextBoardTheme(); setTimeout(() => sfx.complete(), 150); }
+      else toast(t('praise')(Math.max(lines, combo >= 4 ? 3 : 1)), sub, 'l' + Math.min(4, Math.max(lines, combo >= 4 ? 3 : 1)));
+      fxClear(fxCells, lines, perfect);
+      floatPoints(fxCells, score - before);
       buzz(lines > 1 ? [20, 40, 30] : 20);
       sfx.clear(lines, combo);
       if (got) sfx.reveal(got);
@@ -1121,8 +1258,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     if (mode === 'daily') return dailyOver();
     $('oc').hidden = false; $('overHome').hidden = true; $('again').textContent = t('newGame');
     if (!$('done').hidden || rev.count >= RTT()) { pendingOver = true; return; }
-    $('finalScore').textContent = score;
-    $('overTxt').innerHTML = t('overTxt')(best, rev.count + '/' + RTT());
+    $('finalScore').textContent = fmt(score);
+    $('overTxt').innerHTML = t('overTxt')(fmt(best), rev.count + '/' + RTT());
     renderChanceBox();
     $('overRank').hidden = true;
     lbSubmit();
@@ -1135,8 +1272,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const y = utcDay(Date.now() - 864e5);
     if (streak.last !== dday) { streak = { last: dday, n: streak.last === y ? streak.n + 1 : 1 }; store.set('svb_streak', JSON.stringify(streak)); }
     if (score > best) { best = score; saveBest(); }
-    $('finalScore').textContent = score;
-    $('overTxt').innerHTML = t('dailyOver')(best, streakNow());
+    $('finalScore').textContent = fmt(score);
+    $('overTxt').innerHTML = t('dailyOver')(fmt(best), streakNow());
     $('chanceBox').innerHTML = '';
     $('oc').hidden = true;
     $('again').textContent = t('tryAgain2');
@@ -1305,8 +1442,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- home, gallery, back button ---------- */
   const inProgress = () => score > 0 || board.some(v => v >= 0);
   function renderHome() {
-    $('dailySub').textContent = t('dailySub')(streakNow(), dailyBest());
-    $('hbest').textContent = best;
+    $('dailySub').textContent = t('dailySub')(streakNow(), dailyBest() ? fmt(dailyBest()) : 0);
+    $('hbest').textContent = fmt(best);
     const pl = picLabel();
     $('hlabel').textContent = pl.ch + ' ' + pl.k + '/' + pl.of + ' · ' + rev.count + '/' + RTT();
     $('play').textContent = inProgress() ? t('cont') : t('play');
@@ -1558,9 +1695,9 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       const list = $('lbList'); if (!list) return;
       const top = (r.b && r.b.top) || [];
       list.innerHTML = top.length ? top.map((x, i) => '<li class="' + (x.addr === W.addr ? 'me' : '') + '"><span class="r">' + (i + 1) + '</span><span class="a">' +
-        (x.addr === W.addr ? t('lbYou') + ' · ' : '') + shortAddr(x.addr) + '</span><span class="s">' + x.best + '</span></li>').join('')
+        (x.addr === W.addr ? t('lbYou') + ' · ' : '') + shortAddr(x.addr) + '</span><span class="s">' + fmt(x.best) + '</span></li>').join('')
         : '<li class="lbempty" style="display:block;background:none">' + t('lbEmpty') + '</li>';
-      if (W.addr) $('lbMe').innerHTML = r.b && r.b.me ? t('lbMe')(r.b.me.rank, r.b.me.best) : t('lbNoScore');
+      if (W.addr) $('lbMe').innerHTML = r.b && r.b.me ? t('lbMe')(r.b.me.rank, fmt(r.b.me.best)) : t('lbNoScore');
     } catch (e) { const list = $('lbList'); if (list) list.innerHTML = '<li class="lbempty" style="display:block;background:none">' + t('lbErr') + '</li>'; }
   }
   const uerr = m => Object.assign(new Error(m), { user: true });
