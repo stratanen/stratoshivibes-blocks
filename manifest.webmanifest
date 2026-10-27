@@ -1,6 +1,6 @@
 {
-  "name": "StratoshiVibes Blockspace",
-  "short_name": "SV Blockspace",
+  "name": "Blockspace",
+  "short_name": "Blockspace",
   "description": "Neon block puzzle. Clear lines to reveal the bull vs bear picture.",
   "start_url": "./",
   "scope": "./",
