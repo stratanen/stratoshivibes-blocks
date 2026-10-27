@@ -1485,6 +1485,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     CHAPTERS.forEach(ch => {
       const list = PICS.filter(p => p.ch === ch.id);
       const got = list.filter(p => done.includes(p.id)).length;
+      // an event that has ended is hidden from players who got none of its pictures
+      if (ch.until && !chActive(ch) && !list.some(p => done.includes(p.id) || holderUnlocks(PICS.indexOf(p)))) return;
       const h = document.createElement('div');
       h.className = 'ghead' + (got === list.length ? ' full' : '');
       const evTag = ch.until ? ' · ' + (chActive(ch) ? ch[lang === 'el' ? 'untilEl' : 'untilEn'] : t('ended')) : '';
