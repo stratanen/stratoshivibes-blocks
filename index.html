@@ -247,6 +247,22 @@ body{
 .gitem .lock b{font:400 20px var(--fd);color:#3a4380}
 #vimg{width:min(86vw, 60vh, 480px);height:auto;aspect-ratio:1;border-radius:14px;border:1px solid color-mix(in srgb, var(--cyan) 45%, transparent)}
 /* wallet */
+.perkbtn{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;text-align:left;border-color:rgba(97,245,196,.5);background:linear-gradient(100deg,rgba(18,88,79,.6),rgba(255,255,255,.03))}
+.perkbtn b{display:block;font:800 15px/1.15 var(--f)}
+.perkbtn small{display:block;font:600 11.5px var(--f);color:#9be9cf}
+.perkbtn .ps{font:800 11px var(--f);letter-spacing:.04em;color:#9be9cf;white-space:nowrap}
+.perkbtn.on{border-color:#61f5c4;box-shadow:0 0 16px rgba(97,245,196,.25)}
+.perkbtn.on .ps{color:#0c2a24;background:#61f5c4;padding:3px 8px;border-radius:99px}
+.seekmark{width:28px;height:28px;border-radius:8px;flex:none;background:conic-gradient(from 210deg,#61f5c4,#1fb5a0,#12584f,#61f5c4);position:relative;box-shadow:0 0 10px rgba(97,245,196,.45);display:inline-block}
+.seekmark::after{content:"";position:absolute;inset:7.5px;border-radius:50%;border:2.5px solid #071a17}
+.badge.seekb{color:#0c2a24;background:#61f5c4;box-shadow:0 0 14px rgba(97,245,196,.55);margin-left:6px}
+.perks{list-style:none;margin:10px 0;padding:12px;border-radius:12px;background:rgba(255,255,255,.05);display:grid;gap:9px;text-align:left}
+.perks li{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;font-size:14px;line-height:1.4}
+.perks .pk{width:20px;height:20px;color:rgba(255,255,255,.3)}
+.perks.on .pk{color:#61f5c4}
+.sbadge{font:800 9px var(--f);font-style:normal;letter-spacing:.08em;color:#0c2a24;background:#61f5c4;padding:2px 6px;border-radius:99px;margin-left:6px;vertical-align:1px}
+body.genesis .blk{filter:sepia(.6) saturate(2.2) hue-rotate(118deg) brightness(1.02) contrast(1.06);box-shadow:0 0 10px rgba(97,245,196,.55)}
+body.genesis .cell.ghost{filter:sepia(.6) saturate(2.2) hue-rotate(118deg)}
 .wbtn{display:flex;align-items:center;justify-content:center;gap:8px;border-color:color-mix(in srgb, var(--gold) 45%, transparent);background:rgba(255,176,46,.06)}
 .wbtn .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
 .wbtn small{color:var(--dim);font-weight:600}
@@ -390,7 +406,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 <body>
 <section class="home" id="home">
   <button class="help sndbtn homesnd" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button>
-  <div class="brand"><h1>BLOCKSPACE</h1><span class="badge" id="supBadge" hidden>★ Supporter</span></div>
+  <div class="brand"><h1>BLOCKSPACE</h1><span class="badge" id="supBadge" hidden>★ Supporter</span><span class="badge seekb" id="seekBadge" hidden>◆ Seeker</span></div>
   <button class="hpic" id="hpic" type="button" data-i18n-aria="peekAria"><canvas id="hc"></canvas><span class="hlabel" id="hlabel"></span></button>
   <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b></div>
   <div class="hbtns">
@@ -405,6 +421,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   <button class="btn2 shopbtn" id="shopBtn" type="button"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 10.5h10.6L20.5 8H7"/><circle cx="9.5" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg><span><span data-i18n="shop"></span></span></button>
       <button class="btn2 lbbtn" id="lbBtn" type="button" hidden><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M9 20h6"/></svg><span data-i18n="lb"></span></button>
     </div>
+    <button class="btn2 perkbtn" id="perkBtn" type="button"><span class="seekmark" aria-hidden="true"></span><span class="pt"><b data-i18n="seekerPerks"></b><small data-i18n="seekerSub"></small></span><span class="ps" id="perkState"></span></button>
     <button class="btn2 wbtn" id="walletBtn" type="button"></button>
   </div>
 </section>
@@ -608,6 +625,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       chanceName: 'Δεύτερη ευκαιρία', chanceDesc: 'Καθαρίζει τις 3 πιο γεμάτες γραμμές για να συνεχίσεις. Μία φορά ανά παρτίδα.',
       chanceWhere: 'Στο τέλος μιας παρτίδας', youHave: n => 'Έχεις ' + n, useOne: n => 'Χρησιμοποίησε 1 (έχεις ' + n + ')',
       chanceUsed: 'Η δεύτερη ευκαιρία χρησιμοποιήθηκε σε αυτή την παρτίδα.', chanceToast: 'Καθάρισαν 3 γραμμές',
+      seekerPerks: 'Seeker Perks', seekerSub: 'Για κατόχους Seeker', perksShort: '3 προνόμια', perkOnShort: 'Ενεργά', perkOn: 'Ενεργά σε αυτό το πορτοφόλι', perkTiles: 'Τουβλάκια Genesis, μόνο για κατόχους Seeker', perkBadgeLb: 'Σήμα Seeker δίπλα στο όνομά σου στην κατάταξη', perkBadgeHome: 'Σήμα Seeker στην αρχική σου οθόνη', perkConnect: 'Σύνδεσε το πορτοφόλι του Seeker σου για να τα ξεκλειδώσεις.', perkNone: 'Δεν βρέθηκε Seeker Genesis Token σε αυτό το πορτοφόλι. Σύνδεσε το πορτοφόλι του Seeker σου (Seed Vault).', perkChecking: 'Ελέγχω για Seeker Genesis Token…', perkHow: 'Κάθε Seeker έχει ένα Seeker Genesis Token. Το Blockspace το διαβάζει από το blockchain· δεν υπογράφεις και δεν πληρώνεις τίποτα. Το σήμα στην κατάταξη εμφανίζεται όταν μπεις στην κατάταξη.', genesisTiles: 'Τουβλάκια Genesis', perkActive: 'Τα Seeker Perks είναι ενεργά', badgeT: 'Κάτοχος Seeker', refresh2: 'Έλεγχος ξανά',
       owned: 'Το έχεις', goldTiles: 'Χρυσά τουβλάκια', on: 'Ναι', off: 'Όχι', buy: 'Αγορά', close: 'Κλείσιμο', restore: 'Επαναφορά αγορών',
       shopNote: (d, a) => 'Με SKR έχεις ' + d + '% έκπτωση. Το wallet σου θα ζητήσει έγκριση για μία μεταφορά προς ' + a + ' και τίποτα άλλο.',
       connectFirst: 'Σύνδεσε πρώτα το wallet σου', loading: 'Φόρτωση', gettingPrices: 'Παίρνω τις σημερινές τιμές…', noPrice: 'χωρίς τιμή',
@@ -683,6 +701,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       chanceName: 'Second Chance', chanceDesc: 'Clears your 3 fullest rows so you can keep playing. Once per game.',
       chanceWhere: 'At the end of a game', youHave: n => 'You have ' + n, useOne: n => 'Use 1 (you have ' + n + ')',
       chanceUsed: 'Second Chance already used in this game.', chanceToast: '3 rows cleared',
+      seekerPerks: 'Seeker Perks', seekerSub: 'For Seeker owners', perksShort: '3 perks', perkOnShort: 'Active', perkOn: 'Unlocked on this wallet', perkTiles: 'Genesis tiles, only for Seeker owners', perkBadgeLb: 'Seeker badge next to your name in the leaderboard', perkBadgeHome: 'Seeker badge on your home screen', perkConnect: 'Connect the wallet on your Seeker to unlock them.', perkNone: 'No Seeker Genesis Token found in this wallet. Connect the wallet on your Seeker (Seed Vault).', perkChecking: 'Checking for a Seeker Genesis Token…', perkHow: 'Every Seeker holds a Seeker Genesis Token. Blockspace reads it from the blockchain; nothing is signed or paid. The leaderboard badge appears after you join the leaderboard.', genesisTiles: 'Genesis tiles', perkActive: 'Seeker perks on', badgeT: 'Seeker owner', refresh2: 'Check again',
       owned: 'Owned', goldTiles: 'Gold tiles', on: 'On', off: 'Off', buy: 'Buy', close: 'Close', restore: 'Restore purchases',
       shopNote: (d, a) => 'Pay with SKR and get ' + d + '% off. Your wallet will ask you to approve one transfer to ' + a + ' and nothing else.',
       connectFirst: 'Connect your wallet first', loading: 'Loading', gettingPrices: 'Getting today\'s prices…', noPrice: 'price unavailable',
@@ -1574,7 +1593,12 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       }
       W.owned = owned; W.total = total; W.status = 'ok'; W.t = Date.now();
     } catch (e) { console.warn(e); W.status = 'error'; }
-    finally { wLoading = false; saveW(); paintWallet(); }
+    finally {
+      try { const was = !!W.seeker; W.seeker = (await sgtMints(WCFG.rpc, W.addr, 9000)).length > 0; W.seekerChecked = true; if (W.seeker && !was) toast(t('perkActive')); }
+      catch (e) { console.warn(e); }
+      wLoading = false; saveW(); paintWallet(); applyPerks();
+      if (!$('wallet').hidden && $('walletCard').dataset.k === 'perks') openPerks();
+    }
     return W.status;
   }
 
@@ -1609,6 +1633,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
 
   function openPicker() {
+    $('walletCard').dataset.k = '';
     const ws = window.SVWallet ? SVWallet.list() : [];
     const card = $('walletCard');
     card.innerHTML = '<h2>' + t('wConnect') + '</h2><p>' + t('wIntro') + '</p>' +
@@ -1633,6 +1658,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
 
   function openAccount() {
+    $('walletCard').dataset.k = '';
     const card = $('walletCard');
     const ids = Object.keys(W.owned);
     card.innerHTML = '<h2>' + t('wYour') + '</h2><div class="waddr">' + escH(W.addr) + '</div>' +
@@ -1700,7 +1726,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       const list = $('lbList'); if (!list) return;
       const top = (r.b && r.b.top) || [];
       list.innerHTML = top.length ? top.map((x, i) => '<li class="' + (x.addr === W.addr ? 'me' : '') + '"><span class="r">' + (i + 1) + '</span><span class="a">' +
-        (x.addr === W.addr ? t('lbYou') + ' · ' : '') + shortAddr(x.addr) + '</span><span class="s">' + fmt(x.best) + '</span></li>').join('')
+        (x.addr === W.addr ? t('lbYou') + ' · ' : '') + shortAddr(x.addr) + (x.seeker ? ' <i class="sbadge" title="' + t('badgeT') + '">SEEKER</i>' : '') + '</span><span class="s">' + fmt(x.best) + '</span></li>').join('')
         : '<li class="lbempty" style="display:block;background:none">' + t('lbEmpty') + '</li>';
       if (W.addr) $('lbMe').innerHTML = r.b && r.b.me ? t('lbMe')(r.b.me.rank, fmt(r.b.me.best)) : t('lbNoScore');
     } catch (e) { const list = $('lbList'); if (list) list.innerHTML = '<li class="lbempty" style="display:block;background:none">' + t('lbErr') + '</li>'; }
@@ -1721,6 +1747,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       const r = await lbFetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ addr: W.addr, nonce: n.b.nonce, signature: b64 }) });
       if (!r.b || !r.b.token) throw uerr(t('lbSignFail'));
       LBS = { addr: W.addr, token: r.b.token }; store.set('svb_lb', JSON.stringify(LBS));
+      if (r.b.seeker && !W.seeker) { W.seeker = true; W.seekerChecked = true; saveW(); applyPerks(); }
       toast(t('lbJoined'));
       if (best > 0 && score === 0) { /* no game in progress: send this device's best once */ score = best; const pr = lbSubmit(); score = 0; lbSent = 0; saveGame(); await pr; }
       openLb();
@@ -1764,9 +1791,68 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   const usdTxt = n => '$' + n.toFixed(2);
 
   function applyPerks() {
-    document.body.classList.toggle('gold', isSupporter() && SH.gold !== false);
+    const gen = !!W.seeker && W.genesis !== false;
+    document.body.classList.toggle('genesis', gen);
+    document.body.classList.toggle('gold', !gen && isSupporter() && SH.gold !== false);
     $('supBadge').hidden = !isSupporter();
+    $('seekBadge').hidden = !W.seeker;
+    $('perkBtn').classList.toggle('on', !!W.seeker);
+    $('perkState').textContent = W.seeker ? t('perkOnShort') : t('perksShort');
   }
+
+  /* ---------- Seeker perks: for owners of a Solana Seeker, identified by the Seeker Genesis Token. Looks only. ---------- */
+// Seeker Genesis Token check, ported from @solana-mobile/skr-genesis-token (Apache-2.0) without dependencies.
+  // An SGT is a Token-2022 mint whose TokenGroupMember extension points at the SGT group and whose MetadataPointer points at the same address.
+  const SGT_GROUP = 'GT22s89nU4iWFkNXj1Bw6uYhJJWDRPpShHt4Bk8f99Te', TOKEN_2022 = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
+  const B58A = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  function b58enc(bytes){ let n = 0n; for (const x of bytes) n = n * 256n + BigInt(x); let s = ''; while (n > 0n) { s = B58A[Number(n % 58n)] + s; n /= 58n; } for (const x of bytes) { if (x === 0) s = '1' + s; else break; } return s; }
+  function b64bytes(str){ const bin = atob(str); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+  function isSgtMint(d){
+    if (d.length < 166 || d[165] !== 1) return false;
+    let off = 166, group = null, meta = null, member = false;
+    while (off + 4 <= d.length) {
+      const type = d[off] | (d[off + 1] << 8), len = d[off + 2] | (d[off + 3] << 8), s = off + 4, e = s + len;
+      if (type === 0 || e > d.length) break;
+      if (type === 18 && len === 64) meta = b58enc(d.subarray(s + 32, s + 64));
+      else if (type === 23 && len === 72) { group = b58enc(d.subarray(s + 32, s + 64)); member = true; }
+      off = e;
+    }
+    return member && group === SGT_GROUP && meta === SGT_GROUP;
+  }
+  async function sgtMints(rpcUrl, owner, timeoutMs){
+    const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, to = ctl && setTimeout(() => ctl.abort(), timeoutMs || 8000);
+    const call = (method, params) => fetch(rpcUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }), signal: ctl && ctl.signal })
+      .then(r => r.json()).then(j => { if (j.error) throw new Error(j.error.message || 'rpc error'); return j.result; });
+    try {
+      const ta = await call('getTokenAccountsByOwner', [owner, { programId: TOKEN_2022 }, { encoding: 'jsonParsed', commitment: 'confirmed' }]);
+      const mints = [...new Set((ta.value || []).filter(a => a.account.data.parsed.info.tokenAmount.amount !== '0').map(a => a.account.data.parsed.info.mint))];
+      const out = [];
+      for (let i = 0; i < mints.length; i += 100) {
+        const batch = mints.slice(i, i + 100), r = await call('getMultipleAccounts', [batch, { encoding: 'base64', commitment: 'confirmed' }]);
+        (r.value || []).forEach((acc, k) => { if (acc && acc.owner === TOKEN_2022 && isSgtMint(b64bytes(acc.data[0]))) out.push(batch[k]); });
+      }
+      return out;
+    } finally { if (to) clearTimeout(to); }
+  }
+  
+  function openPerks() {
+    const on = !!W.seeker, card = $('walletCard'), ck = '<svg class="pk" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    card.dataset.k = 'perks';
+    card.innerHTML = '<h2><span class="seekmark" aria-hidden="true"></span> ' + t('seekerPerks') + '</h2><p>' + t('seekerSub') + '</p>' +
+      '<ul class="perks' + (on ? ' on' : '') + '"><li>' + ck + '<span>' + t('perkTiles') + '</span></li><li>' + ck + '<span>' + t('perkBadgeLb') + '</span></li><li>' + ck + '<span>' + t('perkBadgeHome') + '</span></li></ul>' +
+      '<p>' + (on ? '<b>' + t('perkOn') + '</b>' : !W.addr ? t('perkConnect') : wLoading ? t('perkChecking') : W.seekerChecked ? t('perkNone') : t('perkChecking')) + '</p>' +
+      '<p class="fine">' + t('perkHow') + '</p>' +
+      '<div class="wbtns">' + (on ? '<button class="stog" type="button" data-g>' + t('genesisTiles') + ': ' + (W.genesis !== false ? t('on') : t('off')) + '</button>' : '') +
+      (W.addr ? '<button class="btn2" type="button" data-r>' + t('refresh2') + '</button>' : '<button class="btn" type="button" data-c>' + t('wConnect') + '</button>') + '</div>' +
+      '<button class="btn2" type="button" data-x>' + t('close') + '</button>';
+    card.querySelector('[data-x]').onclick = closeWallet;
+    const g = card.querySelector('[data-g]'); if (g) g.onclick = () => { W.genesis = W.genesis === false; saveW(); applyPerks(); openPerks(); };
+    const r = card.querySelector('[data-r]'); if (r) r.onclick = () => { checkHolder(true); openPerks(); };
+    const c = card.querySelector('[data-c]'); if (c) c.onclick = () => { card.dataset.k = ''; loadBundle(); openPicker(); };
+    $('wallet').hidden = false;
+    if (W.addr && !W.seekerChecked && !wLoading) checkHolder(true);
+  }
+  $('perkBtn').addEventListener('click', openPerks);
 
   let prices = null, pricesT = 0;
   async function getPrices() {
