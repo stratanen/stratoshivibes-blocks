@@ -571,6 +571,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     { id: 'halloween', el: 'Halloween 2026', en: 'Halloween 2026', until: '2026-11-04T00:00:00+02:00', untilEl: 'έως 3/11', untilEn: 'until Nov 3' },
     { id: 'degens', el: 'Οι Degens', en: 'The Degens' },
     { id: 'moods', el: 'Οι Διαθέσεις της Αγοράς', en: 'Market Moods' },
+    { id: 'history', el: 'Η Ιστορία του Bitcoin', en: 'Bitcoin History' },
     { id: 'legends', el: 'Θρύλοι', en: 'Legends' }
   ];
   // Reveal pictures, in play order. To add one: put the file in art/ and add a line (and the file to sw.js).
@@ -593,6 +594,9 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     { id: 'sideways', ch: 'moods', src: 'art/level-20.webp', n: 6, chars: ['crab'], el: 'Sideways', en: 'Sideways' },
     { id: 'liquidation', ch: 'moods', src: 'art/level-21.webp', n: 6, chars: ['degen'], el: 'Liquidation', en: 'Liquidation' },
     { id: 'storm', ch: 'moods', src: 'art/level-22.webp', n: 6, chars: ['diamond'], el: 'Η Καταιγίδα', en: 'The Storm' },
+    { id: 'whitepaper', ch: 'history', src: 'art/level-24.webp', n: 6, chars: [], el: 'Η Λευκή Βίβλος', en: 'The White Paper' },
+    // boss of the chapter: keep it last; new History pictures go above this line
+    { id: 'timechain', ch: 'history', src: 'art/level-23.webp', n: 8, chars: [], el: 'Η Αλυσίδα του Χρόνου', en: 'The Timechain' },
     { id: 'satoshi', ch: 'legends', src: 'art/level-02.webp', n: 6, chars: [], el: 'Satoshi', en: 'Satoshi' },
     { id: 'aether', ch: 'legends', src: 'art/level-04.webp', n: 6, chars: [], el: 'Αιθήρ', en: 'Aether' },
     { id: 'treasure', ch: 'legends', src: 'art/level-09.webp', n: 6, chars: [], el: 'Ο θησαυρός του Bitcoin', en: 'The Bitcoin Treasure' },
@@ -819,7 +823,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   const sizeOf = cells => ({ h: Math.max(...cells.map(p => p[0])) + 1, w: Math.max(...cells.map(p => p[1])) + 1 });
   // Difficulty from 0 (relaxed) to 0.8: rises gently with the score of the current game and with the chapter.
-  const CH_DIFF = { degens: 0, moods: 0.1, halloween: 0.05, legends: 0.2 };
+  const CH_DIFF = { degens: 0, moods: 0.1, history: 0.15, halloween: 0.05, legends: 0.2 };
   function difficulty() {
     const pic = rev && picById(rev.id);
     const ch = pic ? (CH_DIFF[pic.ch] || 0) + (pic.n > 6 ? 0.1 : 0) : 0;
