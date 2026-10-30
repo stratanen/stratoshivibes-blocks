@@ -124,13 +124,14 @@ body{
   box-shadow:0 0 24px color-mix(in srgb, var(--cyan) 22%, transparent), inset 0 0 30px rgba(0,0,0,.5);
 }
 .cell{
-  border-radius:22%;
-  background:rgba(70,90,200,.08);
+  border-radius:var(--cr,22%);
+  transition:border-radius .5s,background .5s;
+  background:var(--ce,rgba(70,90,200,.08));
   box-shadow:inset 0 0 0 1px rgba(120,140,255,.12);
 }
 .blk{
   background:var(--img) center/112% no-repeat, var(--k);
-  border-radius:22%;
+  border-radius:var(--br,22%);
   box-shadow:0 0 9px color-mix(in srgb, var(--k) 55%, transparent);
 }
 .cell.ghost{
@@ -369,6 +370,12 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 .board.bt3{--b1:#062a1e;--b2:#021209;--bc:#2bff9a}
 .board.bt4{--b1:#1b0f45;--b2:#0a0526;--bc:#a45cff}
 .board{box-shadow:0 0 24px color-mix(in srgb, var(--bc) 30%, transparent), inset 0 0 30px rgba(0,0,0,.5)!important}
+#wglow{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(75% 45% at 50% 55%, var(--glow,#1b2a7a), transparent 72%);opacity:.5;transition:opacity .45s}
+#wglow.fade{opacity:0}
+.board.ripple .cell{animation:rip .7s ease-out both;animation-delay:var(--rd,0ms)}
+@keyframes rip{0%{transform:scale(1)}35%{transform:scale(.72);filter:brightness(2.2)}100%{transform:scale(1)}}
+.meta .lvl{color:var(--bc,var(--cyan));font-weight:800;letter-spacing:.04em}
+@media (prefers-reduced-motion: reduce){.board.ripple .cell{animation:none}}
 .board.shake1{animation:shk .25s linear}
 .board.shake2{animation:shk .35s linear}
 .board.shake3{animation:shkBig .5s linear}
@@ -408,6 +415,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 </style>
 </head>
 <body>
+<div id="wglow" aria-hidden="true"></div>
 <section class="home" id="home">
   <button class="help musbtn homemus" type="button" data-i18n-aria="musicAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/><path d="M3 3l18 18"/></svg></button>
   <button class="help sndbtn homesnd" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button>
@@ -443,7 +451,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
         <span class="hbar"><button class="help musbtn" type="button" data-i18n-aria="musicAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/><path d="M3 3l18 18"/></svg></button><button class="help sndbtn" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button><button class="help" id="homeBtn" type="button" data-i18n-aria="homeAria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg></button></span>
       </div>
       <div class="score" id="score">0</div>
-      <div class="meta"><span><span data-i18n="best"></span> <b id="best">0</b></span><span class="combo" id="combo"></span></div>
+      <div class="meta"><span><span data-i18n="best"></span> <b id="best">0</b></span><span class="lvl" id="lvl"></span><span class="combo" id="combo"></span></div>
       <div class="bar" aria-hidden="true"><i id="bar"></i></div>
     </div>
   </header>
@@ -603,7 +611,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
   const TEXT = {
     el: {
-      picture: 'Εικόνα', best: 'Ρεκόρ', line: 'Γραμμή!', lines: n => n + ' γραμμές!', praise: n => ['', 'Ωραία!', 'Τέλεια!', 'Εξαιρετικό!', 'Απίστευτο!'][Math.min(n, 4)], perfectSub: b => 'Καθαρό ταμπλό · +' + b,
+      picture: 'Εικόνα', best: 'Ρεκόρ', line: 'Γραμμή!', lines: n => n + ' γραμμές!', level: n => 'Επίπεδο ' + n, lvlShort: n => 'Επ. ' + n, praise: n => ['', 'Ωραία!', 'Τέλεια!', 'Εξαιρετικό!', 'Απίστευτο!'][Math.min(n, 4)], perfectSub: b => 'Καθαρό ταμπλό · +' + b,
       pieces: n => '+' + n + ' κομμάτια εικόνας',
       overTitle: 'Δεν χωράει άλλο κομμάτι',
       daily: 'Ημερήσια πρόκληση', dailyShort: 'Ημερήσια',
@@ -679,7 +687,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια'
     },
     en: {
-      picture: 'Picture', best: 'Best', line: 'Line!', lines: n => n + ' lines!', praise: n => ['', 'Good!', 'Great!', 'Excellent!', 'Unbelievable!'][Math.min(n, 4)], perfectSub: b => 'Board cleared · +' + b,
+      picture: 'Picture', best: 'Best', line: 'Line!', lines: n => n + ' lines!', level: n => 'Level ' + n, lvlShort: n => 'Lv ' + n, praise: n => ['', 'Good!', 'Great!', 'Excellent!', 'Unbelievable!'][Math.min(n, 4)], perfectSub: b => 'Board cleared · +' + b,
       pieces: n => '+' + n + ' picture pieces',
       overTitle: 'No room left',
       daily: 'Daily challenge', dailyShort: 'Daily',
@@ -788,15 +796,15 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     [[[0,0],[0,1]], 3, false],
     [[[0,0],[0,1],[0,2]], 3, false],
     [[[0,0],[0,1],[0,2],[0,3]], 2, true],
-    [[[0,0],[0,1],[0,2],[0,3],[0,4]], 1.2, true],
+    [[[0,0],[0,1],[0,2],[0,3],[0,4]], 0.9, true],
     [[[0,0],[0,1],[1,0],[1,1]], 3, false],
-    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]], 1, true],
+    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]], 0.7, true],
     [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2]], 1.2, true],
     [[[0,0],[1,0],[1,1]], 2.5, false],
     [[[0,0],[1,0],[2,0],[2,1]], 2.5, true],
     [[[0,0],[0,1],[0,2],[1,1]], 2, true],
     [[[0,1],[0,2],[1,0],[1,1]], 1.4, true],
-    [[[0,0],[1,0],[2,0],[2,1],[2,2]], 1.2, true]
+    [[[0,0],[1,0],[2,0],[2,1],[2,2]], 0.9, true]
   ];
   const SHAPES = [];
   for (const [b, w, hard] of BASE) {
@@ -815,7 +823,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   function difficulty() {
     const pic = rev && picById(rev.id);
     const ch = pic ? (CH_DIFF[pic.ch] || 0) + (pic.n > 6 ? 0.1 : 0) : 0;
-    return Math.min(0.8, ch + Math.min(0.55, score / 40000 * 0.55));
+    return Math.min(0.6, ch + Math.min(0.45, score / 80000 * 0.45));
   }
   function makePiece(rand = Math.random, d = difficulty()) {
     const wOf = sh => sh.w * (sh.hard ? 1 + d : 1 - 0.35 * d);
@@ -918,7 +926,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     return { ch: ch[lang], k: list.indexOf(p) + 1, of: list.length };
   }
   const saveGame = () => store.set(mode === 'daily' ? 'svb_daily' : 'svb_game', JSON.stringify({
-    board, score, combo, chanceUsed, lbSent, day: dday, seq: dseq,
+    board, score, combo, chanceUsed, lbSent, pf, day: dday, seq: dseq,
     tray: tray.map(p => p ? (p.sp ? { sp: p.sp } : { cells: p.cells, k: p.k }) : null)
   }));
   function loadGame() {
@@ -926,7 +934,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     if (!g || !Array.isArray(g.board) || g.board.length !== N * N || !Array.isArray(g.tray)) return false;
     if (mode === 'daily') { if (g.day !== utcDay()) return false; dday = g.day; dseq = +g.seq || 0; }
     board = g.board.map(v => (Number.isInteger(v) && v >= 0 && v < KINDS.length) ? v : -1);
-    score = +g.score || 0; combo = +g.combo || 0; chanceUsed = !!g.chanceUsed; lbSent = +g.lbSent || 0;
+    score = +g.score || 0; combo = +g.combo || 0; chanceUsed = !!g.chanceUsed; lbSent = +g.lbSent || 0; pf = +g.pf || 0; shownLevel = -1;
     tray = g.tray.slice(0, 3).map(p => p && (p.sp === 'bomb' || p.sp === 'lightning') ? makeSpecial(p.sp) : (p && Array.isArray(p.cells) && p.cells.length) ? { cells: p.cells, ...sizeOf(p.cells), k: p.k % KINDS.length } : null);
     while (tray.length < 3) tray.push(null);
     if (tray.every(p => !p)) refill();
@@ -1021,6 +1029,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   function renderStats() {
     countTo(score);
+    updateWorld();
     $('best').textContent = fmt(best);
     if (mode === 'daily') {
       $('eyebrow').innerHTML = t('dailyShort') + ' <b>' + dday.slice(8) + '/' + dday.slice(5, 7) + '</b>';
@@ -1036,14 +1045,18 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   function refill() {
     if (mode === 'daily') { tray = [dailyPiece(dday, dseq), dailyPiece(dday, dseq + 1), dailyPiece(dday, dseq + 2)]; dseq += 3; return; }
-    // Early in a game, offer the set that lets you clear the most lines, so the first boards flow quickly.
-    const tries = tut ? 1 : score < 5000 ? 8 : score < 15000 ? 3 : 1;
+    // A friendly hand: try a few sets and keep the one where most pieces fit and most can clear a line.
+    // Strongest early in a game; when the board gets crowded, pieces lean small so the game does not end unfairly.
+    const tries = tut ? 1 : score < 15000 ? 8 : score < 50000 ? 5 : 3;
+    const filled = board.filter(v => v >= 0).length / (N * N);
+    const d = filled > 0.5 ? 0 : difficulty();
     let bestSet = null, bestVal = -1, valid = 0;
     for (let i = 0; i < 60 && valid < tries; i++) {
-      const set = [makePiece(), makePiece(), makePiece()];
-      if (!set.some(p => anyFit(p))) continue;
+      const set = [makePiece(Math.random, d), makePiece(Math.random, d), makePiece(Math.random, d)];
+      const fits = set.filter(anyFit).length;
+      if (!fits) continue;
       valid++;
-      const val = tries > 1 ? set.filter(canClear).length : 0;
+      const val = tries > 1 ? fits * 10 + set.filter(canClear).length * 4 - (filled > 0.5 ? set.reduce((a, p) => a + p.cells.length, 0) * 0.5 : 0) + Math.random() : 0;
       if (val > bestVal) { bestVal = val; bestSet = set; }
     }
     tray = bestSet || [makePiece(), makePiece(), makePiece()];
@@ -1130,10 +1143,41 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     countRaf = requestAnimationFrame(step);
   }
   // board colour themes, changed by a PERFECT clear
-  let boardTheme = +(store.get('svb_bt') || 0) % 5;
-  function applyBoardTheme() { const b = $('board'); for (let k = 1; k < 5; k++) b.classList.toggle('bt' + k, boardTheme === k); }
-  function nextBoardTheme() { boardTheme = (boardTheme + 1) % 5; store.set('svb_bt', String(boardTheme)); applyBoardTheme(); }
-  applyBoardTheme();
+  /* ---------- worlds: the board changes look at every new level and at every PERFECT ---------- */
+  const WORLDS = [
+    { el: 'Neon', en: 'Neon', b1: '#0e1640', b2: '#080d29', bc: '#22e4ff', ce: 'rgba(70,90,200,.08)', cr: '22%', br: '22%', glow: '#1b2a7a' },
+    { el: 'Bull Market', en: 'Bull Market', b1: '#062a1e', b2: '#021209', bc: '#2bff9a', ce: 'rgba(43,255,154,.07)', cr: '50%', br: '30%', glow: '#0b4a33' },
+    { el: 'Χρυσός πυρετός', en: 'Gold Rush', b1: '#2e1c06', b2: '#140b02', bc: '#ffb02e', ce: 'rgba(255,176,46,.07)', cr: '12%', br: '16%', glow: '#4a2e08' },
+    { el: 'Βαθύς ωκεανός', en: 'Deep Ocean', b1: '#06203f', b2: '#020a1c', bc: '#3aa0ff', ce: 'rgba(58,160,255,.08)', cr: '50%', br: '34%', glow: '#0a2f5c' },
+    { el: 'Ροζ νεφέλωμα', en: 'Pink Nebula', b1: '#2a0f3d', b2: '#12061f', bc: '#ff4fd8', ce: 'rgba(255,79,216,.07)', cr: '30%', br: '26%', glow: '#4a1046' },
+    { el: 'Ηλιοβασίλεμα', en: 'Sunset', b1: '#3a1208', b2: '#160603', bc: '#ff6a3d', ce: 'rgba(255,106,61,.07)', cr: '8%', br: '14%', glow: '#4f1a0a' },
+    { el: 'Μωβ κενό', en: 'Violet Void', b1: '#1b0f45', b2: '#0a0526', bc: '#a45cff', ce: 'rgba(164,92,255,.08)', cr: '4%', br: '10%', glow: '#2c1670' },
+    { el: 'Πάγος', en: 'Ice', b1: '#0d2a38', b2: '#04121b', bc: '#bff6ff', ce: 'rgba(191,246,255,.07)', cr: '50%', br: '38%', glow: '#123a4a' }
+  ];
+  // score where each level starts (×10 scale); after the list, a new level every 30,000
+  const LEVELS = [0, 6000, 15000, 27000, 42000, 60000, 82000, 108000];
+  const levelOf = sc => { let l = 0; while (l + 1 < LEVELS.length && sc >= LEVELS[l + 1]) l++; if (sc >= LEVELS[LEVELS.length - 1]) l += Math.floor((sc - LEVELS[LEVELS.length - 1]) / 30000); return l; };
+  let pf = 0, shownLevel = -1, shownWorld = -1;
+  (() => { const b = document.getElementById('board'); [...b.children].forEach((d, j) => d.style.setProperty('--rd', ((j % 8) + Math.floor(j / 8)) * 28 + 'ms')); })();
+  function applyWorld(w, anim) {
+    const W = WORLDS[w % WORLDS.length], b = $('board'), g = $('wglow');
+    const set = () => {
+      for (const k of ['b1', 'b2', 'bc', 'ce', 'cr', 'br']) b.style.setProperty('--' + k, W[k]);
+      g.style.setProperty('--glow', W.glow); g.classList.remove('fade');
+    };
+    if (!anim || reduceMotion) { set(); return; }
+    g.classList.add('fade'); b.classList.remove('ripple'); void b.offsetWidth; b.classList.add('ripple');
+    setTimeout(set, 250); setTimeout(() => b.classList.remove('ripple'), 1400);
+  }
+  function updateWorld() {
+    if (score === 0) pf = 0;
+    const lv = levelOf(score), w = (lv + pf) % WORLDS.length;
+    const up = shownLevel >= 0 && lv > shownLevel;
+    if (w !== shownWorld) { applyWorld(w, shownWorld >= 0); shownWorld = w; }
+    if (up) setTimeout(() => { toast(t('level')(lv + 1), WORLDS[w][lang === 'el' ? 'el' : 'en'], 'l3'); sfx.earn(); }, 1300);
+    shownLevel = lv;
+    $('lvl').textContent = t('lvlShort')(lv + 1);
+  }
 
   let toastTimer;
   function toast(main, sub, lvl) {
@@ -1353,7 +1397,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       const got = mode === 'main' ? revealAdd(revealBoost(lines * 2 + (lines > 1 ? lines - 1 : 0) + (combo > 1 ? 1 : 0) + (perfect ? 4 : 0))) : 0;
       if (tut === 1) setTimeout(tutStep2, 700);
       const sub = [combo > 1 ? 'Combo ×' + combo : '', got ? t('pieces')(got) : ''].filter(Boolean).join(' · ');
-      if (perfect) { toast('PERFECT!', t('perfectSub')(fmt(3000)), 'perfect'); nextBoardTheme(); setTimeout(() => sfx.complete(), 150); }
+      if (perfect) { toast('PERFECT!', t('perfectSub')(fmt(3000)), 'perfect'); pf++; setTimeout(() => sfx.complete(), 150); }
       else toast(t('praise')(Math.max(lines, combo >= 4 ? 3 : 1)), sub, 'l' + Math.min(4, Math.max(lines, combo >= 4 ? 3 : 1)));
       fxClear(fxCells, lines, perfect);
       floatPoints(fxCells, score - before);
