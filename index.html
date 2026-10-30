@@ -233,6 +233,10 @@ body{
 .sndbtn .off{display:none}
 .muted .sndbtn .on{display:none}
 .muted .sndbtn .off{display:block}
+.musbtn .off{display:none}
+.nomusic .musbtn .on{display:none}
+.nomusic .musbtn .off{display:block}
+.homemus{position:fixed;top:calc(env(safe-area-inset-top, 0px) + 12px);right:calc(max(16px, env(safe-area-inset-right, 0px)) + 44px);width:36px;height:36px}
 .homesnd{position:fixed;top:calc(env(safe-area-inset-top, 0px) + 12px);right:max(16px, env(safe-area-inset-right, 0px));width:36px;height:36px}
 .ggrid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;width:100%;max-height:min(58vh, 520px);overflow-y:auto;padding:2px}
 .ghead{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px;padding:0 2px;font:800 13px var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
@@ -405,6 +409,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 </head>
 <body>
 <section class="home" id="home">
+  <button class="help musbtn homemus" type="button" data-i18n-aria="musicAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/><path d="M3 3l18 18"/></svg></button>
   <button class="help sndbtn homesnd" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button>
   <div class="brand"><h1>BLOCKSPACE</h1><span class="badge" id="supBadge" hidden>★ Supporter</span><span class="badge seekb" id="seekBadge" hidden>◆ Seeker</span></div>
   <button class="hpic" id="hpic" type="button" data-i18n-aria="peekAria"><canvas id="hc"></canvas><span class="hlabel" id="hlabel"></span></button>
@@ -435,7 +440,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     <div class="stats">
       <div class="head">
         <div class="eyebrow" id="eyebrow"></div>
-        <span class="hbar"><button class="help sndbtn" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button><button class="help" id="homeBtn" type="button" data-i18n-aria="homeAria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg></button></span>
+        <span class="hbar"><button class="help musbtn" type="button" data-i18n-aria="musicAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/><path d="M3 3l18 18"/></svg></button><button class="help sndbtn" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button><button class="help" id="homeBtn" type="button" data-i18n-aria="homeAria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg></button></span>
       </div>
       <div class="score" id="score">0</div>
       <div class="meta"><span><span data-i18n="best"></span> <b id="best">0</b></span><span class="combo" id="combo"></span></div>
@@ -669,7 +674,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r5: 'Καθάρισε 2+ γραμμές μαζί για Βόμβα (ανατινάζει 3×3) ή φτάσε combo ×3 για Κεραυνό (καθαρίζει γραμμή και στήλη). Τα αφήνεις όπου θέλεις, ακόμα και πάνω σε τουβλάκια.',
       bomb: 'Βόμβα!', lightning: 'Κεραυνός!', gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
-      rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση στο dApp Store βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε στο dApp Store', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι',
+      rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση στο dApp Store βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε στο dApp Store', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
       boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια'
     },
@@ -745,7 +750,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r5: 'Clear 2+ lines at once for a Bomb (blasts 3×3), or reach combo ×3 for Lightning (clears a row and a column). Drop them anywhere, even on top of tiles.',
       bomb: 'Bomb!', lightning: 'Lightning!', gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces',
       free: 'Free, no ads, no wallet connection.',
-      rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating on the dApp Store helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate on the dApp Store', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off',
+      rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating on the dApp Store helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate on the dApp Store', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
       boardAria: '8 by 8 board', trayAria: 'Pieces'
     }
@@ -1142,8 +1147,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- sound (synthesised, no files) ---------- */
   let muted = store.get('svb_sound') === 'off';
   let actx = null, master = null;
-  function audio() {
-    if (muted) return null;
+  function audio() { return muted ? null : ensureAudio(); }
+  function ensureAudio() {
     try {
       if (!actx) {
         const AC = window.AudioContext || window.webkitAudioContext;
@@ -1207,6 +1212,103 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     if (!muted) sfx.pick();
   }));
   applySound();
+
+  /* ---------- music: "Lo-fi Blocks", synthesised loop (no files), quiet under the effects ---------- */
+  let musicOff = store.get('svb_music') === 'off';
+  const music = (() => {
+    let bus = null, timer = null, nextT = 0, step = 0, noiseBuf = null, verbIR = null;
+    const mtof = m => 440 * Math.pow(2, (m - 69) / 12), BPM = 78, D = 60 / BPM / 4, SWING = 0.18;
+    const pick = a => a[Math.floor(Math.random() * a.length)];
+    function makeBus(a) {
+      if (!noiseBuf) {
+        noiseBuf = a.createBuffer(1, a.sampleRate, a.sampleRate);
+        const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+        const len = Math.floor(a.sampleRate * 2.2); verbIR = a.createBuffer(2, len, a.sampleRate);
+        for (let c = 0; c < 2; c++) { const d = verbIR.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.4); }
+      }
+      const out = a.createGain(); out.gain.value = 0.0001; out.connect(a.destination);
+      out.gain.setTargetAtTime(0.42, a.currentTime, 0.6);
+      const comp = a.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(out);
+      const dry = a.createGain(); dry.connect(comp);
+      const verb = a.createConvolver(); verb.buffer = verbIR;
+      const wet = a.createGain(); wet.gain.value = 0.3; wet.connect(verb); verb.connect(comp);
+      const echo = a.createDelay(1); echo.delayTime.value = D * 3;
+      const fb = a.createGain(); fb.gain.value = 0.3; echo.connect(fb); fb.connect(echo);
+      const eo = a.createGain(); eo.gain.value = 0.4; echo.connect(eo); eo.connect(dry); eo.connect(wet);
+      return { a, out, dry, wet, echo };
+    }
+    function pluck(b, m, t, o) {
+      const a = b.a, osc = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
+      osc.type = o.type; osc.frequency.value = mtof(m);
+      f.type = 'lowpass'; f.frequency.setValueAtTime(o.cut || 1600, t); f.frequency.exponentialRampToValueAtTime(400, t + o.dec);
+      g.gain.setValueAtTime(o.vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + o.dec);
+      osc.connect(f); f.connect(g); g.connect(b.dry); if (o.echo) g.connect(b.echo); if (o.wet) g.connect(b.wet);
+      osc.start(t); osc.stop(t + o.dec + 0.05);
+    }
+    function bass(b, m, t, dur, vol) {
+      const a = b.a, osc = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
+      osc.type = 'triangle'; osc.frequency.value = mtof(m); f.type = 'lowpass'; f.frequency.value = 300;
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01);
+      g.gain.setValueAtTime(vol, t + dur * 0.8); g.gain.exponentialRampToValueAtTime(0.0001, t + dur * 0.8 + 0.08);
+      osc.connect(f); f.connect(g); g.connect(b.dry); osc.start(t); osc.stop(t + dur + 0.15);
+    }
+    function kick(b, t, v) {
+      const a = b.a, osc = a.createOscillator(), g = a.createGain();
+      osc.frequency.setValueAtTime(130, t); osc.frequency.exponentialRampToValueAtTime(42, t + 0.14);
+      g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.32);
+      osc.connect(g); g.connect(b.dry); osc.start(t); osc.stop(t + 0.35);
+    }
+    function noise(b, t, o) {
+      const a = b.a, s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+      s.buffer = noiseBuf; f.type = o.ft; f.frequency.value = o.fq; f.Q.value = o.q || 0.7;
+      g.gain.setValueAtTime(o.vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + o.dec);
+      s.connect(f); f.connect(g); g.connect(b.dry); if (o.wet) g.connect(b.wet);
+      s.start(t, Math.random() * 0.5); s.stop(t + o.dec + 0.02);
+    }
+    const CH = [[50, 53, 57, 60, 64], [43, 53, 57, 59, 64], [48, 52, 55, 59, 62], [45, 52, 55, 60, 64]];
+    function tick(b, s, t) {
+      const i = s % 16, ch = CH[Math.floor(s / 16) % 4];
+      if (i === 0 || i === 7) ch.forEach((m, k) => pluck(b, m, t + k * 0.018, { type: 'triangle', vol: 0.05, dec: i === 0 ? 1.6 : 0.7, wet: true }));
+      if (i === 0) bass(b, ch[0] - 12, t, D * 6, 0.16);
+      if (i === 10) bass(b, ch[0] - 12, t, D * 4, 0.12);
+      if (i === 0 || i === 10) kick(b, t, 0.4);
+      if (i === 4 || i === 12) noise(b, t, { ft: 'bandpass', fq: 1800, q: 0.8, vol: 0.07, dec: 0.18, wet: true });
+      if (i % 2 === 0) noise(b, t, { ft: 'highpass', fq: 7500, vol: i % 4 === 0 ? 0.03 : 0.02, dec: 0.045 });
+      if (i % 4 === 2 && Math.random() < 0.45) pluck(b, pick([69, 72, 74, 76, 79]), t, { type: 'sine', vol: 0.045, dec: 0.9, echo: true, wet: true });
+      if (Math.random() < 0.5) noise(b, t + Math.random() * D, { ft: 'highpass', fq: 3000, vol: 0.006, dec: 0.02 });
+    }
+    return {
+      start() {
+        if (timer || musicOff || document.hidden) return;
+        const a = ensureAudio(); if (!a || a.state !== 'running') return;
+        bus = makeBus(a); step = 0; nextT = a.currentTime + 0.1;
+        timer = setInterval(() => {
+          while (nextT < a.currentTime + 0.15) { tick(bus, step % 64, nextT + (step % 2 ? SWING * D : 0)); nextT += D; step++; }
+        }, 25);
+      },
+      stop() {
+        if (!timer) return;
+        clearInterval(timer); timer = null;
+        const b = bus; bus = null;
+        try { b.out.gain.setTargetAtTime(0.0001, b.a.currentTime, 0.12); setTimeout(() => { try { b.out.disconnect(); } catch (e) {} }, 1200); } catch (e) {}
+      }
+    };
+  })();
+  function applyMusic() {
+    document.body.classList.toggle('nomusic', musicOff);
+    document.querySelectorAll('.musbtn').forEach(b => b.setAttribute('aria-pressed', String(!musicOff)));
+  }
+  document.querySelectorAll('.musbtn').forEach(b => b.addEventListener('click', () => {
+    musicOff = !musicOff;
+    store.set('svb_music', musicOff ? 'off' : 'on');
+    applyMusic();
+    if (musicOff) music.stop(); else music.start();
+  }));
+  applyMusic();
+  // browsers allow sound only after a tap: start the music on the first one
+  const unlockMusic = () => { const a = ensureAudio(); if (a && a.state !== 'running') a.resume().then(() => music.start()).catch(() => {}); else music.start(); };
+  addEventListener('pointerdown', unlockMusic, { passive: true });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) music.stop(); else if (actx && actx.state === 'running') music.start(); });
 
   function buzz(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} }
 
