@@ -227,6 +227,8 @@ body{
 .hlabel{position:absolute;left:8px;bottom:8px;font-size:12px;font-weight:600;letter-spacing:.05em;padding:3px 8px;border-radius:7px;background:rgba(6,10,30,.82);color:var(--cyan);font-variant-numeric:tabular-nums}
 .hbest{color:var(--dim);font-size:14px;font-variant-numeric:tabular-nums}
 .hbest b{color:var(--gold)}
+.hstreak{margin-left:12px;padding:3px 10px;border-radius:999px;background:rgba(255,120,40,.14);border:1px solid rgba(255,140,60,.5);color:#ffd2a8;font-weight:700;font-size:13px}
+.hstreak.cold{background:rgba(120,140,255,.1);border-color:rgba(140,160,255,.4);color:#c8d2ff}
 .hbtns{display:flex;flex-direction:column;gap:10px;width:min(100%, 300px)}
 .hrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .btn2{font:600 14px var(--f);color:var(--text);padding:11px 12px;border-radius:12px;border:1px solid color-mix(in srgb, var(--cyan) 40%, transparent);background:rgba(34,228,255,.07);cursor:pointer}
@@ -437,7 +439,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   <button class="help sndbtn homesnd" type="button" data-i18n-aria="soundAria"><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5"/><path d="m21 9.5-5 5"/></svg></button>
   <div class="brand"><h1>BLOCKSPACE</h1><span class="badge" id="supBadge" hidden>★ Supporter</span><span class="badge seekb" id="seekBadge" hidden>◆ Seeker</span></div>
   <button class="hpic live" id="hpic" type="button" data-i18n-aria="peekAria"><div class="kbw"><canvas id="hc"></canvas><canvas class="lfx"></canvas></div><span class="hlabel" id="hlabel"></span></button>
-  <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b></div>
+  <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b><span class="hstreak" id="hstreak" hidden></span></div>
   <div class="hbtns">
     <button class="btn" id="play" type="button"></button>
     <button class="btn2 dailybtn" id="dailyBtn" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span><span data-i18n="daily"></span><small id="dailySub"></small></span></button>
@@ -705,7 +707,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r3: 'Κάθε καθαρισμός αποκαλύπτει κομμάτια της εικόνας. Τα combos αποκαλύπτουν περισσότερα.',
       r4: 'Η παρτίδα τελειώνει όταν δεν χωράει κανένα κομμάτι. Η εικόνα κρατάει την πρόοδό της.',
       r5: 'Καθάρισε 2+ γραμμές μαζί για Βόμβα (ανατινάζει 3×3) ή φτάσε combo ×3 για Κεραυνό (καθαρίζει γραμμή και στήλη). Τα αφήνεις όπου θέλεις, ακόμα και πάνω σε τουβλάκια.',
-      bomb: 'Βόμβα!', lightning: 'Κεραυνός!', gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', bomb: 'Βόμβα!', lightning: 'Κεραυνός!', gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
       rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση στο dApp Store βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε στο dApp Store', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
@@ -781,7 +783,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r3: 'Every clear reveals pieces of the picture. Combos reveal more.',
       r4: 'The game ends when no piece fits. Your picture keeps its progress.',
       r5: 'Clear 2+ lines at once for a Bomb (blasts 3×3), or reach combo ×3 for Lightning (clears a row and a column). Drop them anywhere, even on top of tiles.',
-      bomb: 'Bomb!', lightning: 'Lightning!', gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', bomb: 'Bomb!', lightning: 'Lightning!', gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces',
       free: 'Free, no ads, no wallet connection.',
       rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating on the dApp Store helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate on the dApp Store', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
@@ -896,6 +898,26 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   function saveBest() { if (mode === 'daily') store.set('svb_dbest', JSON.stringify({ day: dday, best })); else store.set('svb_best', String(best)); }
   let streak = readJSON('svb_streak') || { last: '', n: 0 };
   const streakNow = () => { const y = utcDay(Date.now() - 864e5); return streak.last === utcDay() || streak.last === y ? streak.n : 0; };
+  // play streak: days in a row (player's own calendar) with at least one move, in any mode
+  const localDay = (ms = Date.now()) => { const d = new Date(ms); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  let pstreak = readJSON('svb_pstreak') || { last: '', n: 0, best: 0 };
+  const pStreakNow = () => pstreak.last === localDay() || pstreak.last === localDay(Date.now() - 864e5) ? pstreak.n : 0;
+  // returns the gift for today's first move (a special), or null
+  function pStreakTick() {
+    const today = localDay();
+    if (pstreak.last === today) return null;
+    const cont = pstreak.last === localDay(Date.now() - 864e5);
+    pstreak = { last: today, n: cont ? pstreak.n + 1 : 1, best: Math.max(pstreak.best || 0, cont ? pstreak.n + 1 : 1) };
+    store.set('svb_pstreak', JSON.stringify(pstreak));
+    const n = pstreak.n;
+    if (n < 2) return null;
+    const gift = mode === 'main' ? (n % 7 === 0 ? 'bomb' : 'lightning') : null;
+    setTimeout(() => {
+      toast(t('pStreakToast')(n), t('pStreakSub')(gift ? t(gift === 'bomb' ? 'giftBomb' : 'giftLightning') : ''), 'l3');
+      sfx.earn(); if ([3, 7, 14, 21, 30, 50, 100].includes(n) || n % 30 === 0) fireworks(6);
+    }, 900);
+    return gift;
+  }
   const picById = id => PICS.find(p => p.id === id);
   const chapterOf = p => CHAPTERS.find(c => c.id === p.ch);
   const chActive = c => !c.until || Date.now() < Date.parse(c.until);
@@ -1465,6 +1487,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     fxClear(fxCells, p.sp === 'bomb' ? 3 : 2, false);
     if (area.length) floatPoints(fxCells, score - before);
     if (p.sp === 'bomb') { sfx.boom(); buzz([40, 30, 60]); } else { sfx.zap(); buzz([15, 20, 15, 20, 30]); }
+    { const g = pStreakTick(); if (g && !tray.some(x => x && x.sp)) { const e = tray.indexOf(null); if (e >= 0) tray[e] = makeSpecial(g); } }
     if (tray.every(x => !x)) refill();
     renderBoard();
     area.forEach((j, n) => { const d = cells[j]; d.className = 'cell blk k' + kinds[n] + ' pop'; d.style.animationDelay = Math.min(n * 18, 240) + 'ms'; });
@@ -1508,6 +1531,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       combo = 0;
       sfx.place();
     }
+    { const g = pStreakTick(); if (g && !tray.some(x => x && x.sp)) { const e = tray.indexOf(null); if (e >= 0) tray[e] = makeSpecial(g); } }
     if (tray.every(x => !x)) refill();
     renderBoard();
     idx.forEach((j, n) => {
@@ -1843,7 +1867,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
   /* ---------- home, gallery, back button ---------- */
   const inProgress = () => score > 0 || board.some(v => v >= 0);
+  function renderStreakBadge() {
+    const el = $('hstreak'), n = pStreakNow(); el.hidden = !n;
+    if (!n) return;
+    const today = pstreak.last === localDay();
+    el.textContent = t('pStreak')(n); el.classList.toggle('cold', !today); el.title = today ? '' : t('pStreakCold');
+  }
   function renderHome() {
+    renderStreakBadge();
     if (!$('home').hidden) liveStart('h', $('hpic'), rev.id, 0.9);
     $('dailySub').textContent = t('dailySub')(streakNow(), dailyBest() ? fmt(dailyBest()) : 0);
     $('hbest').textContent = fmt(best);
