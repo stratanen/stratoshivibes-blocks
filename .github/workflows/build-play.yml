@@ -1,0 +1,88 @@
+name: Build Google Play bundle (AAB)
+
+# Google Play edition of Blockspace: same game, opened with ?edition=play,
+# which hides the shop, wallet connection, Seeker Perks and paid extras.
+# Separate package name so it can sit next to the dApp Store version on the same phone.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_code:
+        description: "Android versionCode for Google Play (whole number, must increase every upload)"
+        required: true
+        default: "1"
+      version_name:
+        description: "Version name shown to players"
+        required: true
+        default: "1.0.0"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Use the runner's preinstalled Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Decrypt upload keystore
+        env:
+          PW: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          test -n "$PW" || { echo "Add the KEYSTORE_PASSWORD secret in Settings > Secrets and variables > Actions"; exit 1; }
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in release.keystore.enc \
+            -out "$RUNNER_TEMP/release.keystore" -pass env:PW
+
+      - name: Generate Android project (Play edition)
+        env:
+          SOLANA_MOBILE_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          SOLANA_MOBILE_KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          SITE="https://$(tr -d '[:space:]' < CNAME)/"
+          npx --yes solana-mobile@0.5.0 webshell init android \
+            --url "${SITE}?edition=play" \
+            --manifest ./manifest.webmanifest \
+            --app-name "Blockspace" \
+            --application-id "com.stratoshivibes.blockspace" \
+            --version-code "${{ inputs.version_code }}" \
+            --version-name "${{ inputs.version_name }}" \
+            --keystore-path "$RUNNER_TEMP/release.keystore" \
+            --keystore-alias stratoshivibes \
+            --force < /dev/null
+          grep SOLANA_MOBILE_ android/gradle.properties
+
+      - name: Build signed App Bundle
+        env:
+          SOLANA_MOBILE_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          SOLANA_MOBILE_KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease \
+            -PSOLANA_MOBILE_KEYSTORE_PATH="$RUNNER_TEMP/release.keystore" \
+            -PSOLANA_MOBILE_KEYSTORE_ALIAS=stratoshivibes
+          cd ..
+          cp android/app/build/outputs/bundle/release/app-release.aab \
+             "blockspace-play-${{ inputs.version_name }}-build${{ inputs.version_code }}.aab"
+
+      - name: Check bundle signature
+        run: jarsigner -verify -verbose:summary blockspace-play-*.aab | tail -5
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blockspace-play-aab
+          path: blockspace-play-*.aab

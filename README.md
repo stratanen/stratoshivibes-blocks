@@ -21,6 +21,16 @@ The APK is a Solana Mobile web shell around the hosted game, built by GitHub Act
 
 Every future update must be signed with this same key, so keep a backup of the keystore and its password outside GitHub.
 
+## Build for Google Play (AAB)
+
+The Google Play edition is the same game opened with `?edition=play`. That hides the Shop, wallet connection, Seeker Perks and Second Chance purchases, and the leaderboard is view-only. It uses its own package name, `com.stratoshivibes.blockspace`, so it can be installed next to the dApp Store version.
+
+1. Actions → **Build Google Play bundle (AAB)** → Run workflow.
+2. Raise **version_code** by 1 for every upload to Google Play (its numbering is separate from the dApp Store APK).
+3. Download the `.aab` from the finished run's Artifacts and upload it in Play Console.
+
+The bundle is signed with the same StratoshiVibes key, used as the Play upload key.
+
 ## Add a reveal picture
 
 1. Save the picture as a square image (1024×1024 or larger) in `art/`, e.g. `art/level-03.webp`.
