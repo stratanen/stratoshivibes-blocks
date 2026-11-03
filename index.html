@@ -711,7 +711,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r5: 'Καθάρισε 2+ γραμμές μαζί για Βόμβα (ανατινάζει 3×3) ή φτάσε combo ×3 για Κεραυνό (καθαρίζει γραμμή και στήλη). Τα αφήνεις όπου θέλεις, ακόμα και πάνω σε τουβλάκια.',
       pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', bomb: 'Βόμβα!', lightning: 'Κεραυνός!', gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
-      rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση στο dApp Store βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε στο dApp Store', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
+      rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε το παιχνίδι', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
       boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια'
     },
@@ -787,7 +787,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r5: 'Clear 2+ lines at once for a Bomb (blasts 3×3), or reach combo ×3 for Lightning (clears a row and a column). Drop them anywhere, even on top of tiles.',
       pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', bomb: 'Bomb!', lightning: 'Lightning!', gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces',
       free: 'Free, no ads, no wallet connection.',
-      rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating on the dApp Store helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate on the dApp Store', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
+      rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate the game', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
       boardAria: '8 by 8 board', trayAria: 'Pieces'
     }
@@ -2533,6 +2533,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 
   // Rating prompt: shown once, inside the Seeker app only, after the player completes a second picture.
   const IN_APP = /; wv\)/.test(navigator.userAgent);
+  // Google Play edition: the rating buttons open the Play Store page instead of the dApp Store
+  if (PLAY) document.querySelectorAll('a[href^="solanadappstore://"]').forEach(x => { x.href = 'market://details?id=com.stratoshivibes.blockspace'; });
   let rateDue = false;
   document.querySelectorAll('.rateLink').forEach(a => { a.hidden = !IN_APP; });
   $('rateLater').addEventListener('click', () => { $('rate').hidden = true; });
