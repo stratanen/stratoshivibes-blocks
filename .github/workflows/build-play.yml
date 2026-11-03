@@ -35,8 +35,14 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Accept Android SDK licenses
-        run: yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+      - name: Prepare Android SDK for Bubblewrap
+        run: |
+          SDKM="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" --install "build-tools;36.1.0" "platforms;android-36" > /dev/null
+          # Bubblewrap looks for <sdk>/bin (newer SDK layout); the runner keeps the tools in cmdline-tools/latest/bin
+          [ -e "$ANDROID_SDK_ROOT/bin" ] || sudo ln -s "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" "$ANDROID_SDK_ROOT/bin"
+          ls "$ANDROID_SDK_ROOT/build-tools" | tail -3
 
       - name: Decrypt upload keystore
         env:
