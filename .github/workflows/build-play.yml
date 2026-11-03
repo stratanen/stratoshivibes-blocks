@@ -11,7 +11,7 @@ on:
       version_code:
         description: "Android versionCode for Google Play (whole number, must increase every upload)"
         required: true
-        default: "2"
+        default: "3"
       version_name:
         description: "Version name shown to players"
         required: true
@@ -84,7 +84,7 @@ jobs:
               appVersionName: process.env.VNAME, appVersionCode: +process.env.VCODE,
               shortcuts: [], generatorApp: "bubblewrap-cli",
               webManifestUrl: "https://" + h + "/manifest.webmanifest",
-              fallbackType: "customtabs",
+              fallbackType: "webview",          // opens in an in-app WebView if no TWA browser is available (no Play Billing there)
               features: { playBilling: { enabled: true } },
               alphaDependencies: { enabled: false },
               enableSiteSettingsShortcut: false, isChromeOSOnly: false, isMetaQuest: false,
