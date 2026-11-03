@@ -88,7 +88,7 @@ jobs:
               features: { playBilling: { enabled: true } },
               alphaDependencies: { enabled: false },
               enableSiteSettingsShortcut: false, isChromeOSOnly: false, isMetaQuest: false,
-              fullScopeUrl: "https://" + h + "/", minSdkVersion: 23,            // Play Billing library needs Android 6+
+              fullScopeUrl: "https://" + h + "/", minSdkVersion: 24,            // androidbrowserhelper 2.7 needs Android 7+
               fingerprints: [], additionalTrustedOrigins: [], retainedBundles: []
             };
             require("fs").writeFileSync("twa/twa-manifest.json", JSON.stringify(m, null, 2));'
