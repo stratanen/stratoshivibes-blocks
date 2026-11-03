@@ -42,6 +42,9 @@ p,li{color:var(--fg)} .muted{color:var(--muted)} a{color:var(--gold)}
 <h2>Purchases</h2>
 <p>When you buy an extra, the payment is a public Solana transaction from your wallet to the StratoshiVibes wallet, with a note naming the item (for example "svblocks:supporter"). Like every blockchain transaction, it is permanently visible to anyone. To show prices, the game asks Jupiter for current SOL and SKR prices; this request does not include your address. "Restore purchases" reads your wallet's public transaction history through Helius.</p>
 
+<h2>Purchases in the Google Play version</h2>
+<p>In the version of the game installed from Google Play there is no wallet connection. Purchases are made with Google Play Billing: Google processes the payment and handles your payment details, under <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>. We never see your card or account details. To confirm a purchase, the game sends the item name and the purchase token that Google issues to our server (pay.stratoshivibes.com), which checks it with Google. We do not store your name, email address or Google account.</p>
+
 <h2>Anonymous play counter</h2>
 <p>To know how many people play and for how long, the game counts play time anonymously. About once a minute while the game is on screen, it sends to our server (lb.stratoshivibes.com, a Cloudflare Worker): the game's name, what is on screen (menu or a game mode), the seconds spent there, a random number created on your device, and whether it runs in the app or a browser. It does not send your wallet address, name, or any account, and the server does not store your IP address. The data is kept for up to 400 days and is only used to see totals, such as players per day. Clearing the app's data creates a new random number.</p>
 

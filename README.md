@@ -23,13 +23,16 @@ Every future update must be signed with this same key, so keep a backup of the k
 
 ## Build for Google Play (AAB)
 
-The Google Play edition is the same game opened with `?edition=play`. That hides the Shop, wallet connection, Seeker Perks and Second Chance purchases, and the leaderboard is view-only. It uses its own package name, `com.stratoshivibes.blockspace`, so it can be installed next to the dApp Store version.
+The Google Play edition is a Trusted Web Activity (built with Bubblewrap) that opens the game with `?edition=play`. There is no wallet connection and no Seeker Perks; the Shop sells the Supporter Pack and packs of 5 Second Chances through Google Play Billing. Package name: `com.stratoshivibes.blockspace`, so it can be installed next to the dApp Store version.
 
 1. Actions → **Build Google Play bundle (AAB)** → Run workflow.
 2. Raise **version_code** by 1 for every upload to Google Play (its numbering is separate from the dApp Store APK).
-3. Download the `.aab` from the finished run's Artifacts and upload it in Play Console.
+3. Download the `.aab` from the finished run's Artifacts (or the pre-release on the Releases page) and upload it in Play Console.
 
 The bundle is signed with the same StratoshiVibes key, used as the Play upload key.
+
+- **Purchase checks:** a Cloudflare Worker at `pay.stratoshivibes.com` checks every purchase with Google and acknowledges the Supporter Pack. Setup: [`play-billing/README.md`](play-billing/README.md).
+- **Digital Asset Links:** `.well-known/assetlinks.json` must list the SHA-256 of the upload key and of the **Play app signing key** (Play Console → Test and release → App integrity). Without it, the app shows a browser address bar and purchases do not work.
 
 ## Add a reveal picture
 

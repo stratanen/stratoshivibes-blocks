@@ -299,7 +299,8 @@ body.genesis .cell.ghost{filter:sepia(.6) saturate(2.2) hue-rotate(118deg)}
 .gitem .star{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1a1405;font:900 12px/20px system-ui,sans-serif;text-align:center}
 #walletCard h2{font:800 22px/1.2 var(--f);letter-spacing:0}
 /* Google Play edition */
-html.play #shopBtn,html.play #perkBtn,html.play #walletBtn,html.play #supBadge,html.play #seekBadge,html.play #chanceBox{display:none!important}
+html.play #perkBtn,html.play #walletBtn,html.play #seekBadge{display:none!important}
+html.play:not(.gpbill) #shopBtn{display:none!important}
 /* shop */
 .badge{display:inline-block;margin-top:8px;font:800 11px var(--f);letter-spacing:.12em;text-transform:uppercase;color:#1a1405;background:var(--gold);padding:3px 10px;border-radius:99px;box-shadow:0 0 14px color-mix(in srgb, var(--gold) 60%, transparent)}
 .shopbtn{display:flex;align-items:center;justify-content:center;gap:8px;border-color:color-mix(in srgb, var(--pink) 45%, transparent);background:rgba(255,79,216,.07)}
@@ -713,7 +714,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
       rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε το παιχνίδι', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
-      boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια'
+      boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια',
+      gpIntro: 'Προαιρετικά extras. Το παιχνίδι μένει δωρεάν. Η πληρωμή γίνεται μέσω Google Play.',
+      gpPack: n => n + ' Δεύτερες ευκαιρίες', gpPackDesc: n => n + ' Δεύτερες ευκαιρίες για όποτε τις χρειαστείς. Καθεμία καθαρίζει τις 3 πιο γεμάτες γραμμές.',
+      gpNote: 'Οι πληρωμές γίνονται με τον λογαριασμό σου Google Play (κάρτα, PayPal κ.ά.). Οι αγορές συνδέονται με τον λογαριασμό Google, όχι με κάποιο wallet.',
+      gpOpening: 'Ανοίγει το Google Play…', gpChecking: 'Επιβεβαίωση αγοράς…', gpCancelled: 'Η αγορά ακυρώθηκε. Δεν χρεώθηκε τίποτα.',
+      gpInvalid: 'Η Google δεν επιβεβαίωσε την αγορά. Αν χρεώθηκες, θα γίνει αυτόματα επιστροφή χρημάτων.',
+      gpUnavail: 'Οι αγορές δεν είναι διαθέσιμες αυτή τη στιγμή. Δοκίμασε ξανά αργότερα.',
+      gpPackThanks: n => 'Πρόσθεσες ' + n + ' Δεύτερες ευκαιρίες.', gpRestored: 'Οι αγορές σου ελέγχθηκαν στο Google Play.'
     },
     en: {
       picture: 'Picture', best: 'Best', line: 'Line!', lines: n => n + ' lines!', level: n => 'Level ' + n, lvlShort: n => 'Lv ' + n, praise: n => ['', 'Good!', 'Great!', 'Excellent!', 'Unbelievable!'][Math.min(n, 4)], perfectSub: b => 'Board cleared · +' + b,
@@ -789,7 +797,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       free: 'Free, no ads, no wallet connection.',
       rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate the game', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
-      boardAria: '8 by 8 board', trayAria: 'Pieces'
+      boardAria: '8 by 8 board', trayAria: 'Pieces',
+      gpIntro: 'Optional extras. The game stays free. Payment goes through Google Play.',
+      gpPack: n => n + ' Second Chances', gpPackDesc: n => n + ' Second Chances to use whenever you need them. Each one clears your 3 fullest rows.',
+      gpNote: 'Payments use your Google Play account (card, PayPal and more). Purchases belong to your Google account, not to a wallet.',
+      gpOpening: 'Opening Google Play…', gpChecking: 'Confirming your purchase…', gpCancelled: 'Purchase cancelled. Nothing was charged.',
+      gpInvalid: 'Google did not confirm the purchase. If you were charged, it will be refunded automatically.',
+      gpUnavail: 'Purchases are not available right now. Try again later.',
+      gpPackThanks: n => 'Added ' + n + ' Second Chances.', gpRestored: 'Your purchases were checked with Google Play.'
     }
   };
 
@@ -2246,6 +2261,17 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   let SH = readJSON('svb_shop') || {};
   SH.own = SH.own || {}; SH.credits = Math.max(0, +SH.credits || 0);
   const saveSH = () => store.set('svb_shop', JSON.stringify(SH));
+  /* Google Play Billing state (Play edition); the billing code lives further down, before the shop button wiring */
+  const GP_SKU = { supporter: 'supporter_pack', chance: 'second_chance_5' };
+  const GP_PACK = 5;
+  const GP_API = store.get('svb_gp_api') || 'https://pay.stratoshivibes.com';
+  let gp = null, gpItems = {};
+  SH.gpTok = SH.gpTok || {};                  // purchaseToken -> 'granted' | 'acked' | 'consumed'
+  const gpPrice = id => {
+    const d = gpItems[GP_SKU[id]]; if (!d) return '';
+    try { return new Intl.NumberFormat(lang === 'el' ? 'el-GR' : navigator.language || 'en', { style: 'currency', currency: d.price.currency }).format(+d.price.value); }
+    catch (e) { return d.price.value + ' ' + d.price.currency; }
+  };
   const isSupporter = () => !!SH.own.supporter;
   const usdTxt = n => '$' + n.toFixed(2);
 
@@ -2361,6 +2387,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   $('shop').addEventListener('click', e => { if (e.target === $('shop')) closeShop(); });
 
   function openShop() {
+    if (PLAY) return gpOpenShop();
     const sup = isSupporter();
     shopShow('<h2>' + t('shop') + '</h2><p>' + t('shopIntro') + '</p>' +
       '<div class="sitem"><span class="ic" aria-hidden="true">★</span><div class="bd"><b>Supporter Pack</b><div class="ds">' + t('supDesc')(SUPPORTER_CHANCES) + '</div>' +
@@ -2507,8 +2534,18 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   function renderChanceBox() {
     const box = $('chanceBox');
-    if (!SHOP_ENABLED && !SH.credits) { box.innerHTML = ''; return; }
+    if (!SHOP_ENABLED && !gp && !SH.credits) { box.innerHTML = ''; return; }
     if (chanceUsed) { box.innerHTML = '<p class="fine">' + t('chanceUsed') + '</p>'; return; }
+    if (PLAY) {
+      box.innerHTML = '<button class="chancebtn" type="button" id="chanceBtn">' + t('chanceName') +
+        '<small>' + (SH.credits ? t('useOne')(SH.credits) : t('gpPack')(GP_PACK) + ' · ' + gpPrice('chance')) + '</small></button>' +
+        '<p class="fine">' + t('chanceDesc') + '</p>';
+      $('chanceBtn').onclick = () => {
+        if (SH.credits > 0) { SH.credits--; saveSH(); applyChance(); }
+        else if (gp) { $('over').hidden = true; gpBuy('chance', true); }
+      };
+      return;
+    }
     box.innerHTML = '<button class="chancebtn" type="button" id="chanceBtn">' + t('chanceName') +
       '<small>' + (SH.credits ? t('useOne')(SH.credits) : usdTxt(PRODUCTS.chance.usd) + ' · SKR / SOL / USDC') + '</small></button>' +
       '<p class="fine">' + t('chanceDesc') + '</p>';
@@ -2518,8 +2555,124 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     };
   }
 
+  /* ---------- Google Play Billing (Play edition only, inside the Play Store app) ----------
+     Digital Goods API + Payment Request. The server at GP_API checks each purchase with Google
+     and acknowledges the Supporter Pack. Second Chance packs are consumed here, which also acknowledges them. */
+  async function gpVerify(sku, token) {          // true = valid, false = Google says invalid, null = could not check now
+    try {
+      const r = await fetch(GP_API + '/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sku, token }) });
+      if (r.status >= 500) return null;
+      const j = await r.json();
+      return j.ok === true ? true : j.ok === false ? false : null;
+    } catch (e) { console.warn(e); return null; }
+  }
+  function gpGrant(id, token) {
+    if (SH.gpTok[token]) return false;
+    SH.gpTok[token] = 'granted';
+    if (id === 'supporter') {
+      const first = !isSupporter();
+      SH.own.supporter = { play: true, t: Date.now() };
+      if (first) SH.credits += SUPPORTER_CHANCES;
+      SH.gold = true;
+    } else SH.credits += GP_PACK;
+    saveSH(); applyPerks();
+    return true;
+  }
+  async function gpSettle(id, token) {           // acknowledge (supporter) or consume (pack); safe to repeat
+    const st = SH.gpTok[token];
+    if (id === 'supporter') {
+      if (st === 'acked') return;
+      if (await gpVerify(GP_SKU.supporter, token) === true) { SH.gpTok[token] = 'acked'; saveSH(); }
+    } else {
+      if (st === 'consumed') return;
+      try { await gp.consume(token); SH.gpTok[token] = 'consumed'; saveSH(); } catch (e) { console.warn(e); }
+    }
+  }
+  async function gpSync() {                      // restores the Supporter Pack and finishes any interrupted purchase
+    if (!gp) return 0;
+    let added = 0;
+    try {
+      for (const p of await gp.listPurchases()) {
+        const id = p.itemId === GP_SKU.supporter ? 'supporter' : p.itemId === GP_SKU.chance ? 'chance' : null;
+        if (!id) continue;
+        if (id === 'supporter' && isSupporter() && !SH.gpTok[p.purchaseToken]) SH.gpTok[p.purchaseToken] = 'granted';
+        if (gpGrant(id, p.purchaseToken)) added++;
+        await gpSettle(id, p.purchaseToken);
+      }
+    } catch (e) { console.warn(e); }
+    return added;
+  }
+  async function gpInit() {
+    if (!PLAY || !('getDigitalGoodsService' in window)) return;
+    try { gp = await window.getDigitalGoodsService('https://play.google.com/billing'); } catch (e) { gp = null; }
+    if (!gp) return;
+    try { (await gp.getDetails(Object.values(GP_SKU))).forEach(d => { gpItems[d.itemId] = d; }); } catch (e) { console.warn(e); }
+    if (!Object.keys(gpItems).length) { gp = null; return; }
+    document.documentElement.classList.add('gpbill');
+    $('shopBtn').hidden = false;
+    gpSync();
+  }
+
+  function gpOpenShop() {
+    if (!gp) return;
+    const sup = isSupporter(), item = (ic, name, desc, row) =>
+      '<div class="sitem"><span class="ic" aria-hidden="true">' + ic + '</span><div class="bd"><b>' + name + '</b><div class="ds">' + desc + '</div><div class="rw">' + row + '</div></div></div>';
+    shopShow('<h2>' + t('shop') + '</h2><p>' + t('gpIntro') + '</p>' +
+      (gpItems[GP_SKU.supporter] ? item('★', 'Supporter Pack', t('supDesc')(SUPPORTER_CHANCES), '<span class="pr">' + gpPrice('supporter') + '</span>' +
+        (sup ? '<span class="own">✓ ' + t('owned') + '</span><button class="stog" type="button" id="goldTog">' + t('goldTiles') + ': ' + (SH.gold !== false ? t('on') : t('off')) + '</button>'
+             : '<button class="sbuy" type="button" data-buy="supporter">' + t('buy') + '</button>')) : '') +
+      (gpItems[GP_SKU.chance] ? item('↻', t('gpPack')(GP_PACK), t('gpPackDesc')(GP_PACK), '<span class="pr">' + gpPrice('chance') + '</span>' +
+        (SH.credits ? '<span class="muted2">' + t('youHave')(SH.credits) + '</span>' : '') + '<button class="sbuy" type="button" data-buy="chance">' + t('buy') + '</button>') : '') +
+      '<p class="fine">' + t('gpNote') + '</p>' +
+      '<div class="wbtns"><button class="btn2" type="button" data-restore>' + t('restore') + '</button><button class="btn2" type="button" data-x>' + t('close') + '</button></div>');
+    sc$().querySelector('[data-x]').onclick = closeShop;
+    sc$().querySelector('[data-restore]').onclick = async () => {
+      shopShow('<h2>' + t('restore') + '</h2><div class="sspin"></div>');
+      const n = await gpSync();
+      shopShow('<h2>' + t('restore') + '</h2><p>' + (n ? t('restored')(n) : isSupporter() ? t('allRestored') : t('gpRestored')) + '</p><button class="btn2" type="button" id="shX">' + t('back') + '</button>');
+      $('shX').onclick = gpOpenShop;
+    };
+    sc$().querySelectorAll('[data-buy]').forEach(b => b.onclick = () => gpBuy(b.dataset.buy, false));
+    const g = $('goldTog'); if (g) g.onclick = () => { SH.gold = SH.gold === false; saveSH(); applyPerks(); gpOpenShop(); };
+  }
+
+  async function gpBuy(id, fromOver) {
+    const name = id === 'supporter' ? 'Supporter Pack' : t('gpPack')(GP_PACK);
+    const back = () => { $('shop').hidden = true; if (fromOver) { if (!$('game').hidden) checkOver(); } };
+    const fail = msg => {
+      shopBusy = false;
+      shopShow('<h2>' + name + '</h2><p class="serr">' + msg + '</p><button class="btn2" type="button" id="shX">' + t('close') + '</button>');
+      $('shX').onclick = () => { if (fromOver) back(); else gpOpenShop(); };
+    };
+    if (!gp) return fail(t('gpUnavail'));
+    shopBusy = true;
+    shopShow('<h2>' + name + '</h2><div class="sspin" role="status"></div><p id="shStep">' + t('gpOpening') + '</p>');
+    let resp;
+    try {
+      const req = new PaymentRequest([{ supportedMethods: 'https://play.google.com/billing', data: { sku: GP_SKU[id] } }],
+        { total: { label: 'Total', amount: { currency: 'EUR', value: '0' } } });
+      resp = await req.show();
+    } catch (e) { console.warn(e); return fail(e && e.name === 'AbortError' ? t('gpCancelled') : t('gpUnavail')); }
+    const token = resp.details && resp.details.purchaseToken;
+    if (!token) { try { await resp.complete('fail'); } catch (e) {} return fail(t('gpUnavail')); }
+    const s = $('shStep'); if (s) s.textContent = t('gpChecking');
+    const ok = await gpVerify(GP_SKU[id], token);
+    if (ok === false) { try { await resp.complete('fail'); } catch (e) {} return fail(t('gpInvalid')); }
+    gpGrant(id, token);
+    if (ok === true && id === 'supporter') { SH.gpTok[token] = 'acked'; saveSH(); }
+    if (id === 'chance') await gpSettle('chance', token);
+    try { await resp.complete('success'); } catch (e) {}
+    shopBusy = false;
+    sfx.complete();
+    if (id === 'chance' && fromOver && SH.credits > 0) { SH.credits--; saveSH(); $('shop').hidden = true; applyChance(); return; }
+    shopShow('<h2>' + t('thanks') + '</h2><p>' + (id === 'supporter' ? t('supThanks')(SUPPORTER_CHANCES) : t('gpPackThanks')(GP_PACK)) + '</p>' +
+      '<button class="btn" type="button" id="shX">' + t('done') + '</button>');
+    $('shX').onclick = () => { if (fromOver) back(); else gpOpenShop(); };
+  }
+
   $('shopBtn').addEventListener('click', openShop);
   $('shopBtn').hidden = !SHOP_ENABLED;
+  gpInit();
   applyPerks();
 
   $('closeGallery').addEventListener('click', () => { $('gallery').hidden = true; });
