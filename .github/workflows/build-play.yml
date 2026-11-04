@@ -87,7 +87,7 @@ jobs:
               fallbackType: "webview",          // opens in an in-app WebView if no TWA browser is available (no Play Billing there)
               features: { playBilling: { enabled: true } },
               alphaDependencies: { enabled: false },
-              enableSiteSettingsShortcut: true,   // androidbrowserhelper 2.7 toggles ManageDataLauncherActivity on start; it must exist isChromeOSOnly: false, isMetaQuest: false,
+              enableSiteSettingsShortcut: true, isChromeOSOnly: false, isMetaQuest: false,   // site-settings shortcut must exist: androidbrowserhelper 2.7 toggles ManageDataLauncherActivity on start
               fullScopeUrl: "https://" + h + "/", minSdkVersion: 24,            // androidbrowserhelper 2.7 needs Android 7+
               fingerprints: [], additionalTrustedOrigins: [], retainedBundles: []
             };
