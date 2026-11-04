@@ -148,7 +148,8 @@ body{
 }
 
 .tray{display:grid;grid-template-columns:repeat(3,1fr);height:calc(var(--mini)*5 + 20px)}
-.slot{display:grid;place-items:center;touch-action:none;cursor:grab;border-radius:12px}
+.slot{display:grid;place-items:center;touch-action:none;cursor:grab;border-radius:12px;position:relative}
+.sptag{position:absolute;left:50%;top:calc(50% + 22px);transform:translateX(-50%);white-space:nowrap;pointer-events:none;font:700 10.5px/1 var(--f);letter-spacing:.02em;color:#fff;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);padding:3px 7px;border-radius:99px}
 .slot.lift .piece{opacity:.18}
 .slot.dim .piece{opacity:.35;filter:grayscale(.7)}
 .piece{display:grid;gap:3px}
@@ -711,7 +712,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r3: 'Κάθε καθαρισμός αποκαλύπτει κομμάτια της εικόνας. Τα combos αποκαλύπτουν περισσότερα.',
       r4: 'Η παρτίδα τελειώνει όταν δεν χωράει κανένα κομμάτι. Η εικόνα κρατάει την πρόοδό της.',
       r5: 'Καθάρισε 2+ γραμμές μαζί για Βόμβα (ανατινάζει 3×3) ή φτάσε combo ×3 για Κεραυνό (καθαρίζει γραμμή και στήλη). Τα αφήνεις όπου θέλεις, ακόμα και πάνω σε τουβλάκια.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', bomb: 'Βόμβα!', lightning: 'Κεραυνός!', gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', bomb: 'Βόμβα!', lightning: 'Κεραυνός!', gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου', howBomb: 'Άφησέ τη όπου θες: ανατινάζει 3×3 κουτάκια γύρω της', howLightning: 'Άφησέ τον όπου θες: καθαρίζει όλη τη γραμμή και όλη τη στήλη', tagBomb: '3×3', tagLightning: 'γραμμή + στήλη',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
       rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε το παιχνίδι', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
@@ -794,7 +795,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r3: 'Every clear reveals pieces of the picture. Combos reveal more.',
       r4: 'The game ends when no piece fits. Your picture keeps its progress.',
       r5: 'Clear 2+ lines at once for a Bomb (blasts 3×3), or reach combo ×3 for Lightning (clears a row and a column). Drop them anywhere, even on top of tiles.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', bomb: 'Bomb!', lightning: 'Lightning!', gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', bomb: 'Bomb!', lightning: 'Lightning!', gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces', howBomb: 'Drop it anywhere: it blasts the 3×3 squares around it', howLightning: 'Drop it anywhere: it clears the whole row and the whole column', tagBomb: '3×3', tagLightning: 'row + column',
       free: 'Free, no ads, no wallet connection.',
       rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate the game', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
@@ -1094,6 +1095,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       s.classList.remove('lift');
       s.classList.toggle('dim', !!p && !anyFit(p));
       if (p) s.appendChild(buildPiece(p, 'mini'));
+      if (p && p.sp) { const tg = document.createElement('span'); tg.className = 'sptag'; tg.textContent = t(p.sp === 'bomb' ? 'tagBomb' : 'tagLightning'); s.appendChild(tg); }
     });
   }
   function renderStats() {
@@ -1325,7 +1327,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     el.textContent = main;
     if (sub) { const s = document.createElement('small'); s.textContent = sub; el.appendChild(s); }
     el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), lvl && lvl !== 'l2' ? 1550 : 1150);
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), sub && sub.length > 40 ? 3400 : lvl && lvl !== 'l2' ? 1550 : 1150);
   }
   /* ---------- sound (synthesised, no files) ---------- */
   let muted = store.get('svb_sound') === 'off';
@@ -1555,7 +1557,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       const earn = lines >= 2 ? 'bomb' : (combo >= 3 && combo % 3 === 0 ? 'lightning' : null);
       if (earn && !tray.some(x => x && x.sp)) {
         tray[i] = makeSpecial(earn);
-        setTimeout(() => { toast(t(earn === 'bomb' ? 'gotBomb' : 'gotLightning'), t('gotSub')); sfx.earn(); }, 1000);
+        setTimeout(() => { toast(t(earn === 'bomb' ? 'gotBomb' : 'gotLightning'), t(earn === 'bomb' ? 'howBomb' : 'howLightning'), 'l3'); sfx.earn(); }, 1000);
       }
     } else {
       combo = 0;
