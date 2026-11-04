@@ -572,6 +572,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       <li data-i18n="r5"></li>
     </ul>
     <p class="fine" data-i18n="free"></p>
+    <p class="fine" id="gpDiag" hidden style="opacity:.6;font-size:11px"></p>
     <div class="links">
       <button class="link" id="langBtn" type="button"></button>
       <a href="privacy.html" data-i18n="privacy"></a>
@@ -2602,12 +2603,16 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     } catch (e) { console.warn(e); }
     return added;
   }
+  let gpStatus = 'not started';
+  const gpDiag = () => { const e = $('gpDiag'); if (e && PLAY) { e.hidden = false; e.textContent = 'Google Play: ' + gpStatus; } };
   async function gpInit() {
-    if (!PLAY || !('getDigitalGoodsService' in window)) return;
-    try { gp = await window.getDigitalGoodsService('https://play.google.com/billing'); } catch (e) { gp = null; }
-    if (!gp) return;
-    try { (await gp.getDetails(Object.values(GP_SKU))).forEach(d => { gpItems[d.itemId] = d; }); } catch (e) { console.warn(e); }
-    if (!Object.keys(gpItems).length) { gp = null; return; }
+    if (!PLAY) return;
+    if (!('getDigitalGoodsService' in window)) { gpStatus = 'no Digital Goods API (' + (navigator.userAgent.match(/Chrome\/[\d.]+/) || ['?'])[0] + ')'; gpDiag(); return; }
+    try { gp = await window.getDigitalGoodsService('https://play.google.com/billing'); } catch (e) { gp = null; gpStatus = 'service error: ' + (e && (e.name + ' ' + e.message)); gpDiag(); return; }
+    if (!gp) { gpStatus = 'service unavailable'; gpDiag(); return; }
+    try { (await gp.getDetails(Object.values(GP_SKU))).forEach(d => { gpItems[d.itemId] = d; }); } catch (e) { console.warn(e); gpStatus = 'details error: ' + (e && (e.name + ' ' + e.message)); }
+    if (!Object.keys(gpItems).length) { gp = null; if (gpStatus === 'not started') gpStatus = 'no products returned'; gpDiag(); return; }
+    gpStatus = 'ok, ' + Object.keys(gpItems).join(', '); gpDiag();
     document.documentElement.classList.add('gpbill');
     $('shopBtn').hidden = false;
     gpSync();
