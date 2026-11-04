@@ -1,4 +1,4 @@
-// Blockspace — Google Play purchase check (Cloudflare Worker)
+// StratoshiVibes games — Google Play purchase check (Cloudflare Worker): Blockspace and Bull Run
 //
 // The Google Play version of the game sends { sku, token } here after every purchase.
 // This Worker asks Google whether the purchase is real and paid, and acknowledges
@@ -8,10 +8,14 @@
 // Needs one secret: GOOGLE_SA_KEY = the whole JSON key file of a Google Cloud
 // service account that has access to the app in Play Console. See README.md.
 
-const PACKAGE = 'com.stratoshivibes.blockspace';
-const SKUS = { supporter_pack: 'once', second_chance_5: 'consumable' };
-const ORIGINS = ['https://blockspace.stratoshivibes.com'];
-const API = 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/' + PACKAGE + '/purchases/products/';
+// product id -> [Android package of the game that sells it, 'once' (acknowledged here) or 'consumable' (consumed by the game)]
+const SKUS = {
+  supporter_pack: ['com.stratoshivibes.blockspace', 'once'],
+  second_chance_5: ['com.stratoshivibes.blockspace', 'consumable'],
+  garage_pass: ['com.stratoshivibes.bullrace', 'once'],
+};
+const ORIGINS = ['https://blockspace.stratoshivibes.com', 'https://bullrun.stratoshivibes.com'];
+const API = pkg => 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/' + pkg + '/purchases/products/';
 
 let cachedToken = null, cachedUntil = 0;
 
@@ -38,14 +42,14 @@ export default {
 
     try {
       const access = await googleToken(env);
-      const base = API + encodeURIComponent(sku) + '/tokens/' + encodeURIComponent(token);
+      const base = API(SKUS[sku][0]) + encodeURIComponent(sku) + '/tokens/' + encodeURIComponent(token);
       const r = await fetch(base, { headers: { Authorization: 'Bearer ' + access } });
       if (r.status === 400 || r.status === 404 || r.status === 410) return json({ ok: false, reason: 'unknown purchase' });
       if (!r.ok) return json({ error: 'google ' + r.status }, 502);
       const p = await r.json();
       // purchaseState: 0 purchased, 1 cancelled, 2 pending
       if (p.purchaseState !== 0) return json({ ok: false, reason: p.purchaseState === 2 ? 'pending' : 'cancelled' });
-      if (SKUS[sku] === 'once' && p.acknowledgementState === 0) {
+      if (SKUS[sku][1] === 'once' && p.acknowledgementState === 0) {
         const a = await fetch(base + ':acknowledge', {
           method: 'POST', headers: { Authorization: 'Bearer ' + access, 'Content-Type': 'application/json' }, body: '{}',
         });
