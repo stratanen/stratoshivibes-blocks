@@ -11,11 +11,11 @@ on:
       version_code:
         description: "Android versionCode for Google Play (whole number, must increase every upload)"
         required: true
-        default: "4"
+        default: "5"
       version_name:
         description: "Version name shown to players"
         required: true
-        default: "1.1.2"
+        default: "1.1.3"
 
 permissions:
   contents: write
@@ -94,13 +94,11 @@ jobs:
             require("fs").writeFileSync("twa/twa-manifest.json", JSON.stringify(m, null, 2));'
           cd twa
           npx --yes @bubblewrap/cli@1.27.0 update --skipVersionUpgrade < /dev/null
-          # R8 renamed an androidbrowserhelper component class, so LauncherActivity crashed on start
-          # ("Component class G0.u does not exist"). Keep the TWA libraries' classes unrenamed.
-          cat >> app/proguard-rules.pro <<'RULES'
-          -keep class com.google.androidbrowserhelper.** { *; }
-          -keep class androidx.browser.** { *; }
-          RULES
-          tail -4 app/proguard-rules.pro
+          # Bubblewrap turns on R8 (minifyEnabled true) without any keep rules, so R8 renamed an
+          # androidbrowserhelper component and LauncherActivity crashed on start
+          # ("Component class G0.u does not exist"). The app is tiny, so ship it unminified.
+          sed -i 's/minifyEnabled true/minifyEnabled false/' app/build.gradle
+          grep -n "minifyEnabled" app/build.gradle
           grep -n "launchUrl\|versionCode\|androidbrowserhelper" app/build.gradle
 
       - name: Build signed App Bundle
