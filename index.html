@@ -1329,17 +1329,22 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   }
   /* ---------- sound (synthesised, no files) ---------- */
   let muted = store.get('svb_sound') === 'off';
-  let actx = null, master = null;
+  let actx = null, master = null, limiter = null;
   function audio() { return muted ? null : ensureAudio(); }
   function ensureAudio() {
     try {
       if (!actx) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
-        actx = new AC();
+        // 'balanced' gives Android a larger audio buffer than the default, so music does not crackle under load
+        try { actx = new AC({ latencyHint: 'balanced' }); } catch (e) { actx = new AC(); }
+        // one limiter in front of the speakers for effects and music together, so they never clip when they overlap
+        limiter = actx.createDynamicsCompressor();
+        limiter.threshold.value = -3; limiter.knee.value = 0; limiter.ratio.value = 20; limiter.attack.value = 0.002; limiter.release.value = 0.15;
+        limiter.connect(actx.destination);
         master = actx.createGain(); master.gain.value = 0.32;
         const comp = actx.createDynamicsCompressor();
-        master.connect(comp); comp.connect(actx.destination);
+        master.connect(comp); comp.connect(limiter);
       }
       if (actx.state === 'suspended') actx.resume();
       return actx;
@@ -1409,7 +1414,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
         const len = Math.floor(a.sampleRate * 2.2); verbIR = a.createBuffer(2, len, a.sampleRate);
         for (let c = 0; c < 2; c++) { const d = verbIR.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.4); }
       }
-      const out = a.createGain(); out.gain.value = 0.0001; out.connect(a.destination);
+      const out = a.createGain(); out.gain.value = 0.0001; out.connect(limiter || a.destination);
       out.gain.setTargetAtTime(0.42, a.currentTime, 0.6);
       const comp = a.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(out);
       const dry = a.createGain(); dry.connect(comp);
@@ -1466,8 +1471,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
         const a = ensureAudio(); if (!a || a.state !== 'running') return;
         bus = makeBus(a); step = 0; nextT = a.currentTime + 0.1;
         timer = setInterval(() => {
-          while (nextT < a.currentTime + 0.15) { tick(bus, step % 64, nextT + (step % 2 ? SWING * D : 0)); nextT += D; step++; }
-        }, 25);
+          // if the page stalled, skip the notes that are already late instead of firing them all at once (clicks)
+          if (nextT < a.currentTime) { const miss = Math.ceil((a.currentTime - nextT) / D); nextT += miss * D; step += miss; }
+          // schedule 0.4 s ahead so busy frames on phones do not starve the music
+          while (nextT < a.currentTime + 0.4) { tick(bus, step % 64, nextT + (step % 2 ? SWING * D : 0)); nextT += D; step++; }
+        }, 50);
       },
       stop() {
         if (!timer) return;
