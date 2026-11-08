@@ -362,8 +362,21 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 .lbme b{color:var(--gold)}
 .lbempty{color:var(--dim);font-size:14px}
 .blk.sp-bomb{--k:#ff4040;--img:url(tiles/sp-bomb.webp)}
+.blk.sp-bull{--k:#2bff9a;--img:url(art/chars/bull.webp)}
+.blk.sp-bear{--k:#ff4040;--img:url(art/chars/bear.webp)}
+.blk.sp-whale{--k:#3aa0ff;--img:url(art/chars/whale.webp)}
+.blk.sp-rugpuller{--k:#a45cff;--img:url(art/chars/rugpuller.webp)}
+.blk.sp-crab{--k:#ff8a3d;--img:url(art/chars/crab.webp)}
+.blk.sp-diamond{--k:#22e4ff;--img:url(art/chars/diamond.webp)}
+.blk[class*="sp-"]:not(.sp-bomb):not(.sp-lightning){background:var(--img) center/cover no-repeat, var(--k);box-shadow:0 0 0 2px var(--k),0 0 14px var(--k)}
+.slot .blk[class*="sp-"]{animation:sppulse 1.1s ease-in-out infinite}
+#hero{position:fixed;left:50%;top:42%;z-index:36;width:min(58vw,260px);aspect-ratio:1;margin-left:calc(min(58vw,260px) / -2);margin-top:calc(min(58vw,260px) / -2);pointer-events:none;opacity:0}
+#hero img{width:100%;height:100%;object-fit:cover;border-radius:28px;border:3px solid var(--hk,#fff);box-shadow:0 0 40px var(--hk,#fff),0 0 90px var(--hk,#fff)}
+#hero b{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);white-space:nowrap;font:400 22px/1 var(--fd);color:#fff;text-shadow:0 0 12px var(--hk,#fff);background:rgba(6,10,30,.85);padding:7px 14px;border-radius:12px;border:1px solid var(--hk,#fff)}
+#hero.go{animation:heroin 1.05s cubic-bezier(.2,.9,.2,1) both}
+@keyframes heroin{0%{opacity:0;transform:scale(.3) rotate(-12deg)}18%{opacity:1;transform:scale(1.08) rotate(3deg)}30%{transform:scale(1) rotate(0)}75%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.25) translateY(-30px)}}
+@media (prefers-reduced-motion: reduce){#hero.go{animation-duration:.6s}}
 .blk.sp-lightning{--k:#ffb02e;--img:url(tiles/sp-lightning.webp)}
-.slot .blk.sp-bomb,.slot .blk.sp-lightning{animation:sppulse 1.1s ease-in-out infinite}
 @keyframes sppulse{50%{transform:scale(1.12);box-shadow:0 0 18px var(--k)}}
 .cell.zap{box-shadow:inset 0 0 0 2px #fff,0 0 12px var(--gold)!important;background:rgba(255,176,46,.22)}
 @media (prefers-reduced-motion: reduce){.slot .blk.sp-bomb,.slot .blk.sp-lightning{animation:none}}
@@ -492,6 +505,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 </div>
 
 <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+<div id="hero" aria-hidden="true"><img alt=""><b></b></div>
 <div class="toast" id="toast" aria-live="polite"></div>
 
 <div class="ov" id="over" hidden>
@@ -711,8 +725,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r2: 'Γέμισε μια γραμμή ή μια στήλη για να καθαρίσει.',
       r3: 'Κάθε καθαρισμός αποκαλύπτει κομμάτια της εικόνας. Τα combos αποκαλύπτουν περισσότερα.',
       r4: 'Η παρτίδα τελειώνει όταν δεν χωράει κανένα κομμάτι. Η εικόνα κρατάει την πρόοδό της.',
-      r5: 'Καθάρισε 2+ γραμμές μαζί για Βόμβα (ανατινάζει 3×3) ή φτάσε combo ×3 για Κεραυνό (καθαρίζει γραμμή και στήλη). Τα αφήνεις όπου θέλεις, ακόμα και πάνω σε τουβλάκια.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', bomb: 'Βόμβα!', lightning: 'Κεραυνός!', gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου', howBomb: 'Άφησέ τη όπου θες: ανατινάζει 3×3 κουτάκια γύρω της', howLightning: 'Άφησέ τον όπου θες: καθαρίζει όλη τη γραμμή και όλη τη στήλη', tagBomb: '3×3', tagLightning: 'γραμμή + στήλη',
+      r5: 'Καθάρισε 2+ γραμμές μαζί ή φτάσε combo ×3 και έρχεται ένας Degen να σε βοηθήσει: Ταύρος (στήλη), Whale (γραμμή), Αρκούδα (3×3), Rugpuller (γραμμή + στήλη), Crab (2 γραμμές), Diamond Hands (όλα τα ίδια τουβλάκια). Τον αφήνεις όπου θέλεις. Όσοι έχουν τις κάρτες Degens τους παίρνουν πιο συχνά.',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', bomb: 'Βόμβα!', lightning: 'Κεραυνός!', pw: { bull: ['Ο Ταύρος!', 'Κουτουλάει όλη τη στήλη', 'στήλη'], whale: ['Η Φάλαινα!', 'Ένα κύμα παίρνει όλη τη γραμμή', 'γραμμή'], bear: ['Η Αρκούδα!', 'Σπάει ένα κομμάτι 3×3', '3×3'], rugpuller: ['Ο Rugpuller!', 'Τραβάει το χαλί: γραμμή + στήλη', 'σταυρός'], crab: ['Ο Crab!', 'Πλάγια βόλτα: παίρνει 2 γραμμές', '2 γραμμές'], diamond: ['Diamond Hands!', 'Μαζεύει όλα τα ίδια τουβλάκια', 'ίδια'] }, pwGot: n => n + ' ήρθε να βοηθήσει!', pwHow: 'Σύρε τον όπου θες στο ταμπλό', pwGift: n => n, gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου', howBomb: 'Άφησέ τη όπου θες: ανατινάζει 3×3 κουτάκια γύρω της', howLightning: 'Άφησέ τον όπου θες: καθαρίζει όλη τη γραμμή και όλη τη στήλη', tagBomb: '3×3', tagLightning: 'γραμμή + στήλη',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
       rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε το παιχνίδι', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
@@ -794,8 +808,8 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r2: 'Fill a row or a column to clear it.',
       r3: 'Every clear reveals pieces of the picture. Combos reveal more.',
       r4: 'The game ends when no piece fits. Your picture keeps its progress.',
-      r5: 'Clear 2+ lines at once for a Bomb (blasts 3×3), or reach combo ×3 for Lightning (clears a row and a column). Drop them anywhere, even on top of tiles.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', bomb: 'Bomb!', lightning: 'Lightning!', gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces', howBomb: 'Drop it anywhere: it blasts the 3×3 squares around it', howLightning: 'Drop it anywhere: it clears the whole row and the whole column', tagBomb: '3×3', tagLightning: 'row + column',
+      r5: 'Clear 2+ lines at once or reach combo ×3 and a Degen comes to help: Bull (column), Whale (row), Bear (3×3), Rugpuller (row + column), Crab (2 rows), Diamond Hands (every matching tile). Drop it anywhere. Vol.1 Degens card holders get their own characters more often.',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', bomb: 'Bomb!', lightning: 'Lightning!', pw: { bull: ['The Bull!', 'Headbutts a whole column', 'column'], whale: ['The Whale!', 'A wave takes a whole row', 'row'], bear: ['The Bear!', 'Smashes a 3×3 block', '3×3'], rugpuller: ['The Rugpuller!', 'Pulls the rug: row + column', 'cross'], crab: ['The Crab!', 'Walks sideways: takes 2 rows', '2 rows'], diamond: ['Diamond Hands!', 'Grabs every matching tile', 'match'] }, pwGot: n => n + ' came to help!', pwHow: 'Drag it anywhere on the board', pwGift: n => n, gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces', howBomb: 'Drop it anywhere: it blasts the 3×3 squares around it', howLightning: 'Drop it anywhere: it clears the whole row and the whole column', tagBomb: '3×3', tagLightning: 'row + column',
       free: 'Free, no ads, no wallet connection.',
       rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate the game', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
@@ -934,9 +948,9 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     store.set('svb_pstreak', JSON.stringify(pstreak));
     const n = pstreak.n;
     if (n < 2) return null;
-    const gift = mode === 'main' ? (n % 7 === 0 ? 'bomb' : 'lightning') : null;
+    const gift = mode === 'main' ? (n % 7 === 0 ? 'bull' : pickPower()) : null;
     setTimeout(() => {
-      toast(t('pStreakToast')(n), t('pStreakSub')(gift ? t(gift === 'bomb' ? 'giftBomb' : 'giftLightning') : ''), 'l3');
+      toast(t('pStreakToast')(n), t('pStreakSub')(gift ? t('pw')[gift][0].replace('!', '') : ''), 'l3');
       sfx.earn(); if ([3, 7, 14, 21, 30, 50, 100].includes(n) || n % 30 === 0) fireworks(6);
     }, 900);
     return gift;
@@ -1005,7 +1019,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     if (mode === 'daily') { if (g.day !== utcDay()) return false; dday = g.day; dseq = +g.seq || 0; }
     board = g.board.map(v => (Number.isInteger(v) && v >= 0 && v < KINDS.length) ? v : -1);
     score = +g.score || 0; combo = +g.combo || 0; chanceUsed = !!g.chanceUsed; lbSent = +g.lbSent || 0; pf = +g.pf || 0; shownLevel = -1;
-    tray = g.tray.slice(0, 3).map(p => p && (p.sp === 'bomb' || p.sp === 'lightning') ? makeSpecial(p.sp) : (p && Array.isArray(p.cells) && p.cells.length) ? { cells: p.cells, ...sizeOf(p.cells), k: p.k % KINDS.length } : null);
+    tray = g.tray.slice(0, 3).map(p => p && isPower(p.sp) ? makeSpecial(p.sp) : (p && Array.isArray(p.cells) && p.cells.length) ? { cells: p.cells, ...sizeOf(p.cells), k: p.k % KINDS.length } : null);
     while (tray.length < 3) tray.push(null);
     if (tray.every(p => !p)) refill();
     return true;
@@ -1027,12 +1041,39 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     return rr >= 0 && rr < N && cc >= 0 && cc < N && board[rr * N + cc] < 0;
   });
   // special tiles: earned by multi-line clears and combos, dropped anywhere, never stay on the board
-  const makeSpecial = sp => ({ sp, cells: [[0, 0]], h: 1, w: 1, k: 0 });
+  // Degen powers: each Vol.1 character clears the board in its own way. Old saves' bomb/lightning become Bear/Rugpuller.
+  const POWERS = ['bull', 'whale', 'bear', 'rugpuller', 'crab', 'diamond'];
+  const POWER_COL = { bull: '#2bff9a', whale: '#3aa0ff', bear: '#ff4040', rugpuller: '#a45cff', crab: '#ff8a3d', diamond: '#22e4ff' };
+  const makeSpecial = sp => ({ sp: sp === 'bomb' ? 'bear' : sp === 'lightning' ? 'rugpuller' : sp, cells: [[0, 0]], h: 1, w: 1, k: 0 });
+  const isPower = sp => POWERS.includes(sp) || sp === 'bomb' || sp === 'lightning';
   function spArea(sp, r, c) {
-    const out = [];
-    if (sp === 'bomb') { for (let y = r - 1; y <= r + 1; y++) for (let x = c - 1; x <= c + 1; x++) if (y >= 0 && y < N && x >= 0 && x < N) out.push(y * N + x); }
-    else { for (let k = 0; k < N; k++) { out.push(r * N + k); if (k !== r) out.push(k * N + c); } }
+    const out = [], add = (y, x) => { if (y >= 0 && y < N && x >= 0 && x < N && !out.includes(y * N + x)) out.push(y * N + x); };
+    if (sp === 'bomb' || sp === 'bear') { for (let y = r - 1; y <= r + 1; y++) for (let x = c - 1; x <= c + 1; x++) add(y, x); }
+    else if (sp === 'bull') { for (let k = 0; k < N; k++) add(k, c); }
+    else if (sp === 'whale') { for (let k = 0; k < N; k++) add(r, k); }
+    else if (sp === 'crab') { const r2 = r < N - 1 ? r + 1 : r - 1; for (let k = 0; k < N; k++) { add(r, k); add(r2, k); } }
+    else if (sp === 'diamond') {
+      let kind = board[r * N + c];
+      if (kind < 0) { const cnt = {}; board.forEach(v => { if (v >= 0) cnt[v] = (cnt[v] || 0) + 1; }); kind = +Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0]; }
+      board.forEach((v, j) => { if (v >= 0 && v === kind) out.push(j); });
+      if (!out.length) add(r, c);
+    }
+    else { for (let k = 0; k < N; k++) { add(r, k); add(k, c); } }
     return out;
+  }
+  // which Degen comes to help: holders of a card get that character three times as often
+  function pickPower(seedFn) {
+    if (mode === 'daily') return null;
+    const w = POWERS.map(pw => 1 + ((W.owned && W.owned[pw]) ? 2 : 0));
+    let x = (seedFn || Math.random)() * w.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < POWERS.length; i++) { x -= w[i]; if (x <= 0) return POWERS[i]; }
+    return POWERS[0];
+  }
+  function heroShow(sp) {
+    if (reduceMotion) return;
+    const h = $('hero'); h.style.setProperty('--hk', POWER_COL[sp] || '#fff');
+    h.querySelector('img').src = 'art/chars/' + sp + '.webp'; h.querySelector('b').textContent = t('pw')[sp][0];
+    h.classList.remove('go'); void h.offsetWidth; h.classList.add('go');
   }
   function anyFit(p) {
     for (let r = 0; r <= N - p.h; r++) for (let c = 0; c <= N - p.w; c++) if (canPlace(p, r, c)) return true;
@@ -1095,7 +1136,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       s.classList.remove('lift');
       s.classList.toggle('dim', !!p && !anyFit(p));
       if (p) s.appendChild(buildPiece(p, 'mini'));
-      if (p && p.sp) { const tg = document.createElement('span'); tg.className = 'sptag'; tg.textContent = t(p.sp === 'bomb' ? 'tagBomb' : 'tagLightning'); s.appendChild(tg); }
+      if (p && p.sp) { const tg = document.createElement('span'); tg.className = 'sptag'; tg.textContent = (t('pw')[p.sp] || ['', '', ''])[2]; s.appendChild(tg); }
     });
   }
   function renderStats() {
@@ -1515,10 +1556,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     score += area.length * 30;
     const fxCells = area.map((j, n) => [j, kinds[n]]);
     const got = area.length && mode === 'main' ? revealAdd(revealBoost(Math.max(1, Math.round(area.length / 4)))) : 0;
-    toast(t(p.sp), got ? t('pieces')(got) : '', 'l3');
-    fxClear(fxCells, p.sp === 'bomb' ? 3 : 2, false);
+    heroShow(p.sp);
+    setTimeout(() => toast(t('pw')[p.sp][1], got ? t('pieces')(got) : '', 'l2'), 650);
+    fxClear(fxCells, area.length >= 12 ? 3 : 2, false);
     if (area.length) floatPoints(fxCells, score - before);
-    if (p.sp === 'bomb') { sfx.boom(); buzz([40, 30, 60]); } else { sfx.zap(); buzz([15, 20, 15, 20, 30]); }
+    if (p.sp === 'bear' || p.sp === 'bull') { sfx.boom(); buzz([40, 30, 60]); } else { sfx.zap(); buzz([15, 20, 15, 20, 30]); }
     { const g = pStreakTick(); if (g && !tray.some(x => x && x.sp)) { const e = tray.indexOf(null); if (e >= 0) tray[e] = makeSpecial(g); } }
     if (tray.every(x => !x)) refill();
     renderBoard();
@@ -1554,10 +1596,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       buzz(lines > 1 ? [20, 40, 30] : 20);
       sfx.clear(lines, combo);
       if (got) sfx.reveal(got);
-      const earn = lines >= 2 ? 'bomb' : (combo >= 3 && combo % 3 === 0 ? 'lightning' : null);
+      const earned = lines >= 2 || (combo >= 3 && combo % 3 === 0);
+      const earn = earned ? (mode === 'daily' ? (lines >= 2 ? 'bear' : 'rugpuller') : pickPower()) : null;
       if (earn && !tray.some(x => x && x.sp)) {
         tray[i] = makeSpecial(earn);
-        setTimeout(() => { toast(t(earn === 'bomb' ? 'gotBomb' : 'gotLightning'), t(earn === 'bomb' ? 'howBomb' : 'howLightning'), 'l3'); sfx.earn(); }, 1000);
+        setTimeout(() => { toast(t('pwGot')(t('pw')[earn][0].replace('!', '')), t('pw')[earn][1] + ' · ' + t('pwHow'), 'l3'); sfx.earn(); }, 1000);
       }
     } else {
       combo = 0;
