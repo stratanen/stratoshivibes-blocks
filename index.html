@@ -414,6 +414,14 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
 #wglow{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(75% 45% at 50% 55%, var(--glow,#1b2a7a), transparent 72%);opacity:.5;transition:opacity .45s}
 #wglow.fade{opacity:0}
 #wbg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+/* light effects, for phones that cannot keep up: no blur behind panels, no glow or shadow that has to be
+   repainted while a piece moves, and no endlessly looping highlights */
+html.lite *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html.lite .piece.float{filter:none}
+html.lite .cell{transition:none}
+html.lite .blk{box-shadow:none}
+html.lite .cell.hl.blk{filter:none;box-shadow:inset 0 0 0 2px #fff}
+html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk[class*="sp-"],html.lite .live.alive .kbw{animation:none}
 .board.c2{outline:2px solid var(--bc);outline-offset:4px;animation:cbeat 1s ease-in-out infinite}
 .board.c3{outline:3px solid var(--bc);outline-offset:5px;animation:cbeat .55s ease-in-out infinite}
 @keyframes cbeat{50%{outline-color:transparent;outline-offset:9px}}
@@ -605,6 +613,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     <p class="fine" id="gpDiag" hidden style="opacity:.6;font-size:11px"></p>
     <div class="links">
       <button class="link" id="langBtn" type="button"></button>
+      <button class="link" id="gfxBtn" type="button"></button>
       <a href="privacy.html" data-i18n="privacy"></a>
       <a href="terms.html" data-i18n="terms"></a>
       <a href="solanadappstore://details?id=com.stratoshivibes.blocks" class="rateLink" data-i18n="rateLink" hidden></a>
@@ -743,7 +752,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r6: 'Κάθε γραμμή που σπας γίνεται ένα block στη δική σου αλυσίδα, που μένει από παρτίδα σε παρτίδα. Κάθε 210 blocks έρχεται Halving, με γιορτή και δώρο.', r5: 'Καθάρισε 2+ γραμμές μαζί ή φτάσε combo ×3 και έρχεται ένας Degen να σε βοηθήσει: Ταύρος (στήλη), Whale (γραμμή), Αρκούδα (3×3), Rugpuller (γραμμή + στήλη), Crab (2 γραμμές), Diamond Hands (όλα τα ίδια τουβλάκια). Τον αφήνεις όπου θέλεις. Όσοι έχουν τις κάρτες Degens τους παίρνουν πιο συχνά.',
       pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', chBlock: n => 'Block ' + n, chHalv: n => 'Halving σε <b>' + n + '</b>', genesis: 'Genesis Block!', genesisSub: 'Η πρώτη γραμμή σου: ξεκινάει η αλυσίδα σου', halving: 'HALVING!', halvingSub: (e, g) => 'Εποχή ' + e + ' · δώρο: ' + g, bomb: 'Βόμβα!', lightning: 'Κεραυνός!', pw: { bull: ['Ο Ταύρος!', 'Κουτουλάει όλη τη στήλη', 'στήλη'], whale: ['Η Φάλαινα!', 'Ένα κύμα παίρνει όλη τη γραμμή', 'γραμμή'], bear: ['Η Αρκούδα!', 'Σπάει ένα κομμάτι 3×3', '3×3'], rugpuller: ['Ο Rugpuller!', 'Τραβάει το χαλί: γραμμή + στήλη', 'σταυρός'], crab: ['Ο Crab!', 'Πλάγια βόλτα: παίρνει 2 γραμμές', '2 γραμμές'], diamond: ['Diamond Hands!', 'Μαζεύει όλα τα ίδια τουβλάκια', 'ίδια'] }, pwGot: n => n + ' ήρθε να βοηθήσει!', pwHow: 'Σύρε τον όπου θες στο ταμπλό', pwGift: n => n, gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου', howBomb: 'Άφησέ τη όπου θες: ανατινάζει 3×3 κουτάκια γύρω της', howLightning: 'Άφησέ τον όπου θες: καθαρίζει όλη τη γραμμή και όλη τη στήλη', tagBomb: '3×3', tagLightning: 'γραμμή + στήλη',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
-      rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε το παιχνίδι', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
+      rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε το παιχνίδι', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', gfx: { auto: 'Εφέ: αυτόματα', lite: 'Εφέ: ελαφριά', full: 'Εφέ: πλήρη' }, soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
       boardAria: 'Ταμπλό 8 επί 8', trayAria: 'Κομμάτια',
       gpIntro: 'Προαιρετικά extras. Το παιχνίδι μένει δωρεάν. Η πληρωμή γίνεται μέσω Google Play.',
@@ -826,7 +835,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
       r6: 'Every line you clear becomes a block in your own chain, which carries over from game to game. Every 210 blocks there is a Halving, with a celebration and a gift.', r5: 'Clear 2+ lines at once or reach combo ×3 and a Degen comes to help: Bull (column), Whale (row), Bear (3×3), Rugpuller (row + column), Crab (2 rows), Diamond Hands (every matching tile). Drop it anywhere. Vol.1 Degens card holders get their own characters more often.',
       pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', chBlock: n => 'Block ' + n, chHalv: n => 'Halving in <b>' + n + '</b>', genesis: 'Genesis Block!', genesisSub: 'Your first line: your chain begins', halving: 'HALVING!', halvingSub: (e, g) => 'Epoch ' + e + ' · gift: ' + g, bomb: 'Bomb!', lightning: 'Lightning!', pw: { bull: ['The Bull!', 'Headbutts a whole column', 'column'], whale: ['The Whale!', 'A wave takes a whole row', 'row'], bear: ['The Bear!', 'Smashes a 3×3 block', '3×3'], rugpuller: ['The Rugpuller!', 'Pulls the rug: row + column', 'cross'], crab: ['The Crab!', 'Walks sideways: takes 2 rows', '2 rows'], diamond: ['Diamond Hands!', 'Grabs every matching tile', 'match'] }, pwGot: n => n + ' came to help!', pwHow: 'Drag it anywhere on the board', pwGift: n => n, gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces', howBomb: 'Drop it anywhere: it blasts the 3×3 squares around it', howLightning: 'Drop it anywhere: it clears the whole row and the whole column', tagBomb: '3×3', tagLightning: 'row + column',
       free: 'Free, no ads, no wallet connection.',
-      rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate the game', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', soundAria: 'Sound on/off', musicAria: 'Music on/off',
+      rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate the game', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', gfx: { auto: 'Effects: auto', lite: 'Effects: light', full: 'Effects: full' }, soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
       boardAria: '8 by 8 board', trayAria: 'Pieces',
       gpIntro: 'Optional extras. The game stays free. Payment goes through Google Play.',
@@ -853,11 +862,17 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- language ---------- */
   let lang = store.get('svb_lang') || ((navigator.language || 'en').toLowerCase().startsWith('el') ? 'el' : 'en');
   const t = k => TEXT[lang][k];
+  /* Effects: 'full', 'lite' or 'auto'. Auto starts light on phones with little memory and otherwise measures the
+     frame rate during play; if the phone cannot hold 45 frames a second it switches to light and remembers it. */
+  let gfxMode = store.get('svb_gfx'); if (gfxMode !== 'lite' && gfxMode !== 'full') gfxMode = 'auto';
+  let lite = gfxMode === 'lite' || (gfxMode === 'auto' && (store.get('svb_gfx_auto') === 'lite' || (navigator.deviceMemory || 4) <= 2));
+  document.documentElement.classList.toggle('lite', lite);
   function applyLang() {
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
     document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
     $('langBtn').textContent = t('lang');
+    $('gfxBtn').textContent = t('gfx')[gfxMode];
   }
 
   /* ---------- shapes ---------- */
@@ -1232,7 +1247,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   /* ---------- effects: particles, beams, shake, floating points, counting score ---------- */
   const fx = $('fx'), fctx = fx.getContext('2d');
   let parts = [], beams = [], fxOn = false, fdpr = 1;
-  function fxResize() { fdpr = Math.min(window.devicePixelRatio || 1, 2); fx.width = innerWidth * fdpr; fx.height = innerHeight * fdpr; }
+  function fxResize() { fdpr = Math.min(window.devicePixelRatio || 1, lite ? 1 : 2); fx.width = innerWidth * fdpr; fx.height = innerHeight * fdpr; }
   fxResize(); addEventListener('resize', fxResize);
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   function fxClear(list, power, perfect) {
@@ -1240,7 +1255,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     const b = $('board'); b.classList.remove('shake1', 'shake2', 'shake3'); void b.offsetWidth;
     if (!reduceMotion) b.classList.add(perfect || power >= 3 ? 'shake3' : power >= 2 ? 'shake2' : 'shake1');
     if (reduceMotion) return;
-    const per = Math.min(14, 5 + power * 3) + (perfect ? 6 : 0);
+    const per = Math.round((Math.min(14, 5 + power * 3) + (perfect ? 6 : 0)) * (lite ? .4 : 1));
     const rows = new Set(), colsS = new Set();
     for (const [j, k] of list) {
       const rc = cells[j].getBoundingClientRect(), cx = rc.left + rc.width / 2, cy = rc.top + rc.height / 2;
@@ -1311,11 +1326,11 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     for (let i = 0; i < n; i++) ambP.push({ x: ar(0, 1), y: ar(0, 1), z: ar(.3, 1), ph: ar(0, 6.28), v: ar(.5, 1.5) });
     ambGo();
   }
-  function ambGo() { if (!ambRaf && !reduceMotion) { ambLast = performance.now(); ambRaf = requestAnimationFrame(ambFrame); } }
+  function ambGo() { if (!ambRaf && !reduceMotion && !lite) { ambLast = performance.now(); ambRaf = requestAnimationFrame(ambFrame); } }
   function ambGlow(x, y, r, col, a) { if (a <= 0) return; const g = ambC.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, 'rgba(' + col + ',' + a + ')'); g.addColorStop(1, 'rgba(' + col + ',0)'); ambC.fillStyle = g; ambC.fillRect(x - r, y - r, 2 * r, 2 * r); }
   function ambFrame(now) {
     ambRaf = 0;
-    if ($('game').hidden || document.hidden) { ambC.clearRect(0, 0, ambW, ambH); return; }
+    if ($('game').hidden || document.hidden || lite) { ambC.clearRect(0, 0, ambW, ambH); return; }
     const dt = Math.min(.05, (now - ambLast) / 1000); ambLast = now; ambT += dt;
     if (ambCv.width === 0 || ambW !== innerWidth || ambH !== innerHeight) ambSize();
     const c = ambC, W = ambW, H = ambH, T = ambT, col = ambCol, U = Math.min(W, H) / 400;
@@ -1725,18 +1740,18 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     e.preventDefault();
     const el = buildPiece(tray[i], 'float');
     document.body.appendChild(el);
-    drag = { i, p: tray[i], el, touch: e.pointerType !== 'mouse', r: null, c: null, ok: false };
+    const g = geom(), gp = g.pitch - g.cell;
+    el.style.setProperty('--sz', g.cell + 'px'); el.style.gap = gp + 'px';
+    drag = { i, p: tray[i], el, touch: e.pointerType !== 'mouse', r: null, c: null, ok: false, g, gp };
     s.classList.add('lift');
     sfx.pick();
     moveDrag(e);
   }));
   function moveDrag(e) {
-    const g = geom(), gp = g.pitch - g.cell, p = drag.p;
+    const g = drag.g, gp = drag.gp, p = drag.p;
     const W = p.w * g.pitch - gp, H = p.h * g.pitch - gp;
     const x = e.clientX - W / 2;
     const y = drag.touch ? e.clientY - H - Math.max(40, g.cell * 1.1) : e.clientY - H / 2;
-    drag.el.style.setProperty('--sz', g.cell + 'px');
-    drag.el.style.gap = gp + 'px';
     drag.el.style.transform = `translate(${x}px, ${y}px)`;
     const c = Math.round((x - g.x) / g.pitch), r = Math.round((y - g.y) / g.pitch);
     if (r !== drag.r || c !== drag.c) {
@@ -1757,6 +1772,36 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
   window.addEventListener('pointermove', e => { if (drag) { e.preventDefault(); moveDrag(e); } }, { passive: false });
   window.addEventListener('pointerup', () => endDrag(true));
   window.addEventListener('pointercancel', () => endDrag(false));
+
+  /* ---------- effects level ---------- */
+  function setLite(on) {
+    if (lite === on) return;
+    lite = on; document.documentElement.classList.toggle('lite', lite); fxResize();
+    if (lite) { for (const k of [...lives.keys()]) liveStop(k); }
+    else { ambGo(); if (!$('home').hidden) renderHome(); }
+  }
+  $('gfxBtn').addEventListener('click', () => {
+    gfxMode = gfxMode === 'auto' ? 'lite' : gfxMode === 'lite' ? 'full' : 'auto';
+    store.set('svb_gfx', gfxMode);
+    setLite(gfxMode === 'lite' || (gfxMode === 'auto' && store.get('svb_gfx_auto') === 'lite'));
+    applyLang(); watchGfx();
+  });
+  // Auto: watch the frame rate while the board is on screen. Two slow 2-second stretches in a row switch to light effects.
+  let watchGfx;
+  { let pt = 0, pn = 0, slow = 0, last = 0, on = false;
+    const watch = now => {
+      const dt = (now - last) / 1000; last = now;
+      if (gfxMode !== 'auto' || lite) { on = false; return; }       // decided: stop watching
+      if (!$('game').hidden && !document.hidden && dt > 0 && dt < .25) {
+        pt += dt; pn++;
+        if (pt >= 2) { slow = pt / pn > 1 / 45 ? slow + 1 : 0; pt = 0; pn = 0;
+          if (slow >= 2) { store.set('svb_gfx_auto', 'lite'); on = false; setLite(true); return; } }
+      }
+      requestAnimationFrame(watch);
+    };
+    watchGfx = () => { if (!on && gfxMode === 'auto' && !lite) { on = true; pt = pn = slow = 0; requestAnimationFrame(watch); } };
+    watchGfx();
+  }
 
   /* ---------- picture ---------- */
   const images = {};
@@ -1902,7 +1947,7 @@ body.gold .cell.ghost{filter:sepia(.9) saturate(2.6) hue-rotate(-12deg)}
     });
   }
   function liveStart(key, wrap, id, amt) {
-    if (liveRM || !wrap) return;
+    if (liveRM || lite || !wrap) return;
     const old = lives.get(key); if (old && old.id === id && old.wrap === wrap) return;
     const fx = wrap.querySelector('.lfx'); if (!fx) return;
     const L = { wrap, fx, base: wrap.querySelector('.kbw > :first-child'), id, amt: amt || 1, T: 0 };
