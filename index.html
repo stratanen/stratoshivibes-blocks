@@ -309,6 +309,24 @@ body.genesis .cell.ghost{filter:sepia(.6) saturate(2.2) hue-rotate(118deg)}
 .wbtns .btn2{flex:1;min-width:110px}
 .gitem{position:relative}
 .gitem.holder{border:2px solid var(--gold);box-shadow:0 0 12px color-mix(in srgb, var(--gold) 50%, transparent)}
+.gitem.locked img.sil{position:absolute;inset:0;filter:blur(6px) brightness(.6) saturate(.7);transform:scale(1.18)}
+.gitem.locked .lock{position:relative;z-index:1}
+.gitem.locked .lock b{color:#9aa3d8}
+.gitem.soon{border-style:dashed;border-color:var(--cyan)}
+.gitem.soon .lock small{color:var(--cyan)}
+.gcount{font-variant-numeric:tabular-nums;color:var(--cyan);font-weight:700}
+.hnew{display:block;margin:6px auto 0;padding:6px 14px;border-radius:999px;border:1px solid color-mix(in srgb, var(--cyan) 50%, transparent);background:rgba(6,10,30,.6);color:var(--cyan);font:600 13px var(--f);font-variant-numeric:tabular-nums;cursor:pointer}
+.hnew.fresh{color:#1a1405;background:var(--gold);border-color:var(--gold)}
+.pwcard .card{text-align:center;max-width:320px}
+.pwcard .pwk{display:block;font:700 12px var(--f);letter-spacing:.12em;text-transform:uppercase;color:var(--hk)}
+.pwcard #pwImg{width:120px;height:120px;object-fit:cover;border-radius:22px;border:3px solid var(--hk);box-shadow:0 0 30px var(--hk);margin:10px auto 6px;display:block}
+.pwcard h2{margin:4px 0 12px;color:#fff}
+.pwgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;width:196px;margin:0 auto 12px}
+.pwgrid i{aspect-ratio:1;border-radius:4px;background:#141c48}
+.pwgrid i.blk0{background:#2a3370}
+.pwgrid i.on{background:var(--hk);box-shadow:0 0 8px var(--hk)}
+.pwgrid i.mid{outline:2px solid #fff;outline-offset:-2px}
+.pwcard p{margin:0 0 14px;color:var(--dim);font-size:14px}
 .gitem .star{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1a1405;font:900 12px/20px system-ui,sans-serif;text-align:center}
 #walletCard h2{font:800 22px/1.2 var(--f);letter-spacing:0}
 /* Google Play edition */
@@ -480,12 +498,13 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   <div class="brand"><h1>BLOCKSPACE</h1><span class="badge" id="supBadge" hidden>★ Supporter</span><span class="badge seekb" id="seekBadge" hidden>◆ Seeker</span></div>
   <button class="hpic live" id="hpic" type="button" data-i18n-aria="peekAria"><div class="kbw"><canvas id="hc"></canvas><canvas class="lfx"></canvas></div><span class="hlabel" id="hlabel"></span></button>
   <div class="hbest"><span data-i18n="best"></span> <b id="hbest">0</b><span class="hstreak" id="hstreak" hidden></span></div>
+  <button class="hnew" id="hnew" type="button" hidden></button>
   <div class="hbtns">
     <button class="btn" id="play" type="button"></button>
     <button class="btn2 dailybtn" id="dailyBtn" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span><span data-i18n="daily"></span><small id="dailySub"></small></span></button>
     <button class="btn2" id="newFromHome" type="button" data-i18n="newGame"></button>
     <div class="hrow">
-      <button class="btn2" id="galleryBtn" type="button" data-i18n="gallery"></button>
+      <button class="btn2" id="galleryBtn" type="button"><span data-i18n="gallery"></span> <b class="gcount" id="galCount"></b></button>
       <button class="btn2" id="howBtn" type="button" data-i18n="howTitle"></button>
     </div>
     <div class="hrow">
@@ -531,6 +550,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
 
 <canvas class="fx" id="fx" aria-hidden="true"></canvas>
 <div id="hero" aria-hidden="true"><img alt=""><b></b></div>
+<div class="ov pwcard" id="pwCard" hidden><div class="card"><small class="pwk" data-i18n="pwFirst"></small><img id="pwImg" alt=""><h2 id="pwName"></h2><div class="pwgrid" id="pwGrid" aria-hidden="true"></div><p id="pwDesc"></p><button class="btn" id="pwOk" type="button" data-i18n="tutOk"></button></div></div>
 <div class="toast" id="toast" aria-live="polite"></div>
 
 <div class="ov" id="over" hidden>
@@ -567,7 +587,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
 
 <div class="ov" id="gallery" hidden>
   <div class="card">
-    <h2 data-i18n="gallery"></h2>
+    <h2><span data-i18n="gallery"></span> <b class="gcount" id="galTotal"></b></h2>
     <div class="ggrid" id="ggrid"></div>
     <p class="fine" data-i18n="galleryHint"></p>
     <button class="btn" id="closeGallery" type="button" data-i18n="back"></button>
@@ -642,6 +662,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   ];
   // Reveal pictures, in play order. To add one: put the file in art/ and add a line (and the file to sw.js).
   // n = pieces per side of the reveal grid: 6 = 36 pieces, 8 = 64 pieces for a harder "boss" picture.
+  // from = 'YYYY-MM-DD' (optional): the picture goes live at midnight Athens time on that day. Until then the home screen
+  //   counts down to it and the Gallery shows it as a dark silhouette, so pictures can be queued days ahead.
   // chars = Vol.1 Degens characters in the picture; holders of any of them unlock it in the Gallery right away.
   const PICS = [
     { id: 'bullbear', ch: 'degens', src: 'art/level-01.webp', n: 6, chars: ['bull', 'bear'], el: 'Ταύρος vs Αρκούδα', en: 'Bull vs Bear' },
@@ -702,6 +724,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Η εικόνα αποκαλύφθηκε!',
       doneTxt: 'Μπήκε στη Συλλογή σου.', chapterDone: n => 'Ολοκλήρωσες το κεφάλαιο «' + n + '»!', allDone: 'Ολοκλήρωσες όλη τη Συλλογή! Νέες εικόνες έρχονται σύντομα.', pieces64: 'κομμάτια', ended: 'Έληξε',
       nextPic: 'Επόμενη εικόνα',
+      newIn: x => 'Νέα εικόνα σε ' + x, newToday: x => 'Νέα σήμερα: ' + x, comingOn: x => 'Έρχεται ' + x, pwFirst: 'Νέα δύναμη',
       share: 'Κοινοποίηση', shareDone: n => 'Αποκάλυψα την εικόνα «' + n + '» στο Blockspace!', shareScore: n => 'Έκανα ' + n + ' πόντους στο Blockspace. Με περνάς;', shareSaved: 'Η εικόνα αποθηκεύτηκε',
       peekTxt: (c, n) => c + ' από ' + n + ' κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
       back: 'Πίσω', resume: 'Συνέχεια', play: 'Παίξε', cont: 'Συνέχισε την παρτίδα',
@@ -786,6 +809,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Picture unlocked!',
       doneTxt: 'Added to your Gallery.', chapterDone: n => 'You completed the chapter "' + n + '"!', allDone: 'You completed the whole Gallery! New pictures are coming soon.', pieces64: 'pieces', ended: 'Ended',
       nextPic: 'Next picture',
+      newIn: x => 'New picture in ' + x, newToday: x => 'New today: ' + x, comingOn: x => 'Coming ' + x, pwFirst: 'New power',
       share: 'Share', shareDone: n => 'I revealed "' + n + '" in Blockspace!', shareScore: n => 'I scored ' + n + ' in Blockspace. Can you beat it?', shareSaved: 'Image saved',
       peekTxt: (c, n) => c + ' of ' + n + ' pieces unlocked. Every line you clear reveals more.',
       back: 'Back', resume: 'Back to game', play: 'Play', cont: 'Continue game',
@@ -874,6 +898,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: '¡Imagen desbloqueada!',
       doneTxt: 'Añadida a tu Galería.', chapterDone: n => '¡Completaste el capítulo "' + n + '"!', allDone: '¡Completaste toda la Galería! Pronto llegarán imágenes nuevas.', pieces64: 'piezas', ended: 'Terminado',
       nextPic: 'Siguiente imagen',
+      newIn: x => 'Nueva imagen en ' + x, newToday: x => 'Nueva hoy: ' + x, comingOn: x => 'Llega el ' + x, pwFirst: 'Nuevo poder',
       share: 'Compartir', shareDone: n => '¡Revelé la imagen "' + n + '" en Blockspace!', shareScore: n => 'Hice ' + n + ' puntos en Blockspace. ¿Me superas?', shareSaved: 'Imagen guardada',
       peekTxt: (c, n) => c + ' de ' + n + ' piezas desbloqueadas. Cada línea que eliminas revela más.',
       back: 'Atrás', resume: 'Volver a la partida', play: 'Jugar', cont: 'Continuar partida',
@@ -929,6 +954,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Imagem desbloqueada!',
       doneTxt: 'Adicionada à sua Galeria.', chapterDone: n => 'Você completou o capítulo "' + n + '"!', allDone: 'Você completou a Galeria inteira! Novas imagens chegam em breve.', pieces64: 'peças', ended: 'Encerrado',
       nextPic: 'Próxima imagem',
+      newIn: x => 'Nova imagem em ' + x, newToday: x => 'Nova hoje: ' + x, comingOn: x => 'Chega em ' + x, pwFirst: 'Novo poder',
       share: 'Compartilhar', shareDone: n => 'Revelei a imagem "' + n + '" no Blockspace!', shareScore: n => 'Fiz ' + n + ' pontos no Blockspace. Consegue me passar?', shareSaved: 'Imagem salva',
       peekTxt: (c, n) => c + ' de ' + n + ' peças desbloqueadas. Cada linha que você elimina revela mais.',
       back: 'Voltar', resume: 'Voltar ao jogo', play: 'Jogar', cont: 'Continuar jogo',
@@ -984,6 +1010,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Bild freigeschaltet!',
       doneTxt: 'Zu deiner Galerie hinzugefügt.', chapterDone: n => 'Du hast das Kapitel „' + n + '“ abgeschlossen!', allDone: 'Du hast die ganze Galerie abgeschlossen! Neue Bilder kommen bald.', pieces64: 'Teile', ended: 'Beendet',
       nextPic: 'Nächstes Bild',
+      newIn: x => 'Neues Bild in ' + x, newToday: x => 'Neu heute: ' + x, comingOn: x => 'Ab ' + x, pwFirst: 'Neue Kraft',
       share: 'Teilen', shareDone: n => 'Ich habe das Bild „' + n + '“ in Blockspace aufgedeckt!', shareScore: n => 'Ich habe ' + n + ' Punkte in Blockspace. Schaffst du mehr?', shareSaved: 'Bild gespeichert',
       peekTxt: (c, n) => c + ' von ' + n + ' Teilen freigeschaltet. Jede aufgelöste Reihe deckt mehr auf.',
       back: 'Zurück', resume: 'Zurück zum Spiel', play: 'Spielen', cont: 'Spiel fortsetzen',
@@ -1039,6 +1066,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Image débloquée !',
       doneTxt: 'Ajoutée à votre Galerie.', chapterDone: n => 'Vous avez terminé le chapitre « ' + n + ' » !', allDone: 'Vous avez terminé toute la Galerie ! De nouvelles images arrivent bientôt.', pieces64: 'pièces', ended: 'Terminé',
       nextPic: 'Image suivante',
+      newIn: x => 'Nouvelle image dans ' + x, newToday: x => 'Nouvelle aujourd\'hui : ' + x, comingOn: x => 'Arrive le ' + x, pwFirst: 'Nouveau pouvoir',
       share: 'Partager', shareDone: n => 'J\'ai révélé l\'image « ' + n + ' » dans Blockspace !', shareScore: n => 'J\'ai fait ' + n + ' points dans Blockspace. Tu fais mieux ?', shareSaved: 'Image enregistrée',
       peekTxt: (c, n) => c + ' pièces sur ' + n + ' débloquées. Chaque ligne effacée en révèle davantage.',
       back: 'Retour', resume: 'Retour à la partie', play: 'Jouer', cont: 'Continuer la partie',
@@ -1094,6 +1122,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Resim açıldı!',
       doneTxt: 'Galerine eklendi.', chapterDone: n => '"' + n + '" bölümünü tamamladın!', allDone: 'Tüm Galeriyi tamamladın! Yeni resimler yakında geliyor.', pieces64: 'parça', ended: 'Bitti',
       nextPic: 'Sonraki resim',
+      newIn: x => 'Yeni resme kalan: ' + x, newToday: x => 'Bugün yeni: ' + x, comingOn: x => x + ' geliyor', pwFirst: 'Yeni güç',
       share: 'Paylaş', shareDone: n => 'Blockspace\'te "' + n + '" resmini açtım!', shareScore: n => 'Blockspace\'te ' + n + ' puan yaptım. Geçebilir misin?', shareSaved: 'Resim kaydedildi',
       peekTxt: (c, n) => n + ' parçadan ' + c + ' tanesi açıldı. Temizlediğin her satır daha fazlasını gösterir.',
       back: 'Geri', resume: 'Oyuna dön', play: 'Oyna', cont: 'Oyuna devam et',
@@ -1208,6 +1237,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   function difficulty() {
     const pic = rev && picById(rev.id);
     const ch = pic ? (CH_DIFF[pic.ch] || 0) + (pic.n > 6 ? 0.1 : 0) : 0;
+    if (done.length < 5 && mode !== 'daily') return Math.min(0.12, score / 80000 * 0.45);   // the first five pictures: mostly small, easy pieces
     return Math.min(0.6, ch + Math.min(0.45, score / 80000 * 0.45));
   }
   function makePiece(rand = Math.random, d = difficulty()) {
@@ -1279,7 +1309,16 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   const picById = id => PICS.find(p => p.id === id);
   const chapterOf = p => CHAPTERS.find(c => c.id === p.ch);
   const chActive = c => !c.until || Date.now() < Date.parse(c.until);
-  const isActive = p => chActive(chapterOf(p));
+  // midnight in Athens on a 'YYYY-MM-DD' day, as a timestamp (works across summer and winter time)
+  function athensMidnight(ymd) {
+    const [y, m, d] = ymd.split('-').map(Number), guess = Date.UTC(y, m - 1, d);
+    const P = {}; new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Athens', hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      .formatToParts(new Date(guess)).forEach(x => { P[x.type] = +x.value; });
+    return guess - (Date.UTC(P.year, P.month - 1, P.day, P.hour, P.minute, P.second) - guess);
+  }
+  const releasedAt = p => p.from ? athensMidnight(p.from) : 0;
+  const released = p => Date.now() >= releasedAt(p);
+  const isActive = p => chActive(chapterOf(p)) && released(p);
   let done = readJSON('svb_done');
   if (!Array.isArray(done)) done = [];
   done = done.filter(id => picById(id));
@@ -1478,6 +1517,30 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     }
     return el;
   }
+  // which cells each power clears, drawn on a 7×7 board with the drop point in the middle
+  const PW_AREA = {
+    bull: (r, c) => c === 3, whale: (r, c) => r === 3, bear: (r, c) => Math.abs(r - 3) <= 1 && Math.abs(c - 3) <= 1,
+    rugpuller: (r, c) => r === 3 || c === 3, crab: (r, c) => r === 3 || r === 4,
+    diamond: (r, c) => [[0, 1], [1, 5], [2, 2], [3, 3], [4, 6], [5, 0], [6, 4], [5, 3]].some(([a, b]) => a === r && b === c)
+  };
+  let pwSeen = readJSON('svb_pwseen') || [];
+  function pwExplain(sp) {
+    if (!PW_AREA[sp] || pwSeen.includes(sp) || tut) return;
+    pwSeen.push(sp); store.set('svb_pwseen', JSON.stringify(pwSeen));
+    const col = POWER_COL[sp] || '#fff', g = $('pwGrid'); g.innerHTML = '';
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 7; c++) {
+      const d = document.createElement('i');
+      if (PW_AREA[sp](r, c)) d.className = 'on';
+      else if ((r * 7 + c) % 3 === 0) d.className = 'blk0';
+      if (r === 3 && c === 3) d.className += ' mid';
+      g.appendChild(d);
+    }
+    $('pwCard').style.setProperty('--hk', col);
+    $('pwImg').src = 'art/chars/' + sp + '.webp'; $('pwName').textContent = t('pw')[sp][0];
+    $('pwDesc').textContent = t('pw')[sp][1] + '. ' + t('pwHow') + '.';
+    $('pwCard').hidden = false;
+  }
+  $('pwCard').addEventListener('click', () => { $('pwCard').hidden = true; });
   function renderTray() {
     tray.forEach((p, i) => {
       const s = slots[i];
@@ -1485,7 +1548,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       s.classList.remove('lift');
       s.classList.toggle('dim', !!p && !anyFit(p));
       if (p) s.appendChild(buildPiece(p, 'mini'));
-      if (p && p.sp) { const tg = document.createElement('span'); tg.className = 'sptag'; tg.textContent = (t('pw')[p.sp] || ['', '', ''])[2]; s.appendChild(tg); }
+      if (p && p.sp) { setTimeout(() => pwExplain(p.sp), 1300); const tg = document.createElement('span'); tg.className = 'sptag'; tg.textContent = (t('pw')[p.sp] || ['', '', ''])[2]; s.appendChild(tg); }
     });
   }
   function renderStats() {
@@ -1510,7 +1573,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     if (mode === 'daily') { tray = [dailyPiece(dday, dseq), dailyPiece(dday, dseq + 1), dailyPiece(dday, dseq + 2)]; dseq += 3; return; }
     // A friendly hand: try a few sets and keep the one where most pieces fit and most can clear a line.
     // Strongest early in a game; when the board gets crowded, pieces lean small so the game does not end unfairly.
-    const tries = tut ? 1 : score < 15000 ? 8 : score < 50000 ? 5 : 3;
+    const tries = tut ? 1 : done.length < 5 ? 12 : score < 15000 ? 8 : score < 50000 ? 5 : 3;
     const filled = board.filter(v => v >= 0).length / (N * N);
     const d = filled > 0.5 ? 0 : difficulty();
     let bestSet = null, bestVal = -1, valid = 0;
@@ -1533,7 +1596,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     return false;
   }
   // the first pictures complete faster
-  const revealBoost = n => Math.round(n * (done.length === 0 ? 2 : done.length < 3 ? 1.5 : 1));
+  const revealBoost = n => Math.round(n * (done.length === 0 ? 2 : done.length < 3 ? 1.5 : done.length < 5 ? 1.25 : 1));
 
   /* ---------- effects: particles, beams, shake, floating points, counting score ---------- */
   const fx = $('fx'), fctx = fx.getContext('2d');
@@ -2340,6 +2403,29 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     $('hlabel').textContent = pl.ch + ' ' + pl.k + '/' + pl.of + ' · ' + rev.count + '/' + RTT();
     $('play').textContent = inProgress() ? t('cont') : t('play');
     $('newFromHome').hidden = !inProgress();
+    const c = collection(); $('galCount').textContent = c.got + '/' + c.of;
+    homeNew();
+  }
+  // the Gallery count: pictures completed out of the pictures that are out now (ended events count only if you got them)
+  function collection() {
+    const list = PICS.filter(p => released(p) && (chActive(chapterOf(p)) || done.includes(p.id) || holderUnlocks(PICS.indexOf(p))));
+    return { got: list.filter(p => done.includes(p.id) || holderUnlocks(PICS.indexOf(p))).length, of: list.length };
+  }
+  // picture of the day: a countdown to the next queued picture, or the one that came out today
+  let hnewT = 0;
+  function homeNew() {
+    const el = $('hnew'), now = Date.now();
+    const next = PICS.filter(p => p.from && !released(p) && chActive(chapterOf(p))).sort((a, b) => releasedAt(a) - releasedAt(b))[0];
+    const today = PICS.find(p => p.from && released(p) && now - releasedAt(p) < 864e5 && !done.includes(p.id));
+    clearTimeout(hnewT);
+    if (today) { el.hidden = false; el.className = 'hnew fresh'; el.textContent = '✨ ' + t('newToday')(L(today)); return; }
+    if (!next) { el.hidden = true; return; }
+    const left = releasedAt(next) - now;
+    if (left > 2 * 864e5) { el.hidden = true; return; }   // only the next two days
+    const sec = Math.max(0, Math.ceil(left / 1000)), pad = v => String(v).padStart(2, '0');
+    el.hidden = false; el.className = 'hnew';
+    el.textContent = '🖼 ' + t('newIn')(pad(Math.floor(sec / 3600)) + ':' + pad(Math.floor(sec / 60) % 60) + ':' + pad(sec % 60));
+    if (!$('home').hidden) hnewT = setTimeout(() => { if (left <= 1000) renderHome(); else homeNew(); }, 1000);
   }
   function setMode(m) {
     if (mode === m) return;
@@ -2416,16 +2502,17 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     const g = $('ggrid'); g.innerHTML = ''; g.scrollTop = 0;
     CHAPTERS.forEach(ch => {
       const list = PICS.filter(p => p.ch === ch.id);
-      const got = list.filter(p => done.includes(p.id)).length;
+      const out = list.filter(released), got = out.filter(p => done.includes(p.id)).length;
       // an event that has ended is hidden from players who got none of its pictures
       if (ch.until && !chActive(ch) && !list.some(p => done.includes(p.id) || holderUnlocks(PICS.indexOf(p)))) return;
       const h = document.createElement('div');
-      h.className = 'ghead' + (got === list.length ? ' full' : '');
+      h.className = 'ghead' + (got === out.length ? ' full' : '');
       const evTag = ch.until ? ' · ' + (chActive(ch) ? ch[lang === 'el' ? 'untilEl' : 'untilEn'] : t('ended')) : '';
-      h.innerHTML = '<span>' + L(ch) + '</span><b>' + (got === list.length ? '✓ ' : '') + got + '/' + list.length + evTag + '</b>';
+      h.innerHTML = '<span>' + L(ch) + '</span><b>' + (got === out.length ? '✓ ' : '') + got + '/' + out.length + evTag + '</b>';
       g.appendChild(h);
       list.forEach(pic => galleryItem(g, pic));
     });
+    { const c = collection(); $('galTotal').textContent = c.got + '/' + c.of; }
     $('gallery').hidden = false;
     g.scrollTop = 0;
   }
@@ -2448,14 +2535,18 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
           liveStop('v'); liveStart('v', $('vlive'), pic.id, 1.3);
         });
       } else {
-        b.disabled = true;
-        const ch = chapterOf(pic);
-        const sub = ch.until ? (chActive(ch) ? ch[lang === 'el' ? 'untilEl' : 'untilEn'] : t('ended')) : pic.n > 6 ? (pic.n * pic.n) + ' ' + t('pieces64') : '';
-        b.innerHTML = '<span class="lock"><b>?</b>' + t('locked') + (sub ? '<small>' + sub + '</small>' : '') + '</span>';
+        b.disabled = true; b.classList.add('locked');
+        const ch = chapterOf(pic), soon = !released(pic);
+        const day = soon ? new Date(releasedAt(pic)).toLocaleDateString(LOCALE[lang], { day: 'numeric', month: 'short', timeZone: 'Europe/Athens' }) : '';
+        const sub = soon ? t('comingOn')(day) : ch.until ? (chActive(ch) ? ch[lang === 'el' ? 'untilEl' : 'untilEn'] : t('ended')) : pic.n > 6 ? (pic.n * pic.n) + ' ' + t('pieces64') : '';
+        // a dark, blurred silhouette of the picture: enough to make you curious, not enough to spoil it
+        b.innerHTML = '<img class="sil" src="' + src + '" alt="" loading="lazy"><span class="lock"><b>?</b>' + (soon ? '' : t('locked')) + (sub ? '<small>' + sub + '</small>' : '') + '</span>';
+        if (soon) b.classList.add('soon');
       }
       g.appendChild(b);
   }
   $('galleryBtn').addEventListener('click', openGallery);
+  $('hnew').addEventListener('click', openGallery);
 
   /* ---------- optional wallet (read-only: public address only, never a signature) ---------- */
   const WCFG = {
