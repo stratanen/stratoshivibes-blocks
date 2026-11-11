@@ -314,6 +314,9 @@ body.genesis .cell.ghost{filter:sepia(.6) saturate(2.2) hue-rotate(118deg)}
 /* Google Play edition */
 html.play #perkBtn,html.play #walletBtn,html.play #seekBadge{display:none!important}
 html.play:not(.gpbill) #shopBtn{display:none!important}
+/* the Shop shows up after the first completed picture, not before the first game */
+html.newbie #shopBtn{display:none!important}
+.sharebtn{width:100%;margin-top:10px}
 /* shop */
 .badge{display:inline-block;margin-top:8px;font:800 11px var(--f);letter-spacing:.12em;text-transform:uppercase;color:#1a1405;background:var(--gold);padding:3px 10px;border-radius:99px;box-shadow:0 0 14px color-mix(in srgb, var(--gold) 60%, transparent)}
 .shopbtn{display:flex;align-items:center;justify-content:center;gap:8px;border-color:color-mix(in srgb, var(--pink) 45%, transparent);background:rgba(255,79,216,.07)}
@@ -539,6 +542,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     <p id="overTxt"></p>
     <div class="chancebox" id="chanceBox"></div>
     <button class="btn" id="again" type="button" data-i18n="newGame"></button>
+    <button class="btn2 sharebtn" id="shareOver" type="button" data-i18n="share"></button>
     <button class="btn2" id="overHome" type="button" data-i18n="homeAria" hidden></button>
   </div>
 </div>
@@ -549,6 +553,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     <div class="live dlive" id="dlive"><div class="kbw"><canvas id="dc"></canvas><canvas class="lfx"></canvas></div></div>
     <p><b id="doneName"></b><br><span id="doneTxt"></span></p>
     <button class="btn" id="next" type="button" data-i18n="nextPic"></button>
+    <button class="btn2 sharebtn" id="shareDone" type="button" data-i18n="share"></button>
   </div>
 </div>
 
@@ -697,6 +702,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Η εικόνα αποκαλύφθηκε!',
       doneTxt: 'Μπήκε στη Συλλογή σου.', chapterDone: n => 'Ολοκλήρωσες το κεφάλαιο «' + n + '»!', allDone: 'Ολοκλήρωσες όλη τη Συλλογή! Νέες εικόνες έρχονται σύντομα.', pieces64: 'κομμάτια', ended: 'Έληξε',
       nextPic: 'Επόμενη εικόνα',
+      share: 'Κοινοποίηση', shareDone: n => 'Αποκάλυψα την εικόνα «' + n + '» στο Blockspace!', shareScore: n => 'Έκανα ' + n + ' πόντους στο Blockspace. Με περνάς;', shareSaved: 'Η εικόνα αποθηκεύτηκε',
       peekTxt: (c, n) => c + ' από ' + n + ' κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
       back: 'Πίσω', resume: 'Συνέχεια', play: 'Παίξε', cont: 'Συνέχισε την παρτίδα',
       gallery: 'Συλλογή', galleryHint: 'Κάθε εικόνα που ολοκληρώνεις μπαίνει στο κεφάλαιό της. Όσοι έχουν κάρτες Degens ξεκλειδώνουν αμέσως τις εικόνες των χαρακτήρων τους (★).',
@@ -780,6 +786,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Picture unlocked!',
       doneTxt: 'Added to your Gallery.', chapterDone: n => 'You completed the chapter "' + n + '"!', allDone: 'You completed the whole Gallery! New pictures are coming soon.', pieces64: 'pieces', ended: 'Ended',
       nextPic: 'Next picture',
+      share: 'Share', shareDone: n => 'I revealed "' + n + '" in Blockspace!', shareScore: n => 'I scored ' + n + ' in Blockspace. Can you beat it?', shareSaved: 'Image saved',
       peekTxt: (c, n) => c + ' of ' + n + ' pieces unlocked. Every line you clear reveals more.',
       back: 'Back', resume: 'Back to game', play: 'Play', cont: 'Continue game',
       gallery: 'Gallery', galleryHint: 'Every picture you complete joins its chapter. Degens card holders unlock their characters\' pictures right away (★).',
@@ -867,6 +874,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: '¡Imagen desbloqueada!',
       doneTxt: 'Añadida a tu Galería.', chapterDone: n => '¡Completaste el capítulo "' + n + '"!', allDone: '¡Completaste toda la Galería! Pronto llegarán imágenes nuevas.', pieces64: 'piezas', ended: 'Terminado',
       nextPic: 'Siguiente imagen',
+      share: 'Compartir', shareDone: n => '¡Revelé la imagen "' + n + '" en Blockspace!', shareScore: n => 'Hice ' + n + ' puntos en Blockspace. ¿Me superas?', shareSaved: 'Imagen guardada',
       peekTxt: (c, n) => c + ' de ' + n + ' piezas desbloqueadas. Cada línea que eliminas revela más.',
       back: 'Atrás', resume: 'Volver a la partida', play: 'Jugar', cont: 'Continuar partida',
       gallery: 'Galería', galleryHint: 'Cada imagen que completas entra en su capítulo. Quienes tienen cartas Degens desbloquean al instante las imágenes de sus personajes (★).',
@@ -921,6 +929,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Imagem desbloqueada!',
       doneTxt: 'Adicionada à sua Galeria.', chapterDone: n => 'Você completou o capítulo "' + n + '"!', allDone: 'Você completou a Galeria inteira! Novas imagens chegam em breve.', pieces64: 'peças', ended: 'Encerrado',
       nextPic: 'Próxima imagem',
+      share: 'Compartilhar', shareDone: n => 'Revelei a imagem "' + n + '" no Blockspace!', shareScore: n => 'Fiz ' + n + ' pontos no Blockspace. Consegue me passar?', shareSaved: 'Imagem salva',
       peekTxt: (c, n) => c + ' de ' + n + ' peças desbloqueadas. Cada linha que você elimina revela mais.',
       back: 'Voltar', resume: 'Voltar ao jogo', play: 'Jogar', cont: 'Continuar jogo',
       gallery: 'Galeria', galleryHint: 'Cada imagem que você completa entra no seu capítulo. Quem tem cartas Degens desbloqueia na hora as imagens dos seus personagens (★).',
@@ -975,6 +984,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Bild freigeschaltet!',
       doneTxt: 'Zu deiner Galerie hinzugefügt.', chapterDone: n => 'Du hast das Kapitel „' + n + '“ abgeschlossen!', allDone: 'Du hast die ganze Galerie abgeschlossen! Neue Bilder kommen bald.', pieces64: 'Teile', ended: 'Beendet',
       nextPic: 'Nächstes Bild',
+      share: 'Teilen', shareDone: n => 'Ich habe das Bild „' + n + '“ in Blockspace aufgedeckt!', shareScore: n => 'Ich habe ' + n + ' Punkte in Blockspace. Schaffst du mehr?', shareSaved: 'Bild gespeichert',
       peekTxt: (c, n) => c + ' von ' + n + ' Teilen freigeschaltet. Jede aufgelöste Reihe deckt mehr auf.',
       back: 'Zurück', resume: 'Zurück zum Spiel', play: 'Spielen', cont: 'Spiel fortsetzen',
       gallery: 'Galerie', galleryHint: 'Jedes Bild, das du vervollständigst, kommt in sein Kapitel. Wer Degens-Karten besitzt, schaltet die Bilder seiner Charaktere sofort frei (★).',
@@ -1029,6 +1039,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Image débloquée !',
       doneTxt: 'Ajoutée à votre Galerie.', chapterDone: n => 'Vous avez terminé le chapitre « ' + n + ' » !', allDone: 'Vous avez terminé toute la Galerie ! De nouvelles images arrivent bientôt.', pieces64: 'pièces', ended: 'Terminé',
       nextPic: 'Image suivante',
+      share: 'Partager', shareDone: n => 'J\'ai révélé l\'image « ' + n + ' » dans Blockspace !', shareScore: n => 'J\'ai fait ' + n + ' points dans Blockspace. Tu fais mieux ?', shareSaved: 'Image enregistrée',
       peekTxt: (c, n) => c + ' pièces sur ' + n + ' débloquées. Chaque ligne effacée en révèle davantage.',
       back: 'Retour', resume: 'Retour à la partie', play: 'Jouer', cont: 'Continuer la partie',
       gallery: 'Galerie', galleryHint: 'Chaque image terminée rejoint son chapitre. Les détenteurs de cartes Degens débloquent tout de suite les images de leurs personnages (★).',
@@ -1083,6 +1094,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Resim açıldı!',
       doneTxt: 'Galerine eklendi.', chapterDone: n => '"' + n + '" bölümünü tamamladın!', allDone: 'Tüm Galeriyi tamamladın! Yeni resimler yakında geliyor.', pieces64: 'parça', ended: 'Bitti',
       nextPic: 'Sonraki resim',
+      share: 'Paylaş', shareDone: n => 'Blockspace\'te "' + n + '" resmini açtım!', shareScore: n => 'Blockspace\'te ' + n + ' puan yaptım. Geçebilir misin?', shareSaved: 'Resim kaydedildi',
       peekTxt: (c, n) => n + ' parçadan ' + c + ' tanesi açıldı. Temizlediğin her satır daha fazlasını gösterir.',
       back: 'Geri', resume: 'Oyuna dön', play: 'Oyna', cont: 'Oyuna devam et',
       gallery: 'Galeri', galleryHint: 'Tamamladığın her resim kendi bölümüne eklenir. Degens kartı sahipleri karakterlerinin resimlerini hemen açar (★).',
@@ -1945,7 +1957,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       }
     } else {
       combo = 0;
-      sfx.place();
+      sfx.place(); buzz(8);
     }
     { const g = pStreakTick(); if (g && !tray.some(x => x && x.sp)) { const e = tray.indexOf(null); if (e >= 0) tray[e] = makeSpecial(g); } }
     if (tray.every(x => !x)) refill();
@@ -1967,7 +1979,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   function checkOver() {
     if (tray.some(p => p && anyFit(p))) return;
     if (mode === 'daily') return dailyOver();
-    $('oc').hidden = false; $('overHome').hidden = true; $('again').textContent = t('newGame');
+    $('oc').hidden = false; $('overHome').hidden = true; $('again').textContent = t('newGame'); $('shareOver').hidden = false;
     if (!$('done').hidden || rev.count >= RTT()) { pendingOver = true; return; }
     $('finalScore').textContent = fmt(score);
     $('overTxt').innerHTML = t('overTxt')(fmt(best), rev.count + '/' + RTT());
@@ -1986,7 +1998,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     $('finalScore').textContent = fmt(score);
     $('overTxt').innerHTML = t('dailyOver')(fmt(best), streakNow());
     $('chanceBox').innerHTML = '';
-    $('oc').hidden = true;
+    $('oc').hidden = true; $('shareOver').hidden = true;   // the daily screen has no picture to put on the card
     $('again').textContent = t('tryAgain2');
     $('overHome').hidden = false;
     $('overRank').hidden = true;
@@ -2397,7 +2409,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   addEventListener('pagehide', send);
   window.SVStats = { start(g, fn){ game = g; if (fn) getMode = fn; } };
 })();
-  if (window.SVStats) SVStats.start('blockspace', () => $('game').hidden ? 'menu' : mode === 'daily' ? 'daily' : 'play');
+  if (window.SVStats) SVStats.start('blockspace', () => $('game').hidden ? 'menu' : mode === 'daily' ? 'daily' : 'play:p' + Math.min(99, done.length + 1));
 
 
   function openGallery() {
@@ -3114,7 +3126,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   });
 
   // Rating prompt: shown once, inside the Seeker app only, after the player completes a second picture.
-  const IN_APP = /; wv\)/.test(navigator.userAgent);
+  const IN_APP = PLAY || /; wv\)/.test(navigator.userAgent);
   // Google Play edition: the rating buttons open the Play Store page instead of the dApp Store
   if (PLAY) document.querySelectorAll('a[href^="solanadappstore://"]').forEach(x => { x.href = 'market://details?id=com.stratoshivibes.blockspace'; });
   let rateDue = false;
@@ -3131,7 +3143,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     $('doneName').textContent = L(pic);
     $('doneTxt').textContent = PICS.filter(isActive).every(p => done.includes(p.id)) && wasNew ? t('allDone')
       : chDone && wasNew ? t('chapterDone')(L(chapterOf(pic))) : t('doneTxt');
-    $('done').hidden = false;
+    $('done').hidden = false; document.documentElement.classList.remove('newbie'); buzz([30, 50, 30, 50, 60]);
     if (actx) sfx.complete();
     requestAnimationFrame(() => drawReveal($('dc'), true));
     liveStop('d'); setTimeout(() => { if (!$('done').hidden) liveStart('d', $('dlive'), pic.id, 1.3); }, 1300);
@@ -3191,12 +3203,50 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   document.addEventListener('pointerdown', e => { if (tut === 1 && e.target.closest && e.target.closest('.slot')) $('coach').style.opacity = 0; }, true);
   document.addEventListener('pointerup', () => { if (tut === 1) $('coach').style.opacity = 1; }, true);
 
+  /* ---------- share card: a picture with the game's name, made on the device ---------- */
+  const SHARE_URL = PLAY ? 'https://play.google.com/store/apps/details?id=com.stratoshivibes.blockspace' : 'https://blockspace.stratoshivibes.com';
+  const CAN_SHARE = typeof navigator.share === 'function';
+  if (!CAN_SHARE && /; wv\)/.test(navigator.userAgent)) document.querySelectorAll('.sharebtn').forEach(b => { b.style.display = 'none'; });   // the dApp Store app cannot share or save a file
+  function shareCard(src, big, small) {
+    const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d'), g = x.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#141a3f'); g.addColorStop(1, '#070a1c'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    const tg = x.createLinearGradient(240, 0, 840, 0); tg.addColorStop(0, '#22e4ff'); tg.addColorStop(.5, '#9b6bff'); tg.addColorStop(1, '#ff4fd8');
+    x.fillStyle = tg; x.font = '92px Bungee, sans-serif'; x.fillText('BLOCKSPACE', W / 2, 120);
+    const S = 820, px = (W - S) / 2, py = 210;
+    x.fillStyle = '#0b0f26'; x.fillRect(px - 10, py - 10, S + 20, S + 20);
+    try { x.imageSmoothingEnabled = true; x.drawImage(src, px, py, S, S); } catch (e) {}
+    x.strokeStyle = 'rgba(155,107,255,.8)'; x.lineWidth = 6; x.strokeRect(px - 10, py - 10, S + 20, S + 20);
+    x.fillStyle = '#ffffff'; let fs = 84; x.font = '800 ' + fs + 'px Commissioner, system-ui, sans-serif';
+    while (x.measureText(big).width > W - 120 && fs > 40) { fs -= 4; x.font = '800 ' + fs + 'px Commissioner, system-ui, sans-serif'; }
+    x.fillText(big, W / 2, 1130);
+    x.fillStyle = '#b9bedf'; x.font = '600 40px Commissioner, system-ui, sans-serif'; x.fillText(small, W / 2, 1220);
+    x.fillStyle = '#6f76a8'; x.font = '600 30px Commissioner, system-ui, sans-serif'; x.fillText(PLAY ? 'Google Play' : 'blockspace.stratoshivibes.com', W / 2, 1296);
+    return new Promise(r => c.toBlob(r, 'image/png'));
+  }
+  async function doShare(src, big, small, text) {
+    let blob = null; try { blob = await shareCard(src, big, small); } catch (e) {}
+    const file = blob && typeof File === 'function' ? new File([blob], 'blockspace.png', { type: 'image/png' }) : null;
+    try {
+      if (file && CAN_SHARE && navigator.canShare && navigator.canShare({ files: [file] })) return await navigator.share({ files: [file], text: text + ' ' + SHARE_URL });
+      if (CAN_SHARE) return await navigator.share({ text, url: SHARE_URL });
+      if (blob) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'blockspace.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast(t('shareSaved')); }
+    } catch (e) {}   // the player closed the share sheet
+  }
+  $('shareDone').addEventListener('click', () => { const n = $('doneName').textContent; doShare($('dc'), n, t('doneTitle'), t('shareDone')(n)); });
+  $('shareOver').addEventListener('click', () => { const n = $('finalScore').textContent; doShare($('oc'), n, t('best') + ' ' + fmt(best), t('shareScore')(n)); });
+  window.__bs = { shareCard };
+
   /* ---------- start ---------- */
   applyLang();
   if (!loadGame()) refill();
+  if (done.length === 0 && !isSupporter()) document.documentElement.classList.add('newbie');
   renderBoard(); renderTray(); renderStats(); renderHome();
   kick();
   if (rev.count >= RTT()) showDone();
+  // the very first launch opens straight on the board, with the coach; the home screen comes after the first game
+  else if (tutDue()) { showGame(); tutStart(); }
 })();
 </script>
 <script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
