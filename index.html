@@ -1793,8 +1793,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       if (!actx) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
-        // 'balanced' gives Android a larger audio buffer than the default, so music does not crackle under load
-        try { actx = new AC({ latencyHint: 'balanced' }); } catch (e) { actx = new AC(); }
+        // a larger audio buffer than the default ('playback' on Android), so the music does not crackle when the phone is busy
+        try { actx = new AC({ latencyHint: /Android/.test(navigator.userAgent) ? 'playback' : 'balanced' }); } catch (e) { actx = new AC(); }
         // one limiter in front of the speakers for effects and music together, so they never clip when they overlap
         limiter = actx.createDynamicsCompressor();
         limiter.threshold.value = -3; limiter.knee.value = 0; limiter.ratio.value = 20; limiter.attack.value = 0.002; limiter.release.value = 0.15;
@@ -1868,12 +1868,12 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       if (!noiseBuf) {
         noiseBuf = a.createBuffer(1, a.sampleRate, a.sampleRate);
         const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
-        const len = Math.floor(a.sampleRate * 2.2); verbIR = a.createBuffer(2, len, a.sampleRate);
-        for (let c = 0; c < 2; c++) { const d = verbIR.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.4); }
+        const len = Math.floor(a.sampleRate * 1.1); verbIR = a.createBuffer(1, len, a.sampleRate);
+        { const d = verbIR.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
       }
       const out = a.createGain(); out.gain.value = 0.0001; out.connect(limiter || a.destination);
       out.gain.setTargetAtTime(0.42, a.currentTime, 0.6);
-      const comp = a.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(out);
+      const comp = a.createGain(); comp.gain.value = 0.8; comp.connect(out);
       const dry = a.createGain(); dry.connect(comp);
       const verb = a.createConvolver(); verb.buffer = verbIR;
       const wet = a.createGain(); wet.gain.value = 0.3; wet.connect(verb); verb.connect(comp);
@@ -1918,9 +1918,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       if (i === 10) bass(b, ch[0] - 12, t, D * 4, 0.12);
       if (i === 0 || i === 10) kick(b, t, 0.4);
       if (i === 4 || i === 12) noise(b, t, { ft: 'bandpass', fq: 1800, q: 0.8, vol: 0.07, dec: 0.18, wet: true });
-      if (i % 2 === 0) noise(b, t, { ft: 'highpass', fq: 7500, vol: i % 4 === 0 ? 0.03 : 0.02, dec: 0.045 });
+      if (i % 4 === 0) noise(b, t, { ft: 'highpass', fq: 6000, vol: 0.018, dec: 0.04 });
       if (i % 4 === 2 && Math.random() < 0.45) pluck(b, pick([69, 72, 74, 76, 79]), t, { type: 'sine', vol: 0.045, dec: 0.9, echo: true, wet: true });
-      if (Math.random() < 0.5) noise(b, t + Math.random() * D, { ft: 'highpass', fq: 3000, vol: 0.006, dec: 0.02 });
     }
     return {
       start() {
