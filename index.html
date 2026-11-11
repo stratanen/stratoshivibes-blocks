@@ -847,6 +847,283 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       gpPackThanks: n => 'Added ' + n + ' Second Chances.', gpRestored: 'Your purchases were checked with Google Play.'
     }
   };
+  /* More languages: Spanish, Portuguese (Brazil), German, French, Turkish. They cover what a player sees in the
+     Google Play edition; anything not listed here (wallet, the crypto Shop, Seeker Perks) falls back to English. */
+  Object.assign(TEXT, {
+    es: {
+      picture: 'Imagen', best: 'Récord', line: '¡Línea!', lines: n => '¡' + n + ' líneas!', level: n => 'Nivel ' + n, lvlShort: n => 'Nv ' + n, praise: n => ['', '¡Bien!', '¡Genial!', '¡Excelente!', '¡Increíble!'][Math.min(n, 4)], perfectSub: b => 'Tablero limpio · +' + b,
+      pieces: n => '+' + n + ' piezas de la imagen',
+      overTitle: 'No queda espacio',
+      daily: 'Desafío diario', dailyShort: 'Diario',
+      dailySub: (s, b) => (s ? 'Racha de ' + s + (s === 1 ? ' día' : ' días') : 'La misma partida para todos') + (b ? ' · hoy ' + b : ''),
+      streakTag: s => 'racha ' + s,
+      dailyOver: (b, s) => 'Mejor de hoy <b>' + b + '</b><br>Racha: <b>' + s + (s === 1 ? ' día' : ' días') + '</b>. Repite la misma partida las veces que quieras.',
+      tryAgain2: 'La misma partida otra vez', lbDay: 'Hoy',
+      tut1: 'Arrastra la pieza al <b>hueco iluminado</b> para llenar la fila.',
+      tut2: '¡Bien! Cada línea que eliminas <b>desbloquea piezas de la imagen</b> de arriba a la izquierda. Complétala para añadirla a tu Galería.',
+      tutOk: '¡Vamos!', skip: 'Saltar',
+      overTxt: (b, p) => 'Récord <b>' + b + '</b><br>Tu imagen conserva su progreso: <b>' + p + '</b> piezas.',
+      newGame: 'Nueva partida',
+      doneTitle: '¡Imagen desbloqueada!',
+      doneTxt: 'Añadida a tu Galería.', chapterDone: n => '¡Completaste el capítulo "' + n + '"!', allDone: '¡Completaste toda la Galería! Pronto llegarán imágenes nuevas.', pieces64: 'piezas', ended: 'Terminado',
+      nextPic: 'Siguiente imagen',
+      peekTxt: (c, n) => c + ' de ' + n + ' piezas desbloqueadas. Cada línea que eliminas revela más.',
+      back: 'Atrás', resume: 'Volver a la partida', play: 'Jugar', cont: 'Continuar partida',
+      gallery: 'Galería', galleryHint: 'Cada imagen que completas entra en su capítulo. Quienes tienen cartas Degens desbloquean al instante las imágenes de sus personajes (★).',
+      lb: 'Clasificación', lbWeek: 'Esta semana', lbAll: 'Histórico', lbYou: 'Tú',
+      lbEmpty: 'Nadie todavía. La primera puntuación puede ser la tuya.', lbLoading: 'Cargando…', lbErr: 'La clasificación no carga ahora mismo. Inténtalo más tarde.',
+      lbMe: (r, b) => 'Tu puesto: <b>#' + r + '</b> con <b>' + b + '</b>', lbNoScore: 'Aún no tienes puntuación en esta tabla.',
+      lbFine: 'La tabla semanal empieza de cero cada lunes. Sin premios, solo gloria.',
+      lbRank: r => 'Puesto de esta semana: #' + r,
+      shop: 'Tienda',
+      supDesc: n => 'Bloques dorados, una insignia Supporter en la pantalla de inicio y ' + n + ' Segundas oportunidades. Gracias por apoyar a StratoshiVibes.',
+      chanceName: 'Segunda oportunidad', chanceDesc: 'Elimina tus 3 filas más llenas para que sigas jugando. Una vez por partida.',
+      chanceWhere: 'Al final de una partida', youHave: n => 'Tienes ' + n, useOne: n => 'Usar 1 (tienes ' + n + ')',
+      chanceUsed: 'La Segunda oportunidad ya se usó en esta partida.', chanceToast: '3 filas eliminadas',
+      owned: 'Comprado', goldTiles: 'Bloques dorados', on: 'Sí', off: 'No', buy: 'Comprar', close: 'Cerrar', restore: 'Restaurar compras',
+      loading: 'Cargando', tryAgain: 'Reintentar', thanks: '¡Gracias!', done: 'Listo',
+      supThanks: n => 'El Supporter Pack está activo: bloques dorados, insignia Supporter y ' + n + ' Segundas oportunidades.',
+      restored: n => n === 1 ? 'Se restauró 1 compra.' : 'Se restauraron ' + n + ' compras.', allRestored: 'Todo lo que compraste ya está activo.',
+      locked: 'Bloqueada', homeAria: 'Inicio', picN: n => 'Imagen ' + n,
+      howTitle: 'Cómo se juega',
+      r1: 'Arrastra las piezas al tablero.',
+      r2: 'Llena una fila o una columna para eliminarla.',
+      r3: 'Cada línea eliminada revela piezas de la imagen. Los combos revelan más.',
+      r4: 'La partida termina cuando no cabe ninguna pieza. Tu imagen conserva su progreso.',
+      r6: 'Cada línea que eliminas se convierte en un bloque de tu propia cadena, que continúa de una partida a otra. Cada 210 bloques hay un Halving, con celebración y regalo.', r5: 'Elimina 2 o más líneas a la vez o llega al combo ×3 y un Degen viene a ayudarte: Bull (columna), Whale (fila), Bear (3×3), Rugpuller (fila + columna), Crab (2 filas), Diamond Hands (todos los bloques iguales). Suéltalo donde quieras. Quienes tienen cartas Vol.1 Degens reciben a sus personajes más a menudo.',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' día seguido' : ' días seguidos'), pStreakToast: n => '¡Racha de ' + n + (n === 1 ? ' día' : ' días') + '! 🔥', pStreakSub: g => g ? 'Regalo: ' + g + ' entre tus piezas' : 'Vuelve mañana para mantenerla', pStreakCold: 'Juega hoy para mantener tu racha', giftBomb: 'una Bomba', giftLightning: 'un Rayo', chBlock: n => 'Bloque ' + n, chHalv: n => 'Halving en <b>' + n + '</b>', genesis: '¡Bloque Génesis!', genesisSub: 'Tu primera línea: empieza tu cadena', halving: '¡HALVING!', halvingSub: (e, g) => 'Época ' + e + ' · regalo: ' + g, bomb: '¡Bomba!', lightning: '¡Rayo!', pw: { bull: ['¡Bull!', 'Embiste una columna entera', 'columna'], whale: ['¡Whale!', 'Una ola se lleva una fila entera', 'fila'], bear: ['¡Bear!', 'Aplasta un bloque de 3×3', '3×3'], rugpuller: ['¡Rugpuller!', 'Tira de la alfombra: fila + columna', 'cruz'], crab: ['¡Crab!', 'Camina de lado: se lleva 2 filas', '2 filas'], diamond: ['¡Diamond Hands!', 'Agarra todos los bloques iguales', 'iguales'] }, pwGot: n => '¡' + n + ' vino a ayudar!', pwHow: 'Arrástralo a cualquier parte del tablero', pwGift: n => n, gotBomb: '¡Ganaste una Bomba!', gotLightning: '¡Ganaste un Rayo!', gotSub: 'Está entre tus piezas', howBomb: 'Suéltala donde quieras: destruye las casillas 3×3 de alrededor', howLightning: 'Suéltalo donde quieras: elimina toda la fila y toda la columna', tagBomb: '3×3', tagLightning: 'fila + columna',
+      free: 'Gratis, sin anuncios, sin conectar wallet.',
+      rateTitle: '¿Te gusta Blockspace?', rateTxt: 'Una valoración rápida ayuda mucho a un creador pequeño. Sé sincero, para bien o para mal: así sé qué mejorar.', rateGo: 'Valorar el juego', rateLink: 'Valorar el juego', privacy: 'Privacidad', terms: 'Términos', gfx: { auto: 'Efectos: auto', lite: 'Efectos: ligeros', full: 'Efectos: completos' }, soundAria: 'Sonido sí/no', musicAria: 'Música sí/no',
+      peekAria: 'Ver la imagen a tamaño completo', helpAria: 'Cómo se juega',
+      boardAria: 'Tablero de 8 por 8', trayAria: 'Piezas',
+      gpIntro: 'Extras opcionales. El juego sigue siendo gratis. El pago se hace a través de Google Play.',
+      gpPack: n => n + ' Segundas oportunidades', gpPackDesc: n => n + ' Segundas oportunidades para usar cuando las necesites. Cada una elimina tus 3 filas más llenas.',
+      gpNote: 'Los pagos usan tu cuenta de Google Play (tarjeta, PayPal y más). Las compras pertenecen a tu cuenta de Google, no a una wallet.',
+      gpOpening: 'Abriendo Google Play…', gpChecking: 'Confirmando tu compra…', gpCancelled: 'Compra cancelada. No se cobró nada.',
+      gpInvalid: 'Google no confirmó la compra. Si se te cobró, se reembolsará automáticamente.',
+      gpUnavail: 'Las compras no están disponibles ahora mismo. Inténtalo más tarde.',
+      gpPackThanks: n => 'Se añadieron ' + n + ' Segundas oportunidades.', gpRestored: 'Tus compras se comprobaron con Google Play.'
+    },
+    pt: {
+      picture: 'Imagem', best: 'Recorde', line: 'Linha!', lines: n => n + ' linhas!', level: n => 'Nível ' + n, lvlShort: n => 'Nv ' + n, praise: n => ['', 'Boa!', 'Ótimo!', 'Excelente!', 'Inacreditável!'][Math.min(n, 4)], perfectSub: b => 'Tabuleiro limpo · +' + b,
+      pieces: n => '+' + n + ' peças da imagem',
+      overTitle: 'Sem espaço',
+      daily: 'Desafio diário', dailyShort: 'Diário',
+      dailySub: (s, b) => (s ? 'Sequência de ' + s + (s === 1 ? ' dia' : ' dias') : 'O mesmo jogo para todos') + (b ? ' · hoje ' + b : ''),
+      streakTag: s => 'sequência ' + s,
+      dailyOver: (b, s) => 'Melhor de hoje <b>' + b + '</b><br>Sequência: <b>' + s + (s === 1 ? ' dia' : ' dias') + '</b>. Repita o mesmo jogo quantas vezes quiser.',
+      tryAgain2: 'O mesmo jogo de novo', lbDay: 'Hoje',
+      tut1: 'Arraste a peça para o <b>espaço iluminado</b> para completar a linha.',
+      tut2: 'Boa! Cada linha que você elimina <b>desbloqueia peças da imagem</b> no canto superior esquerdo. Complete a imagem para adicioná-la à sua Galeria.',
+      tutOk: 'Vamos lá!', skip: 'Pular',
+      overTxt: (b, p) => 'Recorde <b>' + b + '</b><br>Sua imagem mantém o progresso: <b>' + p + '</b> peças.',
+      newGame: 'Novo jogo',
+      doneTitle: 'Imagem desbloqueada!',
+      doneTxt: 'Adicionada à sua Galeria.', chapterDone: n => 'Você completou o capítulo "' + n + '"!', allDone: 'Você completou a Galeria inteira! Novas imagens chegam em breve.', pieces64: 'peças', ended: 'Encerrado',
+      nextPic: 'Próxima imagem',
+      peekTxt: (c, n) => c + ' de ' + n + ' peças desbloqueadas. Cada linha que você elimina revela mais.',
+      back: 'Voltar', resume: 'Voltar ao jogo', play: 'Jogar', cont: 'Continuar jogo',
+      gallery: 'Galeria', galleryHint: 'Cada imagem que você completa entra no seu capítulo. Quem tem cartas Degens desbloqueia na hora as imagens dos seus personagens (★).',
+      lb: 'Ranking', lbWeek: 'Esta semana', lbAll: 'Geral', lbYou: 'Você',
+      lbEmpty: 'Ninguém ainda. A primeira pontuação pode ser a sua.', lbLoading: 'Carregando…', lbErr: 'O ranking não está carregando agora. Tente mais tarde.',
+      lbMe: (r, b) => 'Sua posição: <b>#' + r + '</b> com <b>' + b + '</b>', lbNoScore: 'Você ainda não tem pontuação neste ranking.',
+      lbFine: 'O ranking semanal recomeça toda segunda-feira. Sem prêmios, só glória.',
+      lbRank: r => 'Posição desta semana: #' + r,
+      shop: 'Loja',
+      supDesc: n => 'Blocos dourados, um selo Supporter na tela inicial e ' + n + ' Segundas chances. Obrigado por apoiar o StratoshiVibes.',
+      chanceName: 'Segunda chance', chanceDesc: 'Elimina suas 3 linhas mais cheias para você continuar jogando. Uma vez por jogo.',
+      chanceWhere: 'No fim de um jogo', youHave: n => 'Você tem ' + n, useOne: n => 'Usar 1 (você tem ' + n + ')',
+      chanceUsed: 'A Segunda chance já foi usada neste jogo.', chanceToast: '3 linhas eliminadas',
+      owned: 'Comprado', goldTiles: 'Blocos dourados', on: 'Sim', off: 'Não', buy: 'Comprar', close: 'Fechar', restore: 'Restaurar compras',
+      loading: 'Carregando', tryAgain: 'Tentar de novo', thanks: 'Obrigado!', done: 'Pronto',
+      supThanks: n => 'O Supporter Pack está ativo: blocos dourados, selo Supporter e ' + n + ' Segundas chances.',
+      restored: n => n === 1 ? '1 compra restaurada.' : n + ' compras restauradas.', allRestored: 'Tudo o que você comprou já está ativo.',
+      locked: 'Bloqueada', homeAria: 'Início', picN: n => 'Imagem ' + n,
+      howTitle: 'Como jogar',
+      r1: 'Arraste as peças para o tabuleiro.',
+      r2: 'Preencha uma linha ou uma coluna para eliminá-la.',
+      r3: 'Cada linha eliminada revela peças da imagem. Combos revelam mais.',
+      r4: 'O jogo termina quando nenhuma peça cabe. Sua imagem mantém o progresso.',
+      r6: 'Cada linha que você elimina vira um bloco na sua própria cadeia, que continua de um jogo para o outro. A cada 210 blocos acontece um Halving, com comemoração e presente.', r5: 'Elimine 2 ou mais linhas de uma vez ou chegue ao combo ×3 e um Degen vem ajudar: Bull (coluna), Whale (linha), Bear (3×3), Rugpuller (linha + coluna), Crab (2 linhas), Diamond Hands (todos os blocos iguais). Solte onde quiser. Quem tem cartas Vol.1 Degens recebe seus personagens com mais frequência.',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' dia seguido' : ' dias seguidos'), pStreakToast: n => 'Sequência de ' + n + (n === 1 ? ' dia' : ' dias') + '! 🔥', pStreakSub: g => g ? 'Presente: ' + g + ' entre suas peças' : 'Volte amanhã para manter a sequência', pStreakCold: 'Jogue hoje para manter sua sequência', giftBomb: 'uma Bomba', giftLightning: 'um Raio', chBlock: n => 'Bloco ' + n, chHalv: n => 'Halving em <b>' + n + '</b>', genesis: 'Bloco Gênesis!', genesisSub: 'Sua primeira linha: sua cadeia começa', halving: 'HALVING!', halvingSub: (e, g) => 'Época ' + e + ' · presente: ' + g, bomb: 'Bomba!', lightning: 'Raio!', pw: { bull: ['Bull!', 'Derruba uma coluna inteira', 'coluna'], whale: ['Whale!', 'Uma onda leva uma linha inteira', 'linha'], bear: ['Bear!', 'Esmaga um bloco 3×3', '3×3'], rugpuller: ['Rugpuller!', 'Puxa o tapete: linha + coluna', 'cruz'], crab: ['Crab!', 'Anda de lado: leva 2 linhas', '2 linhas'], diamond: ['Diamond Hands!', 'Pega todos os blocos iguais', 'iguais'] }, pwGot: n => n + ' veio ajudar!', pwHow: 'Arraste para qualquer lugar do tabuleiro', pwGift: n => n, gotBomb: 'Você ganhou uma Bomba!', gotLightning: 'Você ganhou um Raio!', gotSub: 'Está entre suas peças', howBomb: 'Solte onde quiser: ela explode as casas 3×3 ao redor', howLightning: 'Solte onde quiser: ele limpa a linha inteira e a coluna inteira', tagBomb: '3×3', tagLightning: 'linha + coluna',
+      free: 'Grátis, sem anúncios, sem conectar carteira.',
+      rateTitle: 'Gostando do Blockspace?', rateTxt: 'Uma avaliação rápida ajuda muito um criador pequeno. Seja sincero, para o bem ou para o mal: assim eu sei o que melhorar.', rateGo: 'Avaliar o jogo', rateLink: 'Avaliar o jogo', privacy: 'Privacidade', terms: 'Termos', gfx: { auto: 'Efeitos: auto', lite: 'Efeitos: leves', full: 'Efeitos: completos' }, soundAria: 'Som ligado/desligado', musicAria: 'Música ligada/desligada',
+      peekAria: 'Ver a imagem em tamanho completo', helpAria: 'Como jogar',
+      boardAria: 'Tabuleiro 8 por 8', trayAria: 'Peças',
+      gpIntro: 'Extras opcionais. O jogo continua gratuito. O pagamento é feito pelo Google Play.',
+      gpPack: n => n + ' Segundas chances', gpPackDesc: n => n + ' Segundas chances para usar quando precisar. Cada uma elimina suas 3 linhas mais cheias.',
+      gpNote: 'Os pagamentos usam sua conta do Google Play (cartão, PayPal e outros). As compras pertencem à sua conta do Google, não a uma carteira.',
+      gpOpening: 'Abrindo o Google Play…', gpChecking: 'Confirmando sua compra…', gpCancelled: 'Compra cancelada. Nada foi cobrado.',
+      gpInvalid: 'O Google não confirmou a compra. Se você foi cobrado, o valor será reembolsado automaticamente.',
+      gpUnavail: 'As compras não estão disponíveis agora. Tente mais tarde.',
+      gpPackThanks: n => n + ' Segundas chances adicionadas.', gpRestored: 'Suas compras foram verificadas com o Google Play.'
+    },
+    de: {
+      picture: 'Bild', best: 'Rekord', line: 'Reihe!', lines: n => n + ' Reihen!', level: n => 'Level ' + n, lvlShort: n => 'Lv ' + n, praise: n => ['', 'Gut!', 'Super!', 'Ausgezeichnet!', 'Unglaublich!'][Math.min(n, 4)], perfectSub: b => 'Feld geleert · +' + b,
+      pieces: n => '+' + n + ' Bildteile',
+      overTitle: 'Kein Platz mehr',
+      daily: 'Tägliche Herausforderung', dailyShort: 'Täglich',
+      dailySub: (s, b) => (s ? s + (s === 1 ? ' Tag' : ' Tage') + ' in Folge' : 'Dasselbe Spiel für alle') + (b ? ' · heute ' + b : ''),
+      streakTag: s => 'Serie ' + s,
+      dailyOver: (b, s) => 'Bestwert heute <b>' + b + '</b><br>Serie: <b>' + s + (s === 1 ? ' Tag' : ' Tage') + '</b>. Spiele dasselbe Spiel, so oft du willst.',
+      tryAgain2: 'Dasselbe Spiel noch einmal', lbDay: 'Heute',
+      tut1: 'Ziehe das Teil in die <b>leuchtende Lücke</b>, um die Reihe zu füllen.',
+      tut2: 'Gut! Jede aufgelöste Reihe <b>schaltet Teile des Bildes</b> oben links frei. Vervollständige es, um es in deine Galerie aufzunehmen.',
+      tutOk: 'Los geht\'s!', skip: 'Überspringen',
+      overTxt: (b, p) => 'Rekord <b>' + b + '</b><br>Dein Bild behält seinen Fortschritt: <b>' + p + '</b> Teile.',
+      newGame: 'Neues Spiel',
+      doneTitle: 'Bild freigeschaltet!',
+      doneTxt: 'Zu deiner Galerie hinzugefügt.', chapterDone: n => 'Du hast das Kapitel „' + n + '“ abgeschlossen!', allDone: 'Du hast die ganze Galerie abgeschlossen! Neue Bilder kommen bald.', pieces64: 'Teile', ended: 'Beendet',
+      nextPic: 'Nächstes Bild',
+      peekTxt: (c, n) => c + ' von ' + n + ' Teilen freigeschaltet. Jede aufgelöste Reihe deckt mehr auf.',
+      back: 'Zurück', resume: 'Zurück zum Spiel', play: 'Spielen', cont: 'Spiel fortsetzen',
+      gallery: 'Galerie', galleryHint: 'Jedes Bild, das du vervollständigst, kommt in sein Kapitel. Wer Degens-Karten besitzt, schaltet die Bilder seiner Charaktere sofort frei (★).',
+      lb: 'Bestenliste', lbWeek: 'Diese Woche', lbAll: 'Gesamt', lbYou: 'Du',
+      lbEmpty: 'Noch niemand. Das erste Ergebnis könnte deins sein.', lbLoading: 'Lädt…', lbErr: 'Die Bestenliste lädt gerade nicht. Versuche es später noch einmal.',
+      lbMe: (r, b) => 'Dein Rang: <b>#' + r + '</b> mit <b>' + b + '</b>', lbNoScore: 'Du hast in dieser Liste noch kein Ergebnis.',
+      lbFine: 'Die Wochenliste beginnt jeden Montag neu. Keine Preise, nur Ruhm.',
+      lbRank: r => 'Rang diese Woche: #' + r,
+      shop: 'Shop',
+      supDesc: n => 'Goldene Blöcke, ein Supporter-Abzeichen auf dem Startbildschirm und ' + n + ' Zweite Chancen. Danke, dass du StratoshiVibes unterstützt.',
+      chanceName: 'Zweite Chance', chanceDesc: 'Löst deine 3 vollsten Reihen auf, damit du weiterspielen kannst. Einmal pro Spiel.',
+      chanceWhere: 'Am Ende eines Spiels', youHave: n => 'Du hast ' + n, useOne: n => '1 einsetzen (du hast ' + n + ')',
+      chanceUsed: 'Die Zweite Chance wurde in diesem Spiel schon eingesetzt.', chanceToast: '3 Reihen aufgelöst',
+      owned: 'Gekauft', goldTiles: 'Goldene Blöcke', on: 'An', off: 'Aus', buy: 'Kaufen', close: 'Schließen', restore: 'Käufe wiederherstellen',
+      loading: 'Lädt', tryAgain: 'Noch einmal', thanks: 'Danke!', done: 'Fertig',
+      supThanks: n => 'Das Supporter Pack ist aktiv: goldene Blöcke, ein Supporter-Abzeichen und ' + n + ' Zweite Chancen.',
+      restored: n => n === 1 ? '1 Kauf wiederhergestellt.' : n + ' Käufe wiederhergestellt.', allRestored: 'Alles, was du gekauft hast, ist bereits aktiv.',
+      locked: 'Gesperrt', homeAria: 'Start', picN: n => 'Bild ' + n,
+      howTitle: 'So wird gespielt',
+      r1: 'Ziehe die Teile auf das Spielfeld.',
+      r2: 'Fülle eine Reihe oder eine Spalte, um sie aufzulösen.',
+      r3: 'Jede aufgelöste Reihe deckt Teile des Bildes auf. Combos decken mehr auf.',
+      r4: 'Das Spiel endet, wenn kein Teil mehr passt. Dein Bild behält seinen Fortschritt.',
+      r6: 'Jede aufgelöste Reihe wird zu einem Block in deiner eigenen Kette, die von Spiel zu Spiel weiterläuft. Alle 210 Blöcke gibt es ein Halving mit Feier und Geschenk.', r5: 'Löse 2 oder mehr Reihen auf einmal auf oder erreiche Combo ×3, und ein Degen kommt zu Hilfe: Bull (Spalte), Whale (Reihe), Bear (3×3), Rugpuller (Reihe + Spalte), Crab (2 Reihen), Diamond Hands (alle gleichen Blöcke). Lege ihn irgendwo ab. Wer Vol.1-Degens-Karten besitzt, bekommt die eigenen Charaktere häufiger.',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' Tag' : ' Tage') + ' in Folge', pStreakToast: n => n + (n === 1 ? ' Tag' : ' Tage') + ' in Folge! 🔥', pStreakSub: g => g ? 'Geschenk: ' + g + ' bei deinen Teilen' : 'Komm morgen wieder, um sie zu halten', pStreakCold: 'Spiele heute, um deine Serie zu halten', giftBomb: 'eine Bombe', giftLightning: 'ein Blitz', chBlock: n => 'Block ' + n, chHalv: n => 'Halving in <b>' + n + '</b>', genesis: 'Genesis-Block!', genesisSub: 'Deine erste Reihe: Deine Kette beginnt', halving: 'HALVING!', halvingSub: (e, g) => 'Epoche ' + e + ' · Geschenk: ' + g, bomb: 'Bombe!', lightning: 'Blitz!', pw: { bull: ['Bull!', 'Rammt eine ganze Spalte weg', 'Spalte'], whale: ['Whale!', 'Eine Welle nimmt eine ganze Reihe mit', 'Reihe'], bear: ['Bear!', 'Zerschlägt einen 3×3-Block', '3×3'], rugpuller: ['Rugpuller!', 'Zieht den Teppich weg: Reihe + Spalte', 'Kreuz'], crab: ['Crab!', 'Läuft seitwärts: nimmt 2 Reihen', '2 Reihen'], diamond: ['Diamond Hands!', 'Greift alle gleichen Blöcke', 'gleiche'] }, pwGot: n => n + ' kommt zu Hilfe!', pwHow: 'Ziehe ihn irgendwo aufs Spielfeld', pwGift: n => n, gotBomb: 'Du hast eine Bombe verdient!', gotLightning: 'Du hast einen Blitz verdient!', gotSub: 'Liegt bei deinen Teilen', howBomb: 'Lege sie irgendwo ab: Sie sprengt die 3×3 Felder ringsum', howLightning: 'Lege ihn irgendwo ab: Er löst die ganze Reihe und die ganze Spalte auf', tagBomb: '3×3', tagLightning: 'Reihe + Spalte',
+      free: 'Kostenlos, ohne Werbung, ohne Wallet-Verbindung.',
+      rateTitle: 'Gefällt dir Blockspace?', rateTxt: 'Eine kurze Bewertung hilft einem kleinen Entwickler sehr. Sei bitte ehrlich, ob gut oder schlecht: So weiß ich, was ich verbessern soll.', rateGo: 'Spiel bewerten', rateLink: 'Spiel bewerten', privacy: 'Datenschutz', terms: 'Nutzungsbedingungen', gfx: { auto: 'Effekte: auto', lite: 'Effekte: leicht', full: 'Effekte: voll' }, soundAria: 'Ton an/aus', musicAria: 'Musik an/aus',
+      peekAria: 'Bild in voller Größe ansehen', helpAria: 'So wird gespielt',
+      boardAria: 'Spielfeld 8 mal 8', trayAria: 'Teile',
+      gpIntro: 'Optionale Extras. Das Spiel bleibt kostenlos. Die Zahlung läuft über Google Play.',
+      gpPack: n => n + ' Zweite Chancen', gpPackDesc: n => n + ' Zweite Chancen, die du einsetzt, wann immer du sie brauchst. Jede löst deine 3 vollsten Reihen auf.',
+      gpNote: 'Zahlungen laufen über dein Google-Play-Konto (Karte, PayPal und mehr). Käufe gehören zu deinem Google-Konto, nicht zu einer Wallet.',
+      gpOpening: 'Google Play wird geöffnet…', gpChecking: 'Dein Kauf wird bestätigt…', gpCancelled: 'Kauf abgebrochen. Es wurde nichts berechnet.',
+      gpInvalid: 'Google hat den Kauf nicht bestätigt. Falls dir etwas berechnet wurde, wird es automatisch erstattet.',
+      gpUnavail: 'Käufe sind gerade nicht verfügbar. Versuche es später noch einmal.',
+      gpPackThanks: n => n + ' Zweite Chancen hinzugefügt.', gpRestored: 'Deine Käufe wurden mit Google Play abgeglichen.'
+    },
+    fr: {
+      picture: 'Image', best: 'Record', line: 'Ligne !', lines: n => n + ' lignes !', level: n => 'Niveau ' + n, lvlShort: n => 'Niv ' + n, praise: n => ['', 'Bien !', 'Super !', 'Excellent !', 'Incroyable !'][Math.min(n, 4)], perfectSub: b => 'Grille vidée · +' + b,
+      pieces: n => '+' + n + ' pièces de l\'image',
+      overTitle: 'Plus de place',
+      daily: 'Défi quotidien', dailyShort: 'Quotidien',
+      dailySub: (s, b) => (s ? 'Série de ' + s + (s === 1 ? ' jour' : ' jours') : 'La même partie pour tous') + (b ? ' · aujourd\'hui ' + b : ''),
+      streakTag: s => 'série ' + s,
+      dailyOver: (b, s) => 'Meilleur score du jour <b>' + b + '</b><br>Série : <b>' + s + (s === 1 ? ' jour' : ' jours') + '</b>. Rejouez la même partie autant de fois que vous voulez.',
+      tryAgain2: 'Rejouer la même partie', lbDay: 'Aujourd\'hui',
+      tut1: 'Faites glisser la pièce dans l\'<b>espace lumineux</b> pour remplir la ligne.',
+      tut2: 'Bien ! Chaque ligne effacée <b>débloque des pièces de l\'image</b> en haut à gauche. Terminez-la pour l\'ajouter à votre Galerie.',
+      tutOk: 'C\'est parti !', skip: 'Passer',
+      overTxt: (b, p) => 'Record <b>' + b + '</b><br>Votre image garde sa progression : <b>' + p + '</b> pièces.',
+      newGame: 'Nouvelle partie',
+      doneTitle: 'Image débloquée !',
+      doneTxt: 'Ajoutée à votre Galerie.', chapterDone: n => 'Vous avez terminé le chapitre « ' + n + ' » !', allDone: 'Vous avez terminé toute la Galerie ! De nouvelles images arrivent bientôt.', pieces64: 'pièces', ended: 'Terminé',
+      nextPic: 'Image suivante',
+      peekTxt: (c, n) => c + ' pièces sur ' + n + ' débloquées. Chaque ligne effacée en révèle davantage.',
+      back: 'Retour', resume: 'Retour à la partie', play: 'Jouer', cont: 'Continuer la partie',
+      gallery: 'Galerie', galleryHint: 'Chaque image terminée rejoint son chapitre. Les détenteurs de cartes Degens débloquent tout de suite les images de leurs personnages (★).',
+      lb: 'Classement', lbWeek: 'Cette semaine', lbAll: 'Général', lbYou: 'Vous',
+      lbEmpty: 'Personne pour l\'instant. Le premier score peut être le vôtre.', lbLoading: 'Chargement…', lbErr: 'Le classement ne se charge pas pour le moment. Réessayez plus tard.',
+      lbMe: (r, b) => 'Votre rang : <b>#' + r + '</b> avec <b>' + b + '</b>', lbNoScore: 'Vous n\'avez pas encore de score dans ce classement.',
+      lbFine: 'Le classement hebdomadaire repart de zéro chaque lundi. Pas de prix, juste la gloire.',
+      lbRank: r => 'Rang de la semaine : #' + r,
+      shop: 'Boutique',
+      supDesc: n => 'Blocs dorés, un badge Supporter sur l\'écran d\'accueil et ' + n + ' Secondes chances. Merci de soutenir StratoshiVibes.',
+      chanceName: 'Seconde chance', chanceDesc: 'Efface vos 3 lignes les plus remplies pour continuer à jouer. Une fois par partie.',
+      chanceWhere: 'À la fin d\'une partie', youHave: n => 'Vous en avez ' + n, useOne: n => 'En utiliser 1 (vous en avez ' + n + ')',
+      chanceUsed: 'La Seconde chance a déjà été utilisée dans cette partie.', chanceToast: '3 lignes effacées',
+      owned: 'Acheté', goldTiles: 'Blocs dorés', on: 'Oui', off: 'Non', buy: 'Acheter', close: 'Fermer', restore: 'Restaurer les achats',
+      loading: 'Chargement', tryAgain: 'Réessayer', thanks: 'Merci !', done: 'Terminé',
+      supThanks: n => 'Le Supporter Pack est actif : blocs dorés, badge Supporter et ' + n + ' Secondes chances.',
+      restored: n => n === 1 ? '1 achat restauré.' : n + ' achats restaurés.', allRestored: 'Tout ce que vous avez acheté est déjà actif.',
+      locked: 'Verrouillée', homeAria: 'Accueil', picN: n => 'Image ' + n,
+      howTitle: 'Comment jouer',
+      r1: 'Faites glisser les pièces sur la grille.',
+      r2: 'Remplissez une ligne ou une colonne pour l\'effacer.',
+      r3: 'Chaque ligne effacée révèle des pièces de l\'image. Les combos en révèlent plus.',
+      r4: 'La partie se termine quand aucune pièce ne rentre. Votre image garde sa progression.',
+      r6: 'Chaque ligne effacée devient un bloc de votre propre chaîne, qui continue d\'une partie à l\'autre. Tous les 210 blocs, il y a un Halving, avec une célébration et un cadeau.', r5: 'Effacez 2 lignes ou plus d\'un coup ou atteignez le combo ×3 et un Degen vient vous aider : Bull (colonne), Whale (ligne), Bear (3×3), Rugpuller (ligne + colonne), Crab (2 lignes), Diamond Hands (tous les blocs identiques). Déposez-le où vous voulez. Les détenteurs de cartes Vol.1 Degens reçoivent plus souvent leurs propres personnages.',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' jour' : ' jours') + ' de suite', pStreakToast: n => 'Série de ' + n + (n === 1 ? ' jour' : ' jours') + ' ! 🔥', pStreakSub: g => g ? 'Cadeau : ' + g + ' parmi vos pièces' : 'Revenez demain pour la garder', pStreakCold: 'Jouez aujourd\'hui pour garder votre série', giftBomb: 'une Bombe', giftLightning: 'un Éclair', chBlock: n => 'Bloc ' + n, chHalv: n => 'Halving dans <b>' + n + '</b>', genesis: 'Bloc Genesis !', genesisSub: 'Votre première ligne : votre chaîne commence', halving: 'HALVING !', halvingSub: (e, g) => 'Époque ' + e + ' · cadeau : ' + g, bomb: 'Bombe !', lightning: 'Éclair !', pw: { bull: ['Bull !', 'Enfonce une colonne entière', 'colonne'], whale: ['Whale !', 'Une vague emporte une ligne entière', 'ligne'], bear: ['Bear !', 'Écrase un bloc de 3×3', '3×3'], rugpuller: ['Rugpuller !', 'Tire le tapis : ligne + colonne', 'croix'], crab: ['Crab !', 'Marche de côté : emporte 2 lignes', '2 lignes'], diamond: ['Diamond Hands !', 'Attrape tous les blocs identiques', 'identiques'] }, pwGot: n => n + ' vient vous aider !', pwHow: 'Faites-le glisser n\'importe où sur la grille', pwGift: n => n, gotBomb: 'Vous avez gagné une Bombe !', gotLightning: 'Vous avez gagné un Éclair !', gotSub: 'Parmi vos pièces', howBomb: 'Déposez-la où vous voulez : elle fait sauter les cases 3×3 autour', howLightning: 'Déposez-le où vous voulez : il efface toute la ligne et toute la colonne', tagBomb: '3×3', tagLightning: 'ligne + colonne',
+      free: 'Gratuit, sans publicité, sans connexion de wallet.',
+      rateTitle: 'Blockspace vous plaît ?', rateTxt: 'Une note rapide aide beaucoup un petit créateur. Soyez sincère, en bien ou en mal : cela me dit quoi améliorer.', rateGo: 'Noter le jeu', rateLink: 'Noter le jeu', privacy: 'Confidentialité', terms: 'Conditions', gfx: { auto: 'Effets : auto', lite: 'Effets : légers', full: 'Effets : complets' }, soundAria: 'Son activé/désactivé', musicAria: 'Musique activée/désactivée',
+      peekAria: 'Voir l\'image en grand', helpAria: 'Comment jouer',
+      boardAria: 'Grille de 8 sur 8', trayAria: 'Pièces',
+      gpIntro: 'Extras facultatifs. Le jeu reste gratuit. Le paiement passe par Google Play.',
+      gpPack: n => n + ' Secondes chances', gpPackDesc: n => n + ' Secondes chances à utiliser quand vous en avez besoin. Chacune efface vos 3 lignes les plus remplies.',
+      gpNote: 'Les paiements utilisent votre compte Google Play (carte, PayPal et autres). Les achats sont liés à votre compte Google, pas à un wallet.',
+      gpOpening: 'Ouverture de Google Play…', gpChecking: 'Confirmation de votre achat…', gpCancelled: 'Achat annulé. Rien n\'a été débité.',
+      gpInvalid: 'Google n\'a pas confirmé l\'achat. Si vous avez été débité, vous serez remboursé automatiquement.',
+      gpUnavail: 'Les achats ne sont pas disponibles pour le moment. Réessayez plus tard.',
+      gpPackThanks: n => n + ' Secondes chances ajoutées.', gpRestored: 'Vos achats ont été vérifiés auprès de Google Play.'
+    },
+    tr: {
+      picture: 'Resim', best: 'Rekor', line: 'Satır!', lines: n => n + ' satır!', level: n => 'Seviye ' + n, lvlShort: n => 'Sv ' + n, praise: n => ['', 'İyi!', 'Harika!', 'Mükemmel!', 'İnanılmaz!'][Math.min(n, 4)], perfectSub: b => 'Tahta temizlendi · +' + b,
+      pieces: n => '+' + n + ' resim parçası',
+      overTitle: 'Yer kalmadı',
+      daily: 'Günlük meydan okuma', dailyShort: 'Günlük',
+      dailySub: (s, b) => (s ? s + ' günlük seri' : 'Herkes için aynı oyun') + (b ? ' · bugün ' + b : ''),
+      streakTag: s => 'seri ' + s,
+      dailyOver: (b, s) => 'Bugünün en iyisi <b>' + b + '</b><br>Seri: <b>' + s + ' gün</b>. Aynı oyunu istediğin kadar tekrar oyna.',
+      tryAgain2: 'Aynı oyunu tekrar oyna', lbDay: 'Bugün',
+      tut1: 'Satırı doldurmak için parçayı <b>parlayan boşluğa</b> sürükle.',
+      tut2: 'Güzel! Temizlediğin her satır sol üstteki <b>resmin parçalarını açar</b>. Resmi tamamla, Galerine eklensin.',
+      tutOk: 'Hadi başlayalım!', skip: 'Geç',
+      overTxt: (b, p) => 'Rekor <b>' + b + '</b><br>Resmin ilerlemesini korur: <b>' + p + '</b> parça.',
+      newGame: 'Yeni oyun',
+      doneTitle: 'Resim açıldı!',
+      doneTxt: 'Galerine eklendi.', chapterDone: n => '"' + n + '" bölümünü tamamladın!', allDone: 'Tüm Galeriyi tamamladın! Yeni resimler yakında geliyor.', pieces64: 'parça', ended: 'Bitti',
+      nextPic: 'Sonraki resim',
+      peekTxt: (c, n) => n + ' parçadan ' + c + ' tanesi açıldı. Temizlediğin her satır daha fazlasını gösterir.',
+      back: 'Geri', resume: 'Oyuna dön', play: 'Oyna', cont: 'Oyuna devam et',
+      gallery: 'Galeri', galleryHint: 'Tamamladığın her resim kendi bölümüne eklenir. Degens kartı sahipleri karakterlerinin resimlerini hemen açar (★).',
+      lb: 'Sıralama', lbWeek: 'Bu hafta', lbAll: 'Tüm zamanlar', lbYou: 'Sen',
+      lbEmpty: 'Henüz kimse yok. İlk skor senin olabilir.', lbLoading: 'Yükleniyor…', lbErr: 'Sıralama şu anda yüklenmiyor. Daha sonra tekrar dene.',
+      lbMe: (r, b) => 'Sıran: <b>#' + r + '</b>, skorun <b>' + b + '</b>', lbNoScore: 'Bu tabloda henüz skorun yok.',
+      lbFine: 'Haftalık tablo her pazartesi sıfırlanır. Ödül yok, sadece şan.',
+      lbRank: r => 'Bu haftaki sıran: #' + r,
+      shop: 'Mağaza',
+      supDesc: n => 'Altın bloklar, ana ekranda Supporter rozeti ve ' + n + ' İkinci Şans. StratoshiVibes\'ı desteklediğin için teşekkürler.',
+      chanceName: 'İkinci Şans', chanceDesc: 'Oyuna devam edebilmen için en dolu 3 satırını temizler. Oyun başına bir kez.',
+      chanceWhere: 'Oyunun sonunda', youHave: n => n + ' tane var', useOne: n => '1 tane kullan (' + n + ' tane var)',
+      chanceUsed: 'İkinci Şans bu oyunda zaten kullanıldı.', chanceToast: '3 satır temizlendi',
+      owned: 'Satın alındı', goldTiles: 'Altın bloklar', on: 'Açık', off: 'Kapalı', buy: 'Satın al', close: 'Kapat', restore: 'Satın alımları geri yükle',
+      loading: 'Yükleniyor', tryAgain: 'Tekrar dene', thanks: 'Teşekkürler!', done: 'Tamam',
+      supThanks: n => 'Supporter Pack etkin: altın bloklar, Supporter rozeti ve ' + n + ' İkinci Şans.',
+      restored: n => n + ' satın alım geri yüklendi.', allRestored: 'Satın aldığın her şey zaten etkin.',
+      locked: 'Kilitli', homeAria: 'Ana ekran', picN: n => 'Resim ' + n,
+      howTitle: 'Nasıl oynanır',
+      r1: 'Parçaları tahtaya sürükle.',
+      r2: 'Bir satırı veya sütunu doldurarak temizle.',
+      r3: 'Her temizleme resmin parçalarını açar. Kombolar daha fazlasını açar.',
+      r4: 'Hiçbir parça sığmadığında oyun biter. Resmin ilerlemesini korur.',
+      r6: 'Temizlediğin her satır, oyundan oyuna devam eden kendi zincirinde bir blok olur. Her 210 blokta bir kutlama ve hediyeyle Halving gerçekleşir.', r5: 'Aynı anda 2 veya daha fazla satır temizle ya da kombo ×3\'e ulaş, bir Degen yardıma gelsin: Bull (sütun), Whale (satır), Bear (3×3), Rugpuller (satır + sütun), Crab (2 satır), Diamond Hands (eşleşen tüm bloklar). İstediğin yere bırak. Vol.1 Degens kartı sahipleri kendi karakterlerini daha sık alır.',
+      pStreak: n => '🔥 Art arda ' + n + ' gün', pStreakToast: n => n + ' günlük seri! 🔥', pStreakSub: g => g ? 'Hediye: parçalarının arasında ' + g : 'Seriyi sürdürmek için yarın yine gel', pStreakCold: 'Serini korumak için bugün oyna', giftBomb: 'bir Bomba', giftLightning: 'bir Şimşek', chBlock: n => 'Blok ' + n, chHalv: n => 'Halving\'e <b>' + n + '</b> kaldı', genesis: 'Genesis Bloğu!', genesisSub: 'İlk satırın: zincirin başlıyor', halving: 'HALVING!', halvingSub: (e, g) => 'Dönem ' + e + ' · hediye: ' + g, bomb: 'Bomba!', lightning: 'Şimşek!', pw: { bull: ['Bull!', 'Bütün bir sütunu devirir', 'sütun'], whale: ['Whale!', 'Bir dalga bütün bir satırı alır', 'satır'], bear: ['Bear!', '3×3\'lük bir bloğu ezer', '3×3'], rugpuller: ['Rugpuller!', 'Halıyı çeker: satır + sütun', 'artı'], crab: ['Crab!', 'Yan yan yürür: 2 satır alır', '2 satır'], diamond: ['Diamond Hands!', 'Eşleşen tüm blokları alır', 'eşleşen'] }, pwGot: n => n + ' yardıma geldi!', pwHow: 'Tahtada istediğin yere sürükle', pwGift: n => n, gotBomb: 'Bir Bomba kazandın!', gotLightning: 'Bir Şimşek kazandın!', gotSub: 'Parçalarının arasında', howBomb: 'İstediğin yere bırak: çevresindeki 3×3 kareyi patlatır', howLightning: 'İstediğin yere bırak: bütün satırı ve bütün sütunu temizler', tagBomb: '3×3', tagLightning: 'satır + sütun',
+      free: 'Ücretsiz, reklamsız, cüzdan bağlantısı yok.',
+      rateTitle: 'Blockspace hoşuna gidiyor mu?', rateTxt: 'Kısa bir değerlendirme küçük bir geliştiriciye çok yardımcı olur. Lütfen iyi ya da kötü, dürüst ol: neyi geliştirmem gerektiğini gösterir.', rateGo: 'Oyunu değerlendir', rateLink: 'Oyunu değerlendir', privacy: 'Gizlilik', terms: 'Şartlar', gfx: { auto: 'Efektler: otomatik', lite: 'Efektler: hafif', full: 'Efektler: tam' }, soundAria: 'Ses aç/kapat', musicAria: 'Müzik aç/kapat',
+      peekAria: 'Resmi tam boyutta gör', helpAria: 'Nasıl oynanır',
+      boardAria: '8\'e 8 tahta', trayAria: 'Parçalar',
+      gpIntro: 'İsteğe bağlı ekstralar. Oyun ücretsiz kalır. Ödeme Google Play üzerinden yapılır.',
+      gpPack: n => n + ' İkinci Şans', gpPackDesc: n => 'İhtiyacın olduğunda kullanabileceğin ' + n + ' İkinci Şans. Her biri en dolu 3 satırını temizler.',
+      gpNote: 'Ödemeler Google Play hesabını kullanır (kart, PayPal ve diğerleri). Satın alımlar bir cüzdana değil, Google hesabına aittir.',
+      gpOpening: 'Google Play açılıyor…', gpChecking: 'Satın alımın onaylanıyor…', gpCancelled: 'Satın alma iptal edildi. Hiçbir ücret alınmadı.',
+      gpInvalid: 'Google satın almayı onaylamadı. Senden ücret alındıysa otomatik olarak iade edilecek.',
+      gpUnavail: 'Satın alımlar şu anda kullanılamıyor. Daha sonra tekrar dene.',
+      gpPackThanks: n => n + ' İkinci Şans eklendi.', gpRestored: 'Satın alımların Google Play ile kontrol edildi.'
+    }
+  });
+  const LANGS = ['en', 'el', 'es', 'pt', 'de', 'fr', 'tr'];
+  const LANG_NAME = { en: 'English', el: 'Ελληνικά', es: 'Español', pt: 'Português', de: 'Deutsch', fr: 'Français', tr: 'Türkçe' };
+  const LOCALE = { en: 'en-US', el: 'el-GR', es: 'es-ES', pt: 'pt-BR', de: 'de-DE', fr: 'fr-FR', tr: 'tr-TR' };
 
   /* ---------- storage ---------- */
   const store = {
@@ -860,8 +1137,10 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   if (PLAY) document.documentElement.classList.add('play');
 
   /* ---------- language ---------- */
-  let lang = store.get('svb_lang') || ((navigator.language || 'en').toLowerCase().startsWith('el') ? 'el' : 'en');
-  const t = k => TEXT[lang][k];
+  let lang = store.get('svb_lang');
+  if (!LANGS.includes(lang)) { const nav = (navigator.language || 'en').toLowerCase().slice(0, 2); lang = LANGS.includes(nav) ? nav : 'en'; }
+  const t = k => TEXT[lang][k] ?? TEXT.en[k];
+  const L = o => o[lang] ?? o.en;   // picture and chapter names exist in Greek and English; other languages use the English name
   /* Effects: 'full', 'lite' or 'auto'. Auto starts light on phones with little memory and otherwise measures the
      frame rate during play; if the phone cannot hold 45 frames a second it switches to light and remembers it. */
   let gfxMode = store.get('svb_gfx'); if (gfxMode !== 'lite' && gfxMode !== 'full') gfxMode = 'auto';
@@ -871,7 +1150,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
     document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
-    $('langBtn').textContent = t('lang');
+    $('langBtn').textContent = '🌐 ' + LANG_NAME[lang];
     $('gfxBtn').textContent = t('gfx')[gfxMode];
   }
 
@@ -954,7 +1233,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     for (const k of ['svb_game', 'svb_daily']) { const g = readJSON(k); if (g) { g.score = (+g.score || 0) * 10; g.lbSent = (+g.lbSent || 0) * 10; store.set(k, JSON.stringify(g)); } }
     store.set('svb_x10', '1');
   }
-  const fmt = n => Math.round(n).toLocaleString(lang === 'el' ? 'el-GR' : 'en-US');
+  const fmt = n => Math.round(n).toLocaleString(LOCALE[lang]);
   let board = new Array(N * N).fill(-1);
   let tray = [null, null, null];
   let score = 0, combo = 0, chanceUsed = false, lbSent = 0;
@@ -1037,7 +1316,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   saveRev();
   function picLabel() {
     const p = picById(rev.id), ch = chapterOf(p), list = PICS.filter(q => q.ch === p.ch);
-    return { ch: ch[lang], k: list.indexOf(p) + 1, of: list.length };
+    return { ch: L(ch), k: list.indexOf(p) + 1, of: list.length };
   }
   const saveGame = () => store.set(mode === 'daily' ? 'svb_daily' : 'svb_game', JSON.stringify({
     board, score, combo, chanceUsed, lbSent, pf, day: dday, seq: dseq,
@@ -1880,7 +2159,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     c.textAlign = 'center'; c.fillStyle = '#ffb02e'; c.shadowColor = '#ff8c28'; c.shadowBlur = S * 0.08;
     c.font = Math.round(S * 0.42) + 'px Bungee, sans-serif'; c.fillText(String(+dday.slice(8)), S / 2, S * 0.5);
     c.shadowBlur = 0; c.fillStyle = '#e8edff'; c.font = '800 ' + Math.round(S * 0.11) + 'px Commissioner, sans-serif';
-    const mon = new Date(dday + 'T12:00:00Z').toLocaleString(lang === 'el' ? 'el-GR' : 'en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
+    const mon = new Date(dday + 'T12:00:00Z').toLocaleString(LOCALE[lang], { month: 'short', timeZone: 'UTC' }).toUpperCase();
     c.fillText(mon, S / 2, S * 0.68);
   }
   function tick() {
@@ -2131,7 +2410,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       const h = document.createElement('div');
       h.className = 'ghead' + (got === list.length ? ' full' : '');
       const evTag = ch.until ? ' · ' + (chActive(ch) ? ch[lang === 'el' ? 'untilEl' : 'untilEn'] : t('ended')) : '';
-      h.innerHTML = '<span>' + ch[lang] + '</span><b>' + (got === list.length ? '✓ ' : '') + got + '/' + list.length + evTag + '</b>';
+      h.innerHTML = '<span>' + L(ch) + '</span><b>' + (got === list.length ? '✓ ' : '') + got + '/' + list.length + evTag + '</b>';
       g.appendChild(h);
       list.forEach(pic => galleryItem(g, pic));
     });
@@ -2143,7 +2422,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'gitem';
       if (done.includes(pic.id) || holderUnlocks(i)) {
-        const im = document.createElement('img'); im.src = src; im.alt = pic[lang];
+        const im = document.createElement('img'); im.src = src; im.alt = L(pic);
         b.appendChild(im);
         if (holderUnlocks(i)) {
           b.classList.add('holder');
@@ -2151,8 +2430,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
           b.appendChild(st);
         }
         b.addEventListener('click', () => {
-          $('vimg').src = src; $('vimg').alt = pic[lang];
-          $('vtxt').textContent = pic[lang];
+          $('vimg').src = src; $('vimg').alt = L(pic);
+          $('vtxt').textContent = L(pic);
           $('view').hidden = false;
           liveStop('v'); liveStart('v', $('vlive'), pic.id, 1.3);
         });
@@ -2415,7 +2694,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   SH.gpTok = SH.gpTok || {};                  // purchaseToken -> 'granted' | 'acked' | 'consumed'
   const gpPrice = id => {
     const d = gpItems[GP_SKU[id]]; if (!d) return '';
-    try { return new Intl.NumberFormat(lang === 'el' ? 'el-GR' : navigator.language || 'en', { style: 'currency', currency: d.price.currency }).format(+d.price.value); }
+    try { return new Intl.NumberFormat(LOCALE[lang], { style: 'currency', currency: d.price.currency }).format(+d.price.value); }
     catch (e) { return d.price.value + ' ' + d.price.currency; }
   };
   const isSupporter = () => !!SH.own.supporter;
@@ -2829,7 +3108,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   $('closeView').addEventListener('click', () => { $('view').hidden = true; liveStop('v'); });
   $('closeHelp').addEventListener('click', () => { $('help').hidden = true; });
   $('langBtn').addEventListener('click', () => {
-    lang = lang === 'el' ? 'en' : 'el';
+    lang = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length];   // each tap moves to the next language
     store.set('svb_lang', lang);
     applyLang(); renderStats(); renderHome(); paintWallet();
   });
@@ -2849,9 +3128,9 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     const wasNew = !done.includes(pic.id);
     if (wasNew) { done.push(pic.id); saveDone(); if (done.length >= 2 && IN_APP && !store.get('svb_rate')) rateDue = true; }
     const list = PICS.filter(p => p.ch === pic.ch), chDone = list.every(p => done.includes(p.id));
-    $('doneName').textContent = pic[lang];
+    $('doneName').textContent = L(pic);
     $('doneTxt').textContent = PICS.filter(isActive).every(p => done.includes(p.id)) && wasNew ? t('allDone')
-      : chDone && wasNew ? t('chapterDone')(chapterOf(pic)[lang]) : t('doneTxt');
+      : chDone && wasNew ? t('chapterDone')(L(chapterOf(pic))) : t('doneTxt');
     $('done').hidden = false;
     if (actx) sfx.complete();
     requestAnimationFrame(() => drawReveal($('dc'), true));
