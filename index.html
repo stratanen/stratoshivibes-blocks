@@ -1821,6 +1821,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     { el: 'Βασιλικό', en: 'Royal', b1: '#1d1238', b2: '#0b0618', bc: '#e0b8ff', ce: 'rgba(224,184,255,.08)', cr: '18%', br: '20%', glow: '#33205c', amb: 'royal' }
   ];
   // score where each level starts (×10 scale); after the list, a new level every 16,000
+  // music for each world, in WORLDS order
+  const WORLD_MUSIC = ['lofi', 'drift', 'chill', 'lofi', 'lofi', 'chill', 'lofi', 'lofi', 'drift', 'drift', 'lofi', 'chill', 'drift', 'drift', 'chill', 'chill'];
   const LEVELS = [0, 5000, 11000, 18000, 26000, 35000, 45000, 56000, 68000, 81000, 95000, 110000];
   const levelOf = sc => { let l = 0; while (l + 1 < LEVELS.length && sc >= LEVELS[l + 1]) l++; if (sc >= LEVELS[LEVELS.length - 1]) l += Math.floor((sc - LEVELS[LEVELS.length - 1]) / 16000); return l; };
   let pf = 0, shownLevel = -1, shownWorld = -1;
@@ -1844,6 +1846,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     if (up) setTimeout(() => { toast(t('level')(lv + 1), WORLDS[w][lang === 'el' ? 'el' : 'en'], 'l3'); sfx.earn(); fireworks(5); }, 1300);
     const bd = $('board'); bd.classList.toggle('c2', combo >= 2 && combo < 4); bd.classList.toggle('c3', combo >= 4);
     shownLevel = lv;
+    try { music.setTrack(WORLD_MUSIC[w % WORLD_MUSIC.length]); } catch (e) {}
     $('lvl').textContent = t('lvlShort')(lv + 1);
   }
 
@@ -1933,8 +1936,11 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   /* ---------- music: "Lo-fi Blocks", synthesised loop (no files), quiet under the effects ---------- */
   let musicOff = store.get('svb_music') === 'off';
   const music = (() => {
-    let bus = null, timer = null, nextT = 0, step = 0, noiseBuf = null, verbIR = null;
-    const mtof = m => 440 * Math.pow(2, (m - 69) / 12), BPM = 78, D = 60 / BPM / 4, SWING = 0.18;
+    // three synthesised loops; the board's world picks one (menu: Lo-fi Blocks)
+    let bus = null, timer = null, nextT = 0, step = 0, noiseBuf = null, verbIR = null, cur = 'lofi';
+    const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+    const SPEC = { lofi: { bpm: 78, swing: 0.18, echo: 3 }, drift: { bpm: 96, swing: 0, echo: 3 }, chill: { bpm: 88, swing: 0.12, echo: 3 } };
+    let D = 60 / 78 / 4;
     const pick = a => a[Math.floor(Math.random() * a.length)];
     function makeBus(a) {
       if (!noiseBuf) {
@@ -1949,7 +1955,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       const dry = a.createGain(); dry.connect(comp);
       const verb = a.createConvolver(); verb.buffer = verbIR;
       const wet = a.createGain(); wet.gain.value = 0.3; wet.connect(verb); verb.connect(comp);
-      const echo = a.createDelay(1); echo.delayTime.value = D * 3;
+      const echo = a.createDelay(1); echo.delayTime.value = D * SPEC[cur].echo;
       const fb = a.createGain(); fb.gain.value = 0.3; echo.connect(fb); fb.connect(echo);
       const eo = a.createGain(); eo.gain.value = 0.4; echo.connect(eo); eo.connect(dry); eo.connect(wet);
       return { a, out, dry, wet, echo };
@@ -1962,9 +1968,9 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       osc.connect(f); f.connect(g); g.connect(b.dry); if (o.echo) g.connect(b.echo); if (o.wet) g.connect(b.wet);
       osc.start(t); osc.stop(t + o.dec + 0.05);
     }
-    function bass(b, m, t, dur, vol) {
+    function bass(b, m, t, dur, vol, type, cut) {
       const a = b.a, osc = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
-      osc.type = 'triangle'; osc.frequency.value = mtof(m); f.type = 'lowpass'; f.frequency.value = 300;
+      osc.type = type || 'triangle'; osc.frequency.value = mtof(m); f.type = 'lowpass'; f.frequency.value = cut || 300;
       g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.01);
       g.gain.setValueAtTime(vol, t + dur * 0.8); g.gain.exponentialRampToValueAtTime(0.0001, t + dur * 0.8 + 0.08);
       osc.connect(f); f.connect(g); g.connect(b.dry); osc.start(t); osc.stop(t + dur + 0.15);
@@ -1982,8 +1988,46 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       s.connect(f); f.connect(g); g.connect(b.dry); if (o.wet) g.connect(b.wet);
       s.start(t, Math.random() * 0.5); s.stop(t + o.dec + 0.02);
     }
+    function pad(b, notes, t, dur) {
+      const a = b.a;
+      notes.forEach(m => [-7, 7].forEach(det => {
+        const osc = a.createOscillator(), f = a.createBiquadFilter(), g = a.createGain();
+        osc.type = 'sawtooth'; osc.frequency.value = mtof(m); osc.detune.value = det;
+        f.type = 'lowpass'; f.frequency.value = 1100; f.Q.value = 0.6;
+        const v = 0.05 / notes.length * 3;
+        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + 0.35);
+        g.gain.setValueAtTime(v, t + dur); g.gain.exponentialRampToValueAtTime(0.0001, t + dur + 0.9);
+        osc.connect(f); f.connect(g); g.connect(b.dry); g.connect(b.wet);
+        osc.start(t); osc.stop(t + dur + 1);
+      }));
+    }
+    const DR_CH = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]], DR_ROOT = [45, 41, 36, 43];
+    function tickDrift(b, s, t) {
+      const bar = Math.floor(s / 16) % 4, i = s % 16, ch = DR_CH[bar], root = DR_ROOT[bar];
+      if (i === 0) pad(b, ch, t, D * 16);
+      if (i % 2 === 0) bass(b, root - 12 + (i % 8 === 6 ? 12 : 0), t, D * 2, 0.12, 'sawtooth', 380);
+      pluck(b, ch[[0, 1, 2, 1][i % 4]] + 12 + (i >= 8 && i % 4 === 2 ? 12 : 0), t, { type: 'square', vol: 0.028, dec: 0.22, cut: 2400, echo: true });
+      if (i % 4 === 0) kick(b, t, 0.45);
+      if (i % 4 === 2) noise(b, t, { ft: 'highpass', fq: 7500, vol: 0.04, dec: 0.045 });
+      if (i === 4 || i === 12) noise(b, t, { ft: 'bandpass', fq: 1800, q: 0.8, vol: 0.09, dec: 0.18, wet: true });
+    }
+    const CW_CH = [[53, 57, 60, 64], [52, 55, 59, 62], [50, 53, 57, 60], [48, 52, 55, 59]];
+    function tickChill(b, s, t) {
+      const i = s % 16, ch = CW_CH[Math.floor(s / 16) % 4];
+      if (i === 0 || i === 6 || i === 10) ch.forEach((m, k) => pluck(b, m + 12, t + k * 0.012, { type: 'sine', vol: 0.05, dec: i === 0 ? 1.4 : 0.6, cut: 2200, wet: true }));
+      if (i === 0 || i === 6 || i === 10) ch.forEach(m => pluck(b, m + 24, t, { type: 'triangle', vol: 0.012, dec: 0.5, cut: 3000 }));
+      if (i === 0) bass(b, ch[0] - 12, t, D * 5, 0.2, 'sine', 260);
+      if (i === 8) bass(b, ch[2] - 12, t, D * 3, 0.15, 'sine', 260);
+      if (i === 14) bass(b, ch[1] - 12, t, D * 2, 0.12, 'sine', 260);
+      if (i === 0 || i === 9) kick(b, t, 0.38);
+      if (i === 4 || i === 12) noise(b, t, { ft: 'bandpass', fq: 2400, q: 1.2, vol: 0.06, dec: 0.09, wet: true });
+      if (i % 2 === 0) noise(b, t, { ft: 'highpass', fq: 9000, vol: 0.02, dec: 0.035 });
+      if (i % 8 === 3 && Math.random() < 0.6) pluck(b, pick([72, 74, 76, 79, 81]), t, { type: 'sine', vol: 0.04, dec: 0.8, echo: true, wet: true });
+    }
     const CH = [[50, 53, 57, 60, 64], [43, 53, 57, 59, 64], [48, 52, 55, 59, 62], [45, 52, 55, 60, 64]];
     function tick(b, s, t) {
+      if (cur === 'drift') return tickDrift(b, s, t);
+      if (cur === 'chill') return tickChill(b, s, t);
       const i = s % 16, ch = CH[Math.floor(s / 16) % 4];
       if (i === 0 || i === 7) ch.forEach((m, k) => pluck(b, m, t + k * 0.018, { type: 'triangle', vol: 0.05, dec: i === 0 ? 1.6 : 0.7, wet: true }));
       if (i === 0) bass(b, ch[0] - 12, t, D * 6, 0.16);
@@ -1997,6 +2041,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       start() {
         if (timer || musicOff || document.hidden) return;
         const a = ensureAudio(); if (!a || a.state !== 'running') return;
+        D = 60 / SPEC[cur].bpm / 4; const SWING = SPEC[cur].swing;
         bus = makeBus(a); step = 0; nextT = a.currentTime + 0.1;
         timer = setInterval(() => {
           // if the page stalled, skip the notes that are already late instead of firing them all at once (clicks)
@@ -2004,6 +2049,11 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
           // schedule 0.4 s ahead so busy frames on phones do not starve the music
           while (nextT < a.currentTime + 0.4) { tick(bus, step % 64, nextT + (step % 2 ? SWING * D : 0)); nextT += D; step++; }
         }, 50);
+      },
+      setTrack(id) {
+        if (!SPEC[id] || id === cur) return;
+        cur = id;
+        if (timer) { this.stop(); setTimeout(() => this.start(), 350); }
       },
       stop() {
         if (!timer) return;
@@ -2466,6 +2516,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     el.textContent = t('pStreak')(n); el.classList.toggle('cold', !today); el.title = today ? '' : t('pStreakCold');
   }
   function renderHome() {
+    try { music.setTrack('lofi'); } catch (e) {}
     renderStreakBadge();
     if (!$('home').hidden) liveStart('h', $('hpic'), rev.id, 0.9);
     $('dailySub').textContent = t('dailySub')(streakNow(), dailyBest() ? fmt(dailyBest()) : 0);
