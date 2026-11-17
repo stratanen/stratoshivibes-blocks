@@ -153,6 +153,40 @@ body{
 }
 .cell.hl.blk{filter:brightness(1.35) saturate(1.2);box-shadow:0 0 16px #fff, inset 0 0 0 2px #fff}
 .cell.pop{animation:pop .38s ease-out both}
+/* epoch tile styles, unlocked by Halvings */
+.sk2 .blk{box-shadow:inset 0 0 0 2px #ffd76a,0 0 11px rgba(255,200,90,.6)}
+.sk3 .blk{box-shadow:inset 0 7px 9px rgba(255,255,255,.38),inset 0 -7px 10px rgba(0,0,0,.38),0 0 9px color-mix(in srgb, var(--k) 55%, transparent);filter:saturate(1.15)}
+.sk4 .board .cell.blk:not(.pop),.sk4 .slot .blk:not([class*="sp-"]),.sk4 .hvtiles .blk{animation:skholo 3.5s ease-in-out infinite}
+@keyframes skholo{0%,100%{filter:hue-rotate(-18deg) brightness(1)}50%{filter:hue-rotate(18deg) brightness(1.25)}}
+.sk5 .blk{box-shadow:inset 0 0 0 2px var(--k),0 0 16px var(--k),0 0 3px #fff}
+.sk6 .blk{border-radius:50%!important;box-shadow:inset 0 6px 8px rgba(255,255,255,.35),0 0 10px color-mix(in srgb, var(--k) 60%, transparent)}
+.sk7 .blk{border-radius:5px!important;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85),0 0 16px rgba(120,230,255,.7);filter:contrast(1.08) saturate(1.3)}
+.sk8 .board .cell.blk:not(.pop),.sk8 .slot .blk:not([class*="sp-"]),.sk8 .hvtiles .blk{animation:skrain 7s linear infinite}
+@keyframes skrain{to{filter:hue-rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.sk4 .blk,.sk8 .blk{animation:none!important}}
+/* Halving celebration */
+#halv{z-index:56}
+#halv .card{border-color:#ff4fd8;box-shadow:0 0 0 1px #ff4fd8,0 0 50px rgba(255,79,216,.45)}
+#halv h2{margin:0;font:400 clamp(34px,11vw,48px)/1 var(--fd);background:linear-gradient(90deg,#22e4ff,#ff4fd8,#ffb02e,#22e4ff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:hvtitle 2.4s linear infinite, hvin .8s cubic-bezier(.2,.9,.2,1) both}
+@keyframes hvtitle{to{background-position:300% 0}}
+@keyframes hvin{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.12)}100%{transform:none;opacity:1}}
+#halv .ep{font:800 15px var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+#halv .rw{width:100%;display:flex;flex-direction:column;gap:10px}
+#halv .rw>div{display:flex;align-items:center;gap:12px;text-align:left;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);opacity:0;animation:hvrow .5s ease-out both}
+#halv .rw>div:nth-child(1){animation-delay:.7s}#halv .rw>div:nth-child(2){animation-delay:1.3s}#halv .rw>div:nth-child(3){animation-delay:1.9s}
+@keyframes hvrow{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
+#halv .rw small{display:block;color:var(--dim);font-size:12.5px;font-weight:600}
+#halv .rw b{font-size:15px}
+.hvtiles{display:flex;gap:5px;flex:none}
+.hvtiles .blk{display:block;width:26px;height:26px}
+#halv .hvgift{flex:none;width:44px;height:44px;border-radius:12px;background:center/cover no-repeat;box-shadow:0 0 14px var(--gold)}
+#halv .hvbig{flex:none;width:86px;text-align:center;font:400 22px/1 var(--fd);color:var(--cyan)}
+#halv .hvtiles{width:86px;justify-content:center}
+#halv .hvgift{margin-inline:21px}
+body.hvon .fx{z-index:57;pointer-events:none}
+#halv{background:rgba(4,6,20,.6)}
+#halv .btn{opacity:0;animation:hvrow .5s 2.5s ease-out both}
+@media (prefers-reduced-motion: reduce){#halv h2,#halv .rw>div,#halv .btn{animation-duration:.01s;animation-delay:0s}}
 @keyframes pop{
   0%{transform:scale(1);filter:brightness(1.6)}
   60%{transform:scale(1.18);opacity:.8;filter:brightness(2.2)}
@@ -577,6 +611,18 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   </div>
 </div>
 
+<div class="ov" id="halv" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="hvT">
+    <h2 id="hvT">HALVING!</h2>
+    <div class="ep" id="hvEp"></div>
+    <div class="rw">
+      <div><span class="hvtiles" id="hvTiles"></span><span><small id="hvSkL"></small><b id="hvSk"></b></span></div>
+      <div><span class="hvbig" id="hvPct"></span><span><small id="hvBoL"></small><b id="hvBo"></b></span></div>
+      <div><span class="hvgift" id="hvGiftI"></span><span><small id="hvGiL"></small><b id="hvGi"></b></span></div>
+    </div>
+    <button class="btn" id="hvGo" type="button"></button>
+  </div>
+</div>
 <div class="ov" id="peek" hidden>
   <div class="card">
     <canvas id="pc"></canvas>
@@ -779,7 +825,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       r3: 'Κάθε καθαρισμός αποκαλύπτει κομμάτια της εικόνας. Τα combos αποκαλύπτουν περισσότερα.',
       r4: 'Η παρτίδα τελειώνει όταν δεν χωράει κανένα κομμάτι. Η εικόνα κρατάει την πρόοδό της.',
       r6: 'Κάθε γραμμή που σπας γίνεται ένα block στη δική σου αλυσίδα, που μένει από παρτίδα σε παρτίδα. Κάθε 210 blocks έρχεται Halving, με γιορτή και δώρο.', r5: 'Καθάρισε 2+ γραμμές μαζί ή φτάσε combo ×3 και έρχεται ένας Degen να σε βοηθήσει: Ταύρος (στήλη), Whale (γραμμή), Αρκούδα (3×3), Rugpuller (γραμμή + στήλη), Crab (2 γραμμές), Diamond Hands (όλα τα ίδια τουβλάκια). Τον αφήνεις όπου θέλεις. Όσοι έχουν τις κάρτες Degens τους παίρνουν πιο συχνά.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', chBlock: n => 'Block ' + n, chHalv: n => 'Halving σε <b>' + n + '</b>', genesis: 'Genesis Block!', genesisSub: 'Η πρώτη γραμμή σου: ξεκινάει η αλυσίδα σου', halving: 'HALVING!', halvingSub: (e, g) => 'Εποχή ' + e + ' · δώρο: ' + g, bomb: 'Βόμβα!', lightning: 'Κεραυνός!', pw: { bull: ['Ο Ταύρος!', 'Κουτουλάει όλη τη στήλη', 'στήλη'], whale: ['Η Φάλαινα!', 'Ένα κύμα παίρνει όλη τη γραμμή', 'γραμμή'], bear: ['Η Αρκούδα!', 'Σπάει ένα κομμάτι 3×3', '3×3'], rugpuller: ['Ο Rugpuller!', 'Τραβάει το χαλί: γραμμή + στήλη', 'σταυρός'], crab: ['Ο Crab!', 'Πλάγια βόλτα: παίρνει 2 γραμμές', '2 γραμμές'], diamond: ['Diamond Hands!', 'Μαζεύει όλα τα ίδια τουβλάκια', 'ίδια'] }, pwGot: n => n + ' ήρθε να βοηθήσει!', pwHow: 'Σύρε τον όπου θες στο ταμπλό', pwGift: n => n, gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου', howBomb: 'Άφησέ τη όπου θες: ανατινάζει 3×3 κουτάκια γύρω της', howLightning: 'Άφησέ τον όπου θες: καθαρίζει όλη τη γραμμή και όλη τη στήλη', tagBomb: '3×3', tagLightning: 'γραμμή + στήλη',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' μέρα' : ' μέρες') + ' σερί', pStreakToast: n => 'Σερί ' + n + ' ημερών! 🔥', pStreakSub: g => g ? 'Δώρο: ' + g + ' στα κομμάτια σου' : 'Έλα και αύριο να το συνεχίσεις', pStreakCold: 'Παίξε σήμερα για να κρατήσεις το σερί', giftBomb: 'μια Βόμβα', giftLightning: 'ένας Κεραυνός', chBlock: n => 'Block ' + n, chHalv: n => 'Halving σε <b>' + n + '</b>', genesis: 'Genesis Block!', genesisSub: 'Η πρώτη γραμμή σου: ξεκινάει η αλυσίδα σου', halving: 'HALVING!', halvingSub: (e, g) => 'Εποχή ' + e + ' · δώρο: ' + g, hvEp: e => 'Εποχή ' + e, hvSkL: 'Νέο στυλ για τα τουβλάκια', hvBoL: 'Από τώρα, σε κάθε γραμμή', hvBo: p => '+' + p + '% κομμάτια εικόνας', hvBoMax: 'Μέγιστο μπόνους: +50% κομμάτια εικόνας', hvGiL: 'Δώρο στα κομμάτια σου', hvGo: 'Συνέχισε', skins: ['Κλασικό', 'Χρυσό πλαίσιο', 'Γυαλί', 'Ολόγραμμα', 'Neon', 'Φούσκες', 'Διαμάντι', 'Ουράνιο τόξο'], bomb: 'Βόμβα!', lightning: 'Κεραυνός!', pw: { bull: ['Ο Ταύρος!', 'Κουτουλάει όλη τη στήλη', 'στήλη'], whale: ['Η Φάλαινα!', 'Ένα κύμα παίρνει όλη τη γραμμή', 'γραμμή'], bear: ['Η Αρκούδα!', 'Σπάει ένα κομμάτι 3×3', '3×3'], rugpuller: ['Ο Rugpuller!', 'Τραβάει το χαλί: γραμμή + στήλη', 'σταυρός'], crab: ['Ο Crab!', 'Πλάγια βόλτα: παίρνει 2 γραμμές', '2 γραμμές'], diamond: ['Diamond Hands!', 'Μαζεύει όλα τα ίδια τουβλάκια', 'ίδια'] }, pwGot: n => n + ' ήρθε να βοηθήσει!', pwHow: 'Σύρε τον όπου θες στο ταμπλό', pwGift: n => n, gotBomb: 'Κέρδισες Βόμβα!', gotLightning: 'Κέρδισες Κεραυνό!', gotSub: 'Τη βρίσκεις στα κομμάτια σου', howBomb: 'Άφησέ τη όπου θες: ανατινάζει 3×3 κουτάκια γύρω της', howLightning: 'Άφησέ τον όπου θες: καθαρίζει όλη τη γραμμή και όλη τη στήλη', tagBomb: '3×3', tagLightning: 'γραμμή + στήλη',
       free: 'Δωρεάν, χωρίς διαφημίσεις και χωρίς σύνδεση wallet.',
       rateTitle: 'Σου αρέσει το Blockspace;', rateTxt: 'Μια σύντομη αξιολόγηση βοηθάει πολύ έναν μικρό δημιουργό. Γράψε ειλικρινά τη γνώμη σου, θετική ή αρνητική: μου λέει τι να βελτιώσω.', rateGo: 'Αξιολόγησε το παιχνίδι', rateLink: 'Αξιολόγησε το παιχνίδι', privacy: 'Απόρρητο', terms: 'Όροι χρήσης', lang: 'English', gfx: { auto: 'Εφέ: αυτόματα', lite: 'Εφέ: ελαφριά', full: 'Εφέ: πλήρη' }, soundAria: 'Ήχος ναι/όχι', musicAria: 'Μουσική ναι/όχι',
       peekAria: 'Δες την εικόνα σε μεγάλο μέγεθος', helpAria: 'Πώς παίζεται',
@@ -864,7 +910,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       r3: 'Every clear reveals pieces of the picture. Combos reveal more.',
       r4: 'The game ends when no piece fits. Your picture keeps its progress.',
       r6: 'Every line you clear becomes a block in your own chain, which carries over from game to game. Every 210 blocks there is a Halving, with a celebration and a gift.', r5: 'Clear 2+ lines at once or reach combo ×3 and a Degen comes to help: Bull (column), Whale (row), Bear (3×3), Rugpuller (row + column), Crab (2 rows), Diamond Hands (every matching tile). Drop it anywhere. Vol.1 Degens card holders get their own characters more often.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', chBlock: n => 'Block ' + n, chHalv: n => 'Halving in <b>' + n + '</b>', genesis: 'Genesis Block!', genesisSub: 'Your first line: your chain begins', halving: 'HALVING!', halvingSub: (e, g) => 'Epoch ' + e + ' · gift: ' + g, bomb: 'Bomb!', lightning: 'Lightning!', pw: { bull: ['The Bull!', 'Headbutts a whole column', 'column'], whale: ['The Whale!', 'A wave takes a whole row', 'row'], bear: ['The Bear!', 'Smashes a 3×3 block', '3×3'], rugpuller: ['The Rugpuller!', 'Pulls the rug: row + column', 'cross'], crab: ['The Crab!', 'Walks sideways: takes 2 rows', '2 rows'], diamond: ['Diamond Hands!', 'Grabs every matching tile', 'match'] }, pwGot: n => n + ' came to help!', pwHow: 'Drag it anywhere on the board', pwGift: n => n, gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces', howBomb: 'Drop it anywhere: it blasts the 3×3 squares around it', howLightning: 'Drop it anywhere: it clears the whole row and the whole column', tagBomb: '3×3', tagLightning: 'row + column',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' day' : ' days') + ' in a row', pStreakToast: n => n + '-day streak! 🔥', pStreakSub: g => g ? 'Gift: ' + g + ' in your pieces' : 'Come back tomorrow to keep it going', pStreakCold: 'Play today to keep your streak', giftBomb: 'a Bomb', giftLightning: 'Lightning', chBlock: n => 'Block ' + n, chHalv: n => 'Halving in <b>' + n + '</b>', genesis: 'Genesis Block!', genesisSub: 'Your first line: your chain begins', halving: 'HALVING!', halvingSub: (e, g) => 'Epoch ' + e + ' · gift: ' + g, hvEp: e => 'Epoch ' + e, hvSkL: 'New tile style', hvBoL: 'From now on, every line gives', hvBo: p => '+' + p + '% picture pieces', hvBoMax: 'Max bonus: +50% picture pieces', hvGiL: 'Gift in your pieces', hvGo: 'Continue', skins: ['Classic', 'Gold edge', 'Glass', 'Hologram', 'Neon', 'Bubbles', 'Diamond', 'Rainbow'], bomb: 'Bomb!', lightning: 'Lightning!', pw: { bull: ['The Bull!', 'Headbutts a whole column', 'column'], whale: ['The Whale!', 'A wave takes a whole row', 'row'], bear: ['The Bear!', 'Smashes a 3×3 block', '3×3'], rugpuller: ['The Rugpuller!', 'Pulls the rug: row + column', 'cross'], crab: ['The Crab!', 'Walks sideways: takes 2 rows', '2 rows'], diamond: ['Diamond Hands!', 'Grabs every matching tile', 'match'] }, pwGot: n => n + ' came to help!', pwHow: 'Drag it anywhere on the board', pwGift: n => n, gotBomb: 'You earned a Bomb!', gotLightning: 'You earned Lightning!', gotSub: 'It is in your pieces', howBomb: 'Drop it anywhere: it blasts the 3×3 squares around it', howLightning: 'Drop it anywhere: it clears the whole row and the whole column', tagBomb: '3×3', tagLightning: 'row + column',
       free: 'Free, no ads, no wallet connection.',
       rateTitle: 'Enjoying Blockspace?', rateTxt: 'A quick rating helps a small creator a lot. Please be honest, good or bad: it tells me what to improve.', rateGo: 'Rate the game', rateLink: 'Rate the game', privacy: 'Privacy', terms: 'Terms', lang: 'Ελληνικά', gfx: { auto: 'Effects: auto', lite: 'Effects: light', full: 'Effects: full' }, soundAria: 'Sound on/off', musicAria: 'Music on/off',
       peekAria: 'View the picture full size', helpAria: 'How to play',
@@ -924,7 +970,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       r3: 'Cada línea eliminada revela piezas de la imagen. Los combos revelan más.',
       r4: 'La partida termina cuando no cabe ninguna pieza. Tu imagen conserva su progreso.',
       r6: 'Cada línea que eliminas se convierte en un bloque de tu propia cadena, que continúa de una partida a otra. Cada 210 bloques hay un Halving, con celebración y regalo.', r5: 'Elimina 2 o más líneas a la vez o llega al combo ×3 y un Degen viene a ayudarte: Bull (columna), Whale (fila), Bear (3×3), Rugpuller (fila + columna), Crab (2 filas), Diamond Hands (todos los bloques iguales). Suéltalo donde quieras. Quienes tienen cartas Vol.1 Degens reciben a sus personajes más a menudo.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' día seguido' : ' días seguidos'), pStreakToast: n => '¡Racha de ' + n + (n === 1 ? ' día' : ' días') + '! 🔥', pStreakSub: g => g ? 'Regalo: ' + g + ' entre tus piezas' : 'Vuelve mañana para mantenerla', pStreakCold: 'Juega hoy para mantener tu racha', giftBomb: 'una Bomba', giftLightning: 'un Rayo', chBlock: n => 'Bloque ' + n, chHalv: n => 'Halving en <b>' + n + '</b>', genesis: '¡Bloque Génesis!', genesisSub: 'Tu primera línea: empieza tu cadena', halving: '¡HALVING!', halvingSub: (e, g) => 'Época ' + e + ' · regalo: ' + g, bomb: '¡Bomba!', lightning: '¡Rayo!', pw: { bull: ['¡Bull!', 'Embiste una columna entera', 'columna'], whale: ['¡Whale!', 'Una ola se lleva una fila entera', 'fila'], bear: ['¡Bear!', 'Aplasta un bloque de 3×3', '3×3'], rugpuller: ['¡Rugpuller!', 'Tira de la alfombra: fila + columna', 'cruz'], crab: ['¡Crab!', 'Camina de lado: se lleva 2 filas', '2 filas'], diamond: ['¡Diamond Hands!', 'Agarra todos los bloques iguales', 'iguales'] }, pwGot: n => '¡' + n + ' vino a ayudar!', pwHow: 'Arrástralo a cualquier parte del tablero', pwGift: n => n, gotBomb: '¡Ganaste una Bomba!', gotLightning: '¡Ganaste un Rayo!', gotSub: 'Está entre tus piezas', howBomb: 'Suéltala donde quieras: destruye las casillas 3×3 de alrededor', howLightning: 'Suéltalo donde quieras: elimina toda la fila y toda la columna', tagBomb: '3×3', tagLightning: 'fila + columna',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' día seguido' : ' días seguidos'), pStreakToast: n => '¡Racha de ' + n + (n === 1 ? ' día' : ' días') + '! 🔥', pStreakSub: g => g ? 'Regalo: ' + g + ' entre tus piezas' : 'Vuelve mañana para mantenerla', pStreakCold: 'Juega hoy para mantener tu racha', giftBomb: 'una Bomba', giftLightning: 'un Rayo', chBlock: n => 'Bloque ' + n, chHalv: n => 'Halving en <b>' + n + '</b>', genesis: '¡Bloque Génesis!', genesisSub: 'Tu primera línea: empieza tu cadena', halving: '¡HALVING!', halvingSub: (e, g) => 'Época ' + e + ' · regalo: ' + g, hvEp: e => 'Época ' + e, hvSkL: 'Nuevo estilo de bloques', hvBoL: 'Desde ahora, cada línea da', hvBo: p => '+' + p + '% piezas de imagen', hvBoMax: 'Bonus máximo: +50% piezas de imagen', hvGiL: 'Regalo entre tus piezas', hvGo: 'Continuar', skins: ['Clásico', 'Borde dorado', 'Cristal', 'Holograma', 'Neón', 'Burbujas', 'Diamante', 'Arcoíris'], bomb: '¡Bomba!', lightning: '¡Rayo!', pw: { bull: ['¡Bull!', 'Embiste una columna entera', 'columna'], whale: ['¡Whale!', 'Una ola se lleva una fila entera', 'fila'], bear: ['¡Bear!', 'Aplasta un bloque de 3×3', '3×3'], rugpuller: ['¡Rugpuller!', 'Tira de la alfombra: fila + columna', 'cruz'], crab: ['¡Crab!', 'Camina de lado: se lleva 2 filas', '2 filas'], diamond: ['¡Diamond Hands!', 'Agarra todos los bloques iguales', 'iguales'] }, pwGot: n => '¡' + n + ' vino a ayudar!', pwHow: 'Arrástralo a cualquier parte del tablero', pwGift: n => n, gotBomb: '¡Ganaste una Bomba!', gotLightning: '¡Ganaste un Rayo!', gotSub: 'Está entre tus piezas', howBomb: 'Suéltala donde quieras: destruye las casillas 3×3 de alrededor', howLightning: 'Suéltalo donde quieras: elimina toda la fila y toda la columna', tagBomb: '3×3', tagLightning: 'fila + columna',
       free: 'Gratis, sin anuncios, sin conectar wallet.',
       rateTitle: '¿Te gusta Blockspace?', rateTxt: 'Una valoración rápida ayuda mucho a un creador pequeño. Sé sincero, para bien o para mal: así sé qué mejorar.', rateGo: 'Valorar el juego', rateLink: 'Valorar el juego', privacy: 'Privacidad', terms: 'Términos', gfx: { auto: 'Efectos: auto', lite: 'Efectos: ligeros', full: 'Efectos: completos' }, soundAria: 'Sonido sí/no', musicAria: 'Música sí/no',
       peekAria: 'Ver la imagen a tamaño completo', helpAria: 'Cómo se juega',
@@ -980,7 +1026,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       r3: 'Cada linha eliminada revela peças da imagem. Combos revelam mais.',
       r4: 'O jogo termina quando nenhuma peça cabe. Sua imagem mantém o progresso.',
       r6: 'Cada linha que você elimina vira um bloco na sua própria cadeia, que continua de um jogo para o outro. A cada 210 blocos acontece um Halving, com comemoração e presente.', r5: 'Elimine 2 ou mais linhas de uma vez ou chegue ao combo ×3 e um Degen vem ajudar: Bull (coluna), Whale (linha), Bear (3×3), Rugpuller (linha + coluna), Crab (2 linhas), Diamond Hands (todos os blocos iguais). Solte onde quiser. Quem tem cartas Vol.1 Degens recebe seus personagens com mais frequência.',
-      pStreak: n => '🔥 ' + n + (n === 1 ? ' dia seguido' : ' dias seguidos'), pStreakToast: n => 'Sequência de ' + n + (n === 1 ? ' dia' : ' dias') + '! 🔥', pStreakSub: g => g ? 'Presente: ' + g + ' entre suas peças' : 'Volte amanhã para manter a sequência', pStreakCold: 'Jogue hoje para manter sua sequência', giftBomb: 'uma Bomba', giftLightning: 'um Raio', chBlock: n => 'Bloco ' + n, chHalv: n => 'Halving em <b>' + n + '</b>', genesis: 'Bloco Gênesis!', genesisSub: 'Sua primeira linha: sua cadeia começa', halving: 'HALVING!', halvingSub: (e, g) => 'Época ' + e + ' · presente: ' + g, bomb: 'Bomba!', lightning: 'Raio!', pw: { bull: ['Bull!', 'Derruba uma coluna inteira', 'coluna'], whale: ['Whale!', 'Uma onda leva uma linha inteira', 'linha'], bear: ['Bear!', 'Esmaga um bloco 3×3', '3×3'], rugpuller: ['Rugpuller!', 'Puxa o tapete: linha + coluna', 'cruz'], crab: ['Crab!', 'Anda de lado: leva 2 linhas', '2 linhas'], diamond: ['Diamond Hands!', 'Pega todos os blocos iguais', 'iguais'] }, pwGot: n => n + ' veio ajudar!', pwHow: 'Arraste para qualquer lugar do tabuleiro', pwGift: n => n, gotBomb: 'Você ganhou uma Bomba!', gotLightning: 'Você ganhou um Raio!', gotSub: 'Está entre suas peças', howBomb: 'Solte onde quiser: ela explode as casas 3×3 ao redor', howLightning: 'Solte onde quiser: ele limpa a linha inteira e a coluna inteira', tagBomb: '3×3', tagLightning: 'linha + coluna',
+      pStreak: n => '🔥 ' + n + (n === 1 ? ' dia seguido' : ' dias seguidos'), pStreakToast: n => 'Sequência de ' + n + (n === 1 ? ' dia' : ' dias') + '! 🔥', pStreakSub: g => g ? 'Presente: ' + g + ' entre suas peças' : 'Volte amanhã para manter a sequência', pStreakCold: 'Jogue hoje para manter sua sequência', giftBomb: 'uma Bomba', giftLightning: 'um Raio', chBlock: n => 'Bloco ' + n, chHalv: n => 'Halving em <b>' + n + '</b>', genesis: 'Bloco Gênesis!', genesisSub: 'Sua primeira linha: sua cadeia começa', halving: 'HALVING!', halvingSub: (e, g) => 'Época ' + e + ' · presente: ' + g, hvEp: e => 'Época ' + e, hvSkL: 'Novo estilo de blocos', hvBoL: 'A partir de agora, cada linha dá', hvBo: p => '+' + p + '% peças de imagem', hvBoMax: 'Bônus máximo: +50% peças de imagem', hvGiL: 'Presente entre suas peças', hvGo: 'Continuar', skins: ['Clássico', 'Borda dourada', 'Vidro', 'Holograma', 'Neon', 'Bolhas', 'Diamante', 'Arco-íris'], bomb: 'Bomba!', lightning: 'Raio!', pw: { bull: ['Bull!', 'Derruba uma coluna inteira', 'coluna'], whale: ['Whale!', 'Uma onda leva uma linha inteira', 'linha'], bear: ['Bear!', 'Esmaga um bloco 3×3', '3×3'], rugpuller: ['Rugpuller!', 'Puxa o tapete: linha + coluna', 'cruz'], crab: ['Crab!', 'Anda de lado: leva 2 linhas', '2 linhas'], diamond: ['Diamond Hands!', 'Pega todos os blocos iguais', 'iguais'] }, pwGot: n => n + ' veio ajudar!', pwHow: 'Arraste para qualquer lugar do tabuleiro', pwGift: n => n, gotBomb: 'Você ganhou uma Bomba!', gotLightning: 'Você ganhou um Raio!', gotSub: 'Está entre suas peças', howBomb: 'Solte onde quiser: ela explode as casas 3×3 ao redor', howLightning: 'Solte onde quiser: ele limpa a linha inteira e a coluna inteira', tagBomb: '3×3', tagLightning: 'linha + coluna',
       free: 'Grátis, sem anúncios, sem conectar carteira.',
       rateTitle: 'Gostando do Blockspace?', rateTxt: 'Uma avaliação rápida ajuda muito um criador pequeno. Seja sincero, para o bem ou para o mal: assim eu sei o que melhorar.', rateGo: 'Avaliar o jogo', rateLink: 'Avaliar o jogo', privacy: 'Privacidade', terms: 'Termos', gfx: { auto: 'Efeitos: auto', lite: 'Efeitos: leves', full: 'Efeitos: completos' }, soundAria: 'Som ligado/desligado', musicAria: 'Música ligada/desligada',
       peekAria: 'Ver a imagem em tamanho completo', helpAria: 'Como jogar',
@@ -1445,6 +1491,29 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       L.appendChild(d);
     }
   }
+  const epochNow = () => Math.floor(chain.h / HALVING) + 1;
+  const epochBoost = () => Math.min(50, (epochNow() - 1) * 10);
+  function applySkin() {
+    const k = (epochNow() - 1) % 8 + 1, r = document.documentElement;
+    for (let i = 2; i <= 8; i++) r.classList.toggle('sk' + i, i === k);
+  }
+  applySkin();
+  function halvingShow(epoch, gift) {
+    applySkin();
+    const sk = t('skins')[(epoch - 1) % 8], bo = epochBoost();
+    $('hvEp').textContent = t('hvEp')(epoch);
+    $('hvTiles').innerHTML = [0, 3, 1].map(k => '<i class="blk k' + k + '"></i>').join('');
+    $('hvSkL').textContent = t('hvSkL'); $('hvSk').textContent = sk;
+    $('hvPct').textContent = '+' + bo + '%';
+    $('hvBoL').textContent = t('hvBoL'); $('hvBo').textContent = bo >= 50 ? t('hvBoMax') : t('hvBo')(bo);
+    $('hvGiL').textContent = t('hvGiL'); $('hvGi').textContent = t('pw')[gift][0].replace('!', '');
+    $('hvGiftI').style.backgroundImage = 'url(art/chars/' + gift + '.webp)';
+    $('hvGo').textContent = t('hvGo');
+    $('halv').hidden = false; document.body.classList.add('hvon'); sfx.complete();
+    let n = 0; fireworks(6);
+    const iv = setInterval(() => { if ($('halv').hidden || ++n > 4) return clearInterval(iv); fireworks(4); }, 1300);
+    setTimeout(() => { try { $('hvGo').focus(); } catch (e) {} }, 2600);
+  }
   function chainAdd(n) {
     if (!n || mode === 'daily') return null;
     const from = chain.h; chain.h += n; store.set('svb_chain', JSON.stringify(chain));
@@ -1452,7 +1521,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     if (from === 0) setTimeout(() => { toast(t('genesis'), t('genesisSub'), 'l4'); fireworks(3); }, 1500);
     if (Math.floor(chain.h / HALVING) > Math.floor(from / HALVING)) {
       const epoch = Math.floor(chain.h / HALVING) + 1, gift = pickPower() || 'bull';
-      setTimeout(() => { toast(t('halving'), t('halvingSub')(epoch, t('pw')[gift][0].replace('!', '')), 'perfect'); fireworks(8); sfx.complete(); }, 1500);
+      setTimeout(() => halvingShow(epoch, gift), 1300);
       return gift;
     }
     return null;
@@ -1596,7 +1665,10 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     return false;
   }
   // the first pictures complete faster
-  const revealBoost = n => Math.round(n * (done.length === 0 ? 2 : done.length < 3 ? 1.5 : done.length < 5 ? 1.25 : 1));
+  const revealBoost = n => {
+    const x = n * (done.length === 0 ? 2 : done.length < 3 ? 1.5 : done.length < 5 ? 1.25 : 1) * (1 + epochBoost() / 100);
+    return Math.floor(x) + (Math.random() < x % 1 ? 1 : 0);
+  };
 
   /* ---------- effects: particles, beams, shake, floating points, counting score ---------- */
   const fx = $('fx'), fctx = fx.getContext('2d');
@@ -3238,6 +3310,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     requestAnimationFrame(() => drawReveal($('dc'), true));
     liveStop('d'); setTimeout(() => { if (!$('done').hidden) liveStart('d', $('dlive'), pic.id, 1.3); }, 1300);
   }
+  $('hvGo').addEventListener('click', () => { $('halv').hidden = true; document.body.classList.remove('hvon'); });
   $('next').addEventListener('click', () => {
     rev = newReveal(nextPicId()); saveRev(); fades.clear();
     $('done').hidden = true; liveStop('d');
