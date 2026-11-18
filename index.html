@@ -246,6 +246,8 @@ body.hvon .fx{z-index:57;pointer-events:none}
 .big{font:400 44px/1 var(--fd);color:#fff;font-variant-numeric:tabular-nums;text-shadow:0 0 16px var(--cyan)}
 .card canvas{width:min(78vw, 320px, 46vh);height:min(78vw, 320px, 46vh);border-radius:12px;border:1px solid color-mix(in srgb, var(--cyan) 45%, transparent);box-shadow:0 0 22px color-mix(in srgb, var(--cyan) 30%, transparent)}
 #oc{width:min(44vw, 170px);height:min(44vw, 170px)}
+#over.picgoal #oc{width:min(60vw, 230px);height:min(60vw, 230px)}
+#over.picgoal #finalScore{font-size:1.6em}
 .btn{
   font:800 16px var(--f);letter-spacing:.04em;
   color:#06081c;
@@ -502,6 +504,10 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
 @keyframes toastBig{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-8deg)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(2deg)}35%{transform:translate(-50%,-50%) scale(1) rotate(0)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-65%) scale(1)}}
 @media (prefers-reduced-motion: reduce){.board.shake1,.board.shake2,.board.shake3,.fpts,.toast.show.l3,.toast.show.l4,.toast.show.perfect{animation-duration:.01s}}
 #done{z-index:60}
+.dprog{color:var(--dim);font-size:.92em}
+.dnext{display:flex;align-items:center;justify-content:center;gap:10px;font-size:.9em;opacity:.85;animation:fadeup .6s 1.5s ease-out both}
+.dnext img{width:56px;height:56px;border-radius:10px;object-fit:cover;filter:blur(3px) brightness(.55) saturate(.6);box-shadow:0 0 0 1px #ffffff33, 0 0 14px #7c8cff55;order:2}
+.dnext span{order:1}
 #done .card{width:min(100%, 560px);gap:16px}
 #dlive{
   width:min(88vw, 62vh, 520px);height:min(88vw, 62vh, 520px);
@@ -605,7 +611,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   <div class="card">
     <h2 data-i18n="doneTitle"></h2>
     <div class="live dlive" id="dlive"><div class="kbw"><canvas id="dc"></canvas><canvas class="lfx"></canvas></div></div>
-    <p><b id="doneName"></b><br><span id="doneTxt"></span></p>
+    <p><b id="doneName"></b><br><span id="doneTxt"></span><br><span class="dprog" id="doneProg"></span></p>
+    <div class="dnext" id="doneNext" hidden><img id="doneNextImg" alt=""><span data-i18n="nextUp"></span></div>
     <button class="btn" id="next" type="button" data-i18n="nextPic"></button>
     <button class="btn2 sharebtn" id="shareDone" type="button" data-i18n="share"></button>
   </div>
@@ -770,6 +777,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Η εικόνα αποκαλύφθηκε!',
       doneTxt: 'Μπήκε στη Συλλογή σου.', chapterDone: n => 'Ολοκλήρωσες το κεφάλαιο «' + n + '»!', allDone: 'Ολοκλήρωσες όλη τη Συλλογή! Νέες εικόνες έρχονται σύντομα.', pieces64: 'κομμάτια', ended: 'Έληξε',
       nextPic: 'Επόμενη εικόνα',
+      contPic: 'Συνέχισε την εικόνα', missing: (n, l) => 'Σου λείπουν <b>' + n + '</b> κομμάτια, περίπου ' + l + (l === 1 ? ' γραμμή' : ' γραμμές') + '.', overBest: b => 'Ρεκόρ ' + b,
+      giftChance: 'Δώρο: Δεύτερη ευκαιρία', giftChanceSub: 'Για να τελειώσεις την πρώτη σου εικόνα', chProg: (c, k, n) => c + ': <b>' + k + '/' + n + '</b>', nextUp: 'Επόμενη:',
       newIn: x => 'Νέα εικόνα σε ' + x, newToday: x => 'Νέα σήμερα: ' + x, comingOn: x => 'Έρχεται ' + x, pwFirst: 'Νέα δύναμη',
       share: 'Κοινοποίηση', shareDone: n => 'Αποκάλυψα την εικόνα «' + n + '» στο Blockspace!', shareScore: n => 'Έκανα ' + n + ' πόντους στο Blockspace. Με περνάς;', shareSaved: 'Η εικόνα αποθηκεύτηκε',
       peekTxt: (c, n) => c + ' από ' + n + ' κομμάτια ξεκλειδωμένα. Κάθε γραμμή που καθαρίζεις αποκαλύπτει περισσότερα.',
@@ -855,6 +864,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Picture unlocked!',
       doneTxt: 'Added to your Gallery.', chapterDone: n => 'You completed the chapter "' + n + '"!', allDone: 'You completed the whole Gallery! New pictures are coming soon.', pieces64: 'pieces', ended: 'Ended',
       nextPic: 'Next picture',
+      contPic: 'Continue the picture', missing: (n, l) => '<b>' + n + '</b> pieces to go, about ' + l + (l === 1 ? ' line' : ' lines') + '.', overBest: b => 'Best ' + b,
+      giftChance: 'Gift: Second Chance', giftChanceSub: 'So you can finish your first picture', chProg: (c, k, n) => c + ': <b>' + k + '/' + n + '</b>', nextUp: 'Next:',
       newIn: x => 'New picture in ' + x, newToday: x => 'New today: ' + x, comingOn: x => 'Coming ' + x, pwFirst: 'New power',
       share: 'Share', shareDone: n => 'I revealed "' + n + '" in Blockspace!', shareScore: n => 'I scored ' + n + ' in Blockspace. Can you beat it?', shareSaved: 'Image saved',
       peekTxt: (c, n) => c + ' of ' + n + ' pieces unlocked. Every line you clear reveals more.',
@@ -944,6 +955,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: '¡Imagen desbloqueada!',
       doneTxt: 'Añadida a tu Galería.', chapterDone: n => '¡Completaste el capítulo "' + n + '"!', allDone: '¡Completaste toda la Galería! Pronto llegarán imágenes nuevas.', pieces64: 'piezas', ended: 'Terminado',
       nextPic: 'Siguiente imagen',
+      contPic: 'Continuar la imagen', missing: (n, l) => 'Te faltan <b>' + n + '</b> piezas, unas ' + l + (l === 1 ? ' línea' : ' líneas') + '.', overBest: b => 'Récord ' + b,
+      giftChance: 'Regalo: Segunda oportunidad', giftChanceSub: 'Para que termines tu primera imagen', chProg: (c, k, n) => c + ': <b>' + k + '/' + n + '</b>', nextUp: 'Siguiente:',
       newIn: x => 'Nueva imagen en ' + x, newToday: x => 'Nueva hoy: ' + x, comingOn: x => 'Llega el ' + x, pwFirst: 'Nuevo poder',
       share: 'Compartir', shareDone: n => '¡Revelé la imagen "' + n + '" en Blockspace!', shareScore: n => 'Hice ' + n + ' puntos en Blockspace. ¿Me superas?', shareSaved: 'Imagen guardada',
       peekTxt: (c, n) => c + ' de ' + n + ' piezas desbloqueadas. Cada línea que eliminas revela más.',
@@ -1000,6 +1013,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Imagem desbloqueada!',
       doneTxt: 'Adicionada à sua Galeria.', chapterDone: n => 'Você completou o capítulo "' + n + '"!', allDone: 'Você completou a Galeria inteira! Novas imagens chegam em breve.', pieces64: 'peças', ended: 'Encerrado',
       nextPic: 'Próxima imagem',
+      contPic: 'Continuar a imagem', missing: (n, l) => 'Faltam <b>' + n + '</b> peças, cerca de ' + l + (l === 1 ? ' linha' : ' linhas') + '.', overBest: b => 'Recorde ' + b,
+      giftChance: 'Presente: Segunda chance', giftChanceSub: 'Para você terminar sua primeira imagem', chProg: (c, k, n) => c + ': <b>' + k + '/' + n + '</b>', nextUp: 'Próxima:',
       newIn: x => 'Nova imagem em ' + x, newToday: x => 'Nova hoje: ' + x, comingOn: x => 'Chega em ' + x, pwFirst: 'Novo poder',
       share: 'Compartilhar', shareDone: n => 'Revelei a imagem "' + n + '" no Blockspace!', shareScore: n => 'Fiz ' + n + ' pontos no Blockspace. Consegue me passar?', shareSaved: 'Imagem salva',
       peekTxt: (c, n) => c + ' de ' + n + ' peças desbloqueadas. Cada linha que você elimina revela mais.',
@@ -1056,6 +1071,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Bild freigeschaltet!',
       doneTxt: 'Zu deiner Galerie hinzugefügt.', chapterDone: n => 'Du hast das Kapitel „' + n + '“ abgeschlossen!', allDone: 'Du hast die ganze Galerie abgeschlossen! Neue Bilder kommen bald.', pieces64: 'Teile', ended: 'Beendet',
       nextPic: 'Nächstes Bild',
+      contPic: 'Bild weiterspielen', missing: (n, l) => 'Noch <b>' + n + '</b> Teile, etwa ' + l + (l === 1 ? ' Reihe' : ' Reihen') + '.', overBest: b => 'Rekord ' + b,
+      giftChance: 'Geschenk: Zweite Chance', giftChanceSub: 'Damit du dein erstes Bild fertig bekommst', chProg: (c, k, n) => c + ': <b>' + k + '/' + n + '</b>', nextUp: 'Als Nächstes:',
       newIn: x => 'Neues Bild in ' + x, newToday: x => 'Neu heute: ' + x, comingOn: x => 'Ab ' + x, pwFirst: 'Neue Kraft',
       share: 'Teilen', shareDone: n => 'Ich habe das Bild „' + n + '“ in Blockspace aufgedeckt!', shareScore: n => 'Ich habe ' + n + ' Punkte in Blockspace. Schaffst du mehr?', shareSaved: 'Bild gespeichert',
       peekTxt: (c, n) => c + ' von ' + n + ' Teilen freigeschaltet. Jede aufgelöste Reihe deckt mehr auf.',
@@ -1112,6 +1129,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Image débloquée !',
       doneTxt: 'Ajoutée à votre Galerie.', chapterDone: n => 'Vous avez terminé le chapitre « ' + n + ' » !', allDone: 'Vous avez terminé toute la Galerie ! De nouvelles images arrivent bientôt.', pieces64: 'pièces', ended: 'Terminé',
       nextPic: 'Image suivante',
+      contPic: 'Continuer l’image', missing: (n, l) => 'Encore <b>' + n + '</b> pièces, environ ' + l + (l === 1 ? ' ligne' : ' lignes') + '.', overBest: b => 'Record ' + b,
+      giftChance: 'Cadeau : Seconde chance', giftChanceSub: 'Pour terminer ta première image', chProg: (c, k, n) => c + ' : <b>' + k + '/' + n + '</b>', nextUp: 'Ensuite :',
       newIn: x => 'Nouvelle image dans ' + x, newToday: x => 'Nouvelle aujourd\'hui : ' + x, comingOn: x => 'Arrive le ' + x, pwFirst: 'Nouveau pouvoir',
       share: 'Partager', shareDone: n => 'J\'ai révélé l\'image « ' + n + ' » dans Blockspace !', shareScore: n => 'J\'ai fait ' + n + ' points dans Blockspace. Tu fais mieux ?', shareSaved: 'Image enregistrée',
       peekTxt: (c, n) => c + ' pièces sur ' + n + ' débloquées. Chaque ligne effacée en révèle davantage.',
@@ -1168,6 +1187,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       doneTitle: 'Resim açıldı!',
       doneTxt: 'Galerine eklendi.', chapterDone: n => '"' + n + '" bölümünü tamamladın!', allDone: 'Tüm Galeriyi tamamladın! Yeni resimler yakında geliyor.', pieces64: 'parça', ended: 'Bitti',
       nextPic: 'Sonraki resim',
+      contPic: 'Resme devam et', missing: (n, l) => '<b>' + n + '</b> parça kaldı, yaklaşık ' + l + ' satır.', overBest: b => 'Rekor ' + b,
+      giftChance: 'Hediye: İkinci Şans', giftChanceSub: 'İlk resmini bitirebilmen için', chProg: (c, k, n) => c + ': <b>' + k + '/' + n + '</b>', nextUp: 'Sıradaki:',
       newIn: x => 'Yeni resme kalan: ' + x, newToday: x => 'Bugün yeni: ' + x, comingOn: x => x + ' geliyor', pwFirst: 'Yeni güç',
       share: 'Paylaş', shareDone: n => 'Blockspace\'te "' + n + '" resmini açtım!', shareScore: n => 'Blockspace\'te ' + n + ' puan yaptım. Geçebilir misin?', shareSaved: 'Resim kaydedildi',
       peekTxt: (c, n) => n + ' parçadan ' + c + ' tanesi açıldı. Temizlediğin her satır daha fazlasını gösterir.',
@@ -1666,7 +1687,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   }
   // the first pictures complete faster
   const revealBoost = n => {
-    const x = n * (done.length === 0 ? 2 : done.length < 3 ? 1.5 : done.length < 5 ? 1.25 : 1) * (1 + epochBoost() / 100);
+    const x = n * (done.length === 0 ? 3 : done.length < 3 ? 1.5 : done.length < 5 ? 1.25 : 1) * (1 + epochBoost() / 100);
     return Math.floor(x) + (Math.random() < x % 1 ? 1 : 0);
   };
 
@@ -2163,10 +2184,21 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   function checkOver() {
     if (tray.some(p => p && anyFit(p))) return;
     if (mode === 'daily') return dailyOver();
+    /* the first picture should be finished in the first sitting: if the game ends before it is, the Second Chance is a free gift, once */
+    if (done.length === 0 && !chanceUsed && rev.count < RTT() && !store.get('svb_gift_chance') && $('done').hidden) {
+      store.set('svb_gift_chance', '1'); applyChance(); toast(t('giftChance'), t('giftChanceSub'), 'l3'); return;
+    }
     $('oc').hidden = false; $('overHome').hidden = true; $('again').textContent = t('newGame'); $('shareOver').hidden = false;
     if (!$('done').hidden || rev.count >= RTT()) { pendingOver = true; return; }
     $('finalScore').textContent = fmt(score);
-    $('overTxt').innerHTML = t('overTxt')(fmt(best), rev.count + '/' + RTT());
+    const left = RTT() - rev.count;
+    $('over').classList.toggle('picgoal', left > 0);
+    if (left > 0) {
+      /* the picture is the goal, so the screen leads with what is missing and offers to carry on */
+      const perLine = 2 * (done.length === 0 ? 3 : done.length < 3 ? 1.5 : done.length < 5 ? 1.25 : 1);
+      $('overTxt').innerHTML = t('missing')(left, Math.max(1, Math.ceil(left / perLine))) + '<br><small class="fine">' + t('overBest')(fmt(best)) + '</small>';
+      $('again').textContent = t('contPic');
+    } else $('overTxt').innerHTML = t('overTxt')(fmt(best), rev.count + '/' + RTT());
     renderChanceBox();
     $('overRank').hidden = true;
     lbSubmit();
@@ -2617,7 +2649,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   addEventListener('pagehide', send);
   window.SVStats = { start(g, fn){ game = g; if (fn) getMode = fn; } };
 })();
-  if (window.SVStats) SVStats.start('blockspace', () => $('game').hidden ? 'menu' : mode === 'daily' ? 'daily' : 'play:p' + Math.min(99, done.length + 1));
+  if (window.SVStats) SVStats.start('blockspace', () => $('game').hidden ? 'menu' : mode === 'daily' ? 'daily' : !$('done').hidden ? 'done:p' + Math.min(99, done.length) : !$('over').hidden ? 'over:p' + Math.min(99, done.length + 1) : 'play:p' + Math.min(99, done.length + 1));
 
 
   function openGallery() {
@@ -3356,6 +3388,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     $('doneName').textContent = L(pic);
     $('doneTxt').textContent = PICS.filter(isActive).every(p => done.includes(p.id)) && wasNew ? t('allDone')
       : chDone && wasNew ? t('chapterDone')(L(chapterOf(pic))) : t('doneTxt');
+    { const k = list.filter(p => done.includes(p.id)).length; $('doneProg').innerHTML = t('chProg')(L(chapterOf(pic)), k, list.length); }
+    { const nx = picById(nextPicId()), show = nx && !done.includes(nx.id) && nx.id !== pic.id; $('doneNext').hidden = !show; if (show) $('doneNextImg').src = nx.src; }
     $('done').hidden = false; document.documentElement.classList.remove('newbie'); buzz([30, 50, 30, 50, 60]);
     if (actx) sfx.complete();
     requestAnimationFrame(() => drawReveal($('dc'), true));
