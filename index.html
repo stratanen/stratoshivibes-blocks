@@ -1279,7 +1279,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     [[[0,0],[0,1],[0,2],[0,3]], 2, true],
     [[[0,0],[0,1],[0,2],[0,3],[0,4]], 0.9, true],
     [[[0,0],[0,1],[1,0],[1,1]], 3, false],
-    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]], 0.7, true],
+    [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]], 0.7, true, 'big'],   // the 3x3 square: retired 19 Nov 2026 (kept only to replay older daily challenges exactly)
     [[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2]], 1.2, true],
     [[[0,0],[1,0],[1,1]], 2.5, false],
     [[[0,0],[1,0],[2,0],[2,1]], 2.5, true],
@@ -1288,7 +1288,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     [[[0,0],[1,0],[2,0],[2,1],[2,2]], 0.9, true]
   ];
   const SHAPES = [];
-  for (const [b, w, hard] of BASE) {
+  for (const [b, w, hard, big] of BASE) {
     const seen = new Set(), rots = [];
     let cs = norm(b);
     for (let i = 0; i < 4; i++) {
@@ -1296,7 +1296,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
       if (!seen.has(k)) { seen.add(k); rots.push(cs); }
       cs = rot(cs);
     }
-    rots.forEach(r => SHAPES.push({ cells: r, w: w / rots.length, hard }));
+    rots.forEach(r => SHAPES.push({ cells: r, w: w / rots.length, hard, big: !!big }));
   }
   const sizeOf = cells => ({ h: Math.max(...cells.map(p => p[0])) + 1, w: Math.max(...cells.map(p => p[1])) + 1 });
   // Difficulty from 0 (relaxed) to 0.8: rises gently with the score of the current game and with the chapter.
@@ -1307,8 +1307,8 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
     if (done.length < 5 && mode !== 'daily') return Math.min(0.12, score / 80000 * 0.45);   // the first five pictures: mostly small, easy pieces
     return Math.min(0.6, ch + Math.min(0.45, score / 80000 * 0.45));
   }
-  function makePiece(rand = Math.random, d = difficulty()) {
-    const wOf = sh => sh.w * (sh.hard ? 1 + d : 1 - 0.35 * d);
+  function makePiece(rand = Math.random, d = difficulty(), oldSet = false) {
+    const wOf = sh => sh.big && !oldSet ? 0 : sh.w * (sh.hard ? 1 + d : 1 - 0.35 * d);
     let x = rand() * SHAPES.reduce((a, sh) => a + wOf(sh), 0), s = SHAPES[0];
     for (const sh of SHAPES) { x -= wOf(sh); if (x <= 0) { s = sh; break; } }
     return { cells: s.cells, ...sizeOf(s.cells), k: Math.floor(rand() * KINDS.length) };
@@ -1318,7 +1318,7 @@ html.lite .cell.tgt,html.lite .board.c2,html.lite .board.c3,html.lite .slot .blk
   const DAILY_DIFF = 0.35;
   function seedOf(str) { let h = 2166136261; for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-  function dailyPiece(day, n) { return makePiece(rng(seedOf(day + '#' + n)), DAILY_DIFF); }
+  function dailyPiece(day, n) { return makePiece(rng(seedOf(day + '#' + n)), DAILY_DIFF, day <= '2026-11-18'); }
   function dailyStartBoard(day) {
     const r = rng(seedOf(day + '#board')), b = new Array(N * N).fill(-1);
     for (let k = 0; k < 14; k++) { const i = Math.floor(r() * N * N); b[i] = Math.floor(r() * KINDS.length); }
